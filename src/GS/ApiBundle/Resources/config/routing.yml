@@ -1,0 +1,27 @@
+
+api_login_check:
+    path: /auth
+
+logout:
+    path: /logout
+
+year:
+    type:     rest
+    resource: GS\ApiBundle\Controller\YearController
+
+activity:
+    type:     rest
+    resource: GS\ApiBundle\Controller\ActivityController
+
+category:
+    type:     rest
+    resource: GS\ApiBundle\Controller\CategoryController
+
+discount:
+    type:     rest
+    resource: GS\ApiBundle\Controller\DiscountController
+
+topic:
+    type:     rest
+    resource: GS\ApiBundle\Controller\TopicController
+
