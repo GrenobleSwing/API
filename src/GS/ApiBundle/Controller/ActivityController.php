@@ -16,13 +16,14 @@ class ActivityController extends FOSRestController
 
     public function deleteAction($id)
     {
-        $year = $this->getDoctrine()->getManager()
+        $em = $this->getDoctrine()->getManager();
+        
+        $activity = $em
             ->getRepository('GSApiBundle:Activity')
             ->find($id)
             ;
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($year);
+        $em->remove($activity);
         $em->flush();
 
         $view = $this->view(array(), 200);
@@ -31,12 +32,12 @@ class ActivityController extends FOSRestController
 
     public function getAction($id)
     {
-        $year = $this->getDoctrine()->getManager()
+        $activity = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Activity')
             ->find($id)
             ;
 
-        $view = $this->view($year, 200);
+        $view = $this->view($activity, 200);
         return $this->handleView($view);
     }
 
@@ -64,21 +65,11 @@ class ActivityController extends FOSRestController
         
         $em = $this->getDoctrine()->getManager();
 
-//        $year = $em
-//            ->getRepository('GSApiBundle:Year')
-//            ->find($data['yearId']);
-//        if ($year === null) {
-//            $view = $this->view(array(), 301);
-//            return $this->handleView($view);
-//        }
-        
         $activity = new Activity();
         if (! $this->setActivityData($em, $activity, $data)) {
             $view = $this->view(array(), 301);
             return $this->handleView($view);
         }
-//        $this->setActivityData($activity, $data);
-//        $year->addActivity($activity);
 
         $em->persist($activity);
         $em->flush();

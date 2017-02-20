@@ -17,12 +17,13 @@ class TopicController extends FOSRestController
 
     public function deleteAction($id)
     {
-        $topic = $this->getDoctrine()->getManager()
+        $em = $this->getDoctrine()->getManager();
+        
+        $topic = $em
             ->getRepository('GSApiBundle:Topic')
             ->find($id)
             ;
 
-        $em = $this->getDoctrine()->getManager();
         $em->remove($topic);
         $em->flush();
 

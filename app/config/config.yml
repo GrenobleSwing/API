@@ -8,6 +8,7 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    jms_serializer.camel_case_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
 
 framework:
     #esi:             ~
@@ -20,6 +21,8 @@ framework:
     csrf_protection: ~
     validation:      { enable_annotations: true }
     #serializer:      { enable_annotations: true }
+    serializer:
+        enabled: false
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
@@ -82,3 +85,5 @@ fos_rest:
     routing_loader:
         default_format: json
         include_format: false
+    serializer:
+        serialize_null:  true

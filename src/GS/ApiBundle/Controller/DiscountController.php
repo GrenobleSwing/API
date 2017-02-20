@@ -16,12 +16,13 @@ class DiscountController extends FOSRestController
 
     public function deleteAction($id)
     {
-        $discount = $this->getDoctrine()->getManager()
+        $em = $this->getDoctrine()->getManager();
+
+        $discount = $em
             ->getRepository('GSApiBundle:Discount')
             ->find($id)
             ;
 
-        $em = $this->getDoctrine()->getManager();
         $em->remove($discount);
         $em->flush();
 

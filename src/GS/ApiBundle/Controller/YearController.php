@@ -17,12 +17,13 @@ class YearController extends FOSRestController
 
     public function deleteAction($id)
     {
-        $year = $this->getDoctrine()->getManager()
+        $em = $this->getDoctrine()->getManager();
+
+        $year = $em
             ->getRepository('GSApiBundle:Year')
             ->find($id)
             ;
 
-        $em = $this->getDoctrine()->getManager();
         $em->remove($year);
         $em->flush();
 

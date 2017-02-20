@@ -3,6 +3,8 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Topic
@@ -66,17 +68,23 @@ class Topic
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Activity", inversedBy="topics")
      * @ORM\JoinColumn(nullable=false)
+     * @SerializedName("activityId")
+     * @Type("Relation")
      */
     private $activity;
 
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Category")
      * @ORM\JoinColumn(nullable=false)
+     * @SerializedName("categoryId")
+     * @Type("Relation")
      */
     private $category;
 
     /**
      * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\Topic")
+     * @SerializedName("requiredTopicIds")
+     * @Type("Relation<Topic>")
      */
     private $requiredTopics;
 

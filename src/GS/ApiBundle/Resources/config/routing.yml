@@ -5,6 +5,10 @@ api_login_check:
 logout:
     path: /logout
 
+account:
+    type:     rest
+    resource: GS\ApiBundle\Controller\AccountController
+
 year:
     type:     rest
     resource: GS\ApiBundle\Controller\YearController
@@ -25,3 +29,6 @@ topic:
     type:     rest
     resource: GS\ApiBundle\Controller\TopicController
 
+subscription:
+    type:     rest
+    resource: GS\ApiBundle\Controller\SubscriptionController

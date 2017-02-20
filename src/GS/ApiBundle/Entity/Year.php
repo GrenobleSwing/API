@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation\Type;
 /**
  * Year
  *
- * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\YearRepository")
+ * @ORM\Entity
  */
 class Year
 {

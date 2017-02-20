@@ -4,6 +4,7 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\SerializedName;
 use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -59,9 +60,11 @@ class Account
     private $address;
 
    /**
-     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\User", cascade={"persist", "remove"})
+    * @ORM\JoinColumn(nullable=false)
+    * @SerializedName("userId")
+    * @Type("Relation")
+    */
     private $user;
 
 

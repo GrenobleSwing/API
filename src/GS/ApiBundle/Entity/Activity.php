@@ -4,6 +4,7 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * Activity
@@ -37,21 +38,25 @@ class Activity
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Year", inversedBy="activities")
      * @ORM\JoinColumn(nullable=false)
+     * @Type("Relation")
      */
     private $year;
 
     /**
      * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\Topic", mappedBy="activity", cascade={"persist", "remove"})
+     * @Type("Relation<Topic>")
      */
     private $topics;
 
     /**
      * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\Category", mappedBy="activity", cascade={"persist", "remove"})
+     * @Type("Relation<Category>")
      */
     private $categories;
 
     /**
      * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\Discount", mappedBy="activity", cascade={"persist", "remove"})
+     * @Type("Relation<Discount>")
      */
     private $discounts;
 

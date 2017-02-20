@@ -6,24 +6,25 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 
-use GS\ApiBundle\Entity\Category;
+use GS\ApiBundle\Entity\Account;
+use GS\ApiBundle\Entity\Address;
 
 /**
- * @RouteResource("Category", pluralize=false)
+ * @RouteResource("Account", pluralize=false)
  */
-class CategoryController extends FOSRestController
+class AccountController extends FOSRestController
 {
 
     public function deleteAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $category = $em
-            ->getRepository('GSApiBundle:Category')
+        $account = $em
+            ->getRepository('GSApiBundle:Account')
             ->find($id)
             ;
 
-        $em->remove($category);
+        $em->remove($account);
         $em->flush();
 
         $view = $this->view(array(), 200);
@@ -32,23 +33,23 @@ class CategoryController extends FOSRestController
 
     public function getAction($id)
     {
-        $category = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Category')
+        $year = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Account')
             ->find($id)
             ;
 
-        $view = $this->view($category, 200);
+        $view = $this->view($year, 200);
         return $this->handleView($view);
     }
 
     public function cgetAction()
     {
-        $listCategories = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Category')
+        $listAccounts = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Account')
             ->findAll()
             ;
 
-        $view = $this->view($listCategories, 200);
+        $view = $this->view($listAccounts, 200);
         return $this->handleView($view);
     }
 
@@ -65,23 +66,17 @@ class CategoryController extends FOSRestController
         
         $em = $this->getDoctrine()->getManager();
 
-        $activity = $em
-            ->getRepository('GSApiBundle:Activity')
-            ->find($data['activityId']);
-        if ($activity === null) {
+        $account = new Account();
+        if (! $this->setAccountData($em, $account, $data)) {
             $view = $this->view(array(), 301);
             return $this->handleView($view);
         }
-        
-        $category = new Category();
-        $this->setCategoryData($category, $data);
-        $activity->addCategory($category);
 
-        $em->persist($activity);
+        $em->persist($account);
         $em->flush();
 
-        if(null != $category->getId()) {
-            $view = $this->view(array('id' => $category->getId()), 200);
+        if(null != $account->getId()) {
+            $view = $this->view(array('id' => $account->getId()), 200);
         }
         else
         {
@@ -102,18 +97,37 @@ class CategoryController extends FOSRestController
         }
         
         $em = $this->getDoctrine()->getManager();
-        $category = $em
-            ->getRepository('GSApiBundle:Category')
+        $account = $em
+            ->getRepository('GSApiBundle:Account')
             ->find($id)
             ;
-        $this->setCategoryData($category, $data);
+        $this->setAccountData($account, $data);
 
         $em->flush();
     }
     
-    private function setCategoryData(&$category, $data)
+    private function setAccountData($em, &$account, $data)
     {
-        $category->setName($data['name']);
-        $category->setPrice($data['price']);
+        $account->setFirstName($data['firstName']);
+        $account->setLastName($data['lastName']);
+        $account->setBirthDate(new \DateTime($data['birthDate']));
+        
+        $phoneNumber = $this->container
+                ->get('libphonenumber.phone_number_util')
+                ->parse($data['phoneNumber'], "FR");
+        $account->setPhoneNumber($phoneNumber);
+
+        $address = new Address();
+        $account->setAddress($address);
+
+        $user = $em
+            ->getRepository('GSApiBundle:User')
+            ->find($data['userId']);
+        if ($user === null) {
+            return false;
+        }
+        $account->setUser($user);
+        $account->setEmail($user->getEmail());
+        return true;
     }
 }

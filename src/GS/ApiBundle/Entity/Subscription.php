@@ -3,11 +3,18 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\SerializedName;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Subscription
  *
  * @ORM\Entity
+ * @UniqueEntity(
+ *     fields={"topic", "account"},
+ *     message="This subscription already exists."
+ * )
  */
 class Subscription
 {
@@ -26,12 +33,28 @@ class Subscription
     /**
      * @ORM\Column(type="string", length=16)
      */
-    private $status;
+    private $state;
 
     /**
      * @ORM\Column(type="array")
      */
     private $options;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Topic")
+     * @ORM\JoinColumn(nullable=false)
+     * @SerializedName("topicId")
+     * @Type("Relation")
+     */
+    private $topic;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Account")
+     * @ORM\JoinColumn(nullable=false)
+     * @SerializedName("accountId")
+     * @Type("Relation")
+     */
+    private $account;
 
     public function __construct()
     {
@@ -74,27 +97,27 @@ class Subscription
     }
 
     /**
-     * Set status
+     * Set state
      *
-     * @param string $status
+     * @param string $state
      *
      * @return Subscription
      */
-    public function setStatus($status)
+    public function setState($state)
     {
-        $this->status = $status;
+        $this->state = $state;
 
         return $this;
     }
 
     /**
-     * Get status
+     * Get state
      *
      * @return string
      */
-    public function getStatus()
+    public function getState()
     {
-        return $this->status;
+        return $this->state;
     }
 
     public function addOption($option)
@@ -122,4 +145,66 @@ class Subscription
         return $this->options;
     }
 
+
+    /**
+     * Set options
+     *
+     * @param array $options
+     *
+     * @return Subscription
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+
+        return $this;
+    }
+
+    /**
+     * Set topic
+     *
+     * @param \GS\ApiBundle\Entity\Topic $topic
+     *
+     * @return Subscription
+     */
+    public function setTopic(\GS\ApiBundle\Entity\Topic $topic)
+    {
+        $this->topic = $topic;
+
+        return $this;
+    }
+
+    /**
+     * Get topic
+     *
+     * @return \GS\ApiBundle\Entity\Topic
+     */
+    public function getTopic()
+    {
+        return $this->topic;
+    }
+
+    /**
+     * Set account
+     *
+     * @param \GS\ApiBundle\Entity\Account $account
+     *
+     * @return Subscription
+     */
+    public function setAccount(\GS\ApiBundle\Entity\Account $account)
+    {
+        $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * Get account
+     *
+     * @return \GS\ApiBundle\Entity\Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
 }

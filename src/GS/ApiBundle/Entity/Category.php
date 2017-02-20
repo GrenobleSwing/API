@@ -3,6 +3,8 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Category
@@ -31,6 +33,8 @@ class Category
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Activity", inversedBy="categories")
      * @ORM\JoinColumn(nullable=false)
+     * @SerializedName("activityId")
+     * @Type("Relation")
      */
     private $activity;
 

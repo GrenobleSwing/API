@@ -3,6 +3,8 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Discount
@@ -41,6 +43,8 @@ class Discount
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Activity", inversedBy="discounts")
      * @ORM\JoinColumn(nullable=false)
+     * @SerializedName("activityId")
+     * @Type("Relation")
      */
     private $activity;
 
