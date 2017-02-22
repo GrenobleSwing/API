@@ -59,9 +59,13 @@ class Account
      */
     private $address;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $student = false;
+
    /**
     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\User", cascade={"persist", "remove"})
-    * @ORM\JoinColumn(nullable=false)
     * @SerializedName("userId")
     * @Type("Relation")
     */
@@ -247,5 +251,39 @@ class Account
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set student
+     *
+     * @param boolean $student
+     *
+     * @return Account
+     */
+    public function setStudent($student)
+    {
+        $this->student = $student;
+
+        return $this;
+    }
+
+    /**
+     * Is student
+     *
+     * @return boolean
+     */
+    public function isStudent()
+    {
+        return $this->student;
+    }
+    
+    /**
+     * Is member
+     *
+     * @return boolean
+     */
+    public function isMember()
+    {
+        return true;
     }
 }

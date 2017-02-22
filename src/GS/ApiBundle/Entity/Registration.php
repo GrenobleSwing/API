@@ -8,15 +8,15 @@ use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * Subscription
+ * Registration
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\RegistrationRepository")
  * @UniqueEntity(
  *     fields={"topic", "account"},
- *     message="This subscription already exists."
+ *     message="This registration already exists."
  * )
  */
-class Subscription
+class Registration
 {
     /**
      * @ORM\Column(type="integer")
@@ -31,6 +31,17 @@ class Subscription
     private $role;
 
     /**
+     * States: submitted, waiting, validated, paid, cancelled
+     *                      validate
+     *     |---------------------------------------|
+     *     |                                       |
+     *     |        wait             validate      v          pay
+     * submitted ----------> waiting ----------> validated ----------> paid
+     *     |                   |                   |                   |
+     *     |                   | cancel            | cancel            | cancel
+     *     |    cancel         v                   |                   |
+     *     |--------------> cancelled <------------|-------------------|
+     *
      * @ORM\Column(type="string", length=16)
      */
     private $state;
@@ -77,7 +88,7 @@ class Subscription
      *
      * @param string $role
      *
-     * @return Subscription
+     * @return Registration
      */
     public function setRole($role)
     {
@@ -101,7 +112,7 @@ class Subscription
      *
      * @param string $state
      *
-     * @return Subscription
+     * @return Registration
      */
     public function setState($state)
     {
@@ -151,7 +162,7 @@ class Subscription
      *
      * @param array $options
      *
-     * @return Subscription
+     * @return Registration
      */
     public function setOptions($options)
     {
@@ -165,7 +176,7 @@ class Subscription
      *
      * @param \GS\ApiBundle\Entity\Topic $topic
      *
-     * @return Subscription
+     * @return Registration
      */
     public function setTopic(\GS\ApiBundle\Entity\Topic $topic)
     {
@@ -189,7 +200,7 @@ class Subscription
      *
      * @param \GS\ApiBundle\Entity\Account $account
      *
-     * @return Subscription
+     * @return Registration
      */
     public function setAccount(\GS\ApiBundle\Entity\Account $account)
     {

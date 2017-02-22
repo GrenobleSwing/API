@@ -29,6 +29,6 @@ topic:
     type:     rest
     resource: GS\ApiBundle\Controller\TopicController
 
-subscription:
+registration:
     type:     rest
-    resource: GS\ApiBundle\Controller\SubscriptionController
+    resource: GS\ApiBundle\Controller\RegistrationController

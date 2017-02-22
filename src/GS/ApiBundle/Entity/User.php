@@ -50,13 +50,14 @@ class User implements AdvancedUserInterface, \Serializable
     private $roles;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
+     * @ORM\Column(name="active", type="boolean")
      */
-    private $isActive;
+    private $active;
 
+    
     public function __construct()
     {
-        $this->isActive = true;
+        $this->active = true;
         $this->roles = array();
     }
 
@@ -140,7 +141,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     public function isEnabled()
     {
-        return $this->isActive;
+        return $this->isActive();
     }
 
     /** @see \Serializable::serialize() */
@@ -150,7 +151,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->id,
             $this->email,
             $this->password,
-            $this->isActive,
+            $this->active,
             $this->roles,
             // $this->salt,
         ));
@@ -163,7 +164,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->id,
             $this->email,
             $this->password,
-            $this->isActive,
+            $this->active,
             $this->roles,
             // $this->salt
         ) = unserialize($serialized);
@@ -219,25 +220,25 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * Set isActive
      *
-     * @param boolean $isActive
+     * @param boolean $active
      *
      * @return User
      */
-    public function setIsActive($isActive)
+    public function setActive($active)
     {
-        $this->isActive = $isActive;
+        $this->active = $active;
 
         return $this;
     }
 
     /**
-     * Get isActive
+     * Is active
      *
      * @return boolean
      */
-    public function getIsActive()
+    public function isActive()
     {
-        return $this->isActive;
+        return $this->active;
     }
     
     public function getPlainPassword()

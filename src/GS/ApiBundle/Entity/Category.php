@@ -3,6 +3,7 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 
@@ -37,6 +38,12 @@ class Category
      * @Type("Relation")
      */
     private $activity;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\Discount")
+     * @Type("Relation<Discount>")
+     */
+    private $discounts;
 
 
     /**
@@ -119,5 +126,46 @@ class Category
     public function getActivity()
     {
         return $this->activity;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->discounts = new ArrayCollection();
+    }
+
+    /**
+     * Add discount
+     *
+     * @param \GS\ApiBundle\Entity\Discount $discount
+     *
+     * @return Category
+     */
+    public function addDiscount(\GS\ApiBundle\Entity\Discount $discount)
+    {
+        $this->discounts[] = $discount;
+
+        return $this;
+    }
+
+    /**
+     * Remove discount
+     *
+     * @param \GS\ApiBundle\Entity\Discount $discount
+     */
+    public function removeDiscount(\GS\ApiBundle\Entity\Discount $discount)
+    {
+        $this->discounts->removeElement($discount);
+    }
+
+    /**
+     * Get discounts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDiscounts()
+    {
+        return $this->discounts;
     }
 }

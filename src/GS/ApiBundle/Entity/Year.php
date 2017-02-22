@@ -44,12 +44,15 @@ class Year
     private $endDate;
 
     /**
+     * States: draft, open, close
+     * 
      * @ORM\Column(type="string", length=16)
      */
     private $state;
 
     /**
      * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\Activity", mappedBy="year", cascade={"persist", "remove"})
+     * @Type("Relation<Activity>")
      */
     private $activities;
 

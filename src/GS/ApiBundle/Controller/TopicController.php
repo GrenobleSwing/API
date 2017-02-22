@@ -139,4 +139,21 @@ class TopicController extends FOSRestController
         $topic->setCategory($category);
         return true;
     }
+
+    public function getRegistrationsAction($id)
+    {
+        $topic = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Topic')
+            ->find($id)
+            ;
+
+        $registrations = $this->getDoctrine()->getManager()
+                ->getRepository('GSApiBundle:Registration')
+                ->findBy(array('topic' => $topic))
+                ;
+        
+        $view = $this->view($registrations, 200);
+        return $this->handleView($view);
+    }
+
 }

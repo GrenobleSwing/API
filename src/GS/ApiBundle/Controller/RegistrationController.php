@@ -6,25 +6,25 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 
-use GS\ApiBundle\Entity\Subscription;
+use GS\ApiBundle\Entity\Registration;
 use GS\ApiBundle\Entity\Address;
 
 /**
- * @RouteResource("Subscription", pluralize=false)
+ * @RouteResource("Registration", pluralize=false)
  */
-class SubscriptionController extends FOSRestController
+class RegistrationController extends FOSRestController
 {
 
     public function deleteAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $subscription = $em
-            ->getRepository('GSApiBundle:Subscription')
+        $registration = $em
+            ->getRepository('GSApiBundle:Registration')
             ->find($id)
             ;
 
-        $em->remove($subscription);
+        $em->remove($registration);
         $em->flush();
 
         $view = $this->view(array(), 200);
@@ -34,7 +34,7 @@ class SubscriptionController extends FOSRestController
     public function getAction($id)
     {
         $year = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Subscription')
+            ->getRepository('GSApiBundle:Registration')
             ->find($id)
             ;
 
@@ -44,12 +44,12 @@ class SubscriptionController extends FOSRestController
 
     public function cgetAction()
     {
-        $listSubscriptions = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Subscription')
+        $listRegistrations = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Registration')
             ->findAll()
             ;
 
-        $view = $this->view($listSubscriptions, 200);
+        $view = $this->view($listRegistrations, 200);
         return $this->handleView($view);
     }
 
@@ -63,8 +63,8 @@ class SubscriptionController extends FOSRestController
         }
         
         $em = $this->getDoctrine()->getManager();
-        $subscription = new Subscription();
-        $view = $this->createUpdateSubscription($em, $subscription, $data);
+        $registration = new Registration();
+        $view = $this->createUpdateRegistration($em, $registration, $data);
         return $this->handleView($view);
     }
 
@@ -78,18 +78,17 @@ class SubscriptionController extends FOSRestController
         }
         
         $em = $this->getDoctrine()->getManager();
-        $subscription = $em
-            ->getRepository('GSApiBundle:Subscription')
+        $registration = $em
+            ->getRepository('GSApiBundle:Registration')
             ->find($id)
             ;
-        $view = $this->createUpdateSubscription($em, $subscription, $data);
+        $view = $this->createUpdateRegistration($em, $registration, $data);
         return $this->handleView($view);
     }
     
-    private function setSubscriptionData($em, &$subscription, $data)
+    private function setRegistrationData($em, &$registration, $data)
     {
-        $subscription->setRole($data['role']);
-        $subscription->setState($data['state']);
+        $registration->setRole($data['role']);
         
         $account = $em
             ->getRepository('GSApiBundle:Account')
@@ -103,44 +102,55 @@ class SubscriptionController extends FOSRestController
         if ($topic === null) {
             return array('message'=> 'Topic is not good.');
         }
-        $subscription->setAccount($account);
-        $subscription->setTopic($topic);
+        $registration->setAccount($account);
+        $registration->setTopic($topic);
+        
+        if( isset($data['state'])) {
+            $registration->setState($data['state']);
+        } else {
+            $registration->setState('received');
+        }
+        
+        if( null !== $topic->getOptions() &&
+                in_array('automatic_validation', $topic->getOptions())) {
+            $registration->setState('validated');
+        }
         return array();
     }
 
-    private function createUpdateSubscription($em, $subscription, $data)
+    private function createUpdateRegistration($em, $registration, $data)
     {
-        $errors_json = $this->setSubscriptionData($em, $subscription, $data);
-        $errors_validation = $this->validateSubscription($subscription, $errors_json);
-        $errors = $this->saveSubscription($em, $subscription, $errors_validation);
+        $errors_json = $this->setRegistrationData($em, $registration, $data);
+        $errors_validation = $this->validateRegistration($registration, $errors_json);
+        $errors = $this->saveRegistration($em, $registration, $errors_validation);
 
         if (count($errors) > 0) {
             $view = $this->view($errors, 301);
         } else {
-            $view = $this->view(array('id' => $subscription->getId()), 200);
+            $view = $this->view(array('id' => $registration->getId()), 200);
         }
         return $view;
     }
     
-    private function validateSubscription($subscription, $errors)
+    private function validateRegistration($registration, $errors)
     {
         if (count($errors) > 0) {
             return $errors;
         } else {
             $validator = $this->get('validator');
-            return $validator->validate($subscription);
+            return $validator->validate($registration);
         }
     }
 
-    private function saveSubscription($em, &$subscription, $errors)
+    private function saveRegistration($em, &$registration, $errors)
     {
         if (count($errors) > 0) {
             return $errors;
         } else {
-            $em->persist($subscription);
+            $em->persist($registration);
             $em->flush();
-            if(null === $subscription->getId()) {
-                return array('message'=> 'Impossible to save subscription, retry.');
+            if(null === $registration->getId()) {
+                return array('message'=> 'Impossible to save registration, retry.');
             } else {
                 return array();
             }

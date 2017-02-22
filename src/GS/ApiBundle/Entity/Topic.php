@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 
+use GS\ApiBundle\Entity\Address;
+
 /**
  * Topic
  *
@@ -33,7 +35,7 @@ class Topic
     /**
      * @ORM\Column(type="integer")
      */
-    private $day;
+    private $day = 0;
 
     /**
      * @ORM\Column(type="time")
@@ -53,14 +55,18 @@ class Topic
     /**
      * @ORM\Column(type="string", length=16)
      */
-    private $type;
+    private $type = 'solo';
 
     /**
+     * States: draft, open, close
+     * 
      * @ORM\Column(type="string", length=16)
      */
-    private $state;
+    private $state = 'draft';
 
     /**
+     * automatic_validation: registrations are automatically validated
+     * 
      * @ORM\Column(type="array")
      */
     private $options;
@@ -92,6 +98,9 @@ class Topic
     public function __construct()
     {
         $this->options = array();
+        $this->startTime = new \DateTime('20:00');
+        $this->endTime = new \DateTime('21:00');
+        $this->address = new Address();
     }
 
     /**

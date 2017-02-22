@@ -31,6 +31,8 @@ class Activity
     private $description;
 
     /**
+     * States: draft, open, close
+     * 
      * @ORM\Column(type="string", length=16)
      */
     private $state;
