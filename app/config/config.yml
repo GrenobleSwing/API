@@ -87,3 +87,19 @@ fos_rest:
         include_format: false
     serializer:
         serialize_null:  true
+
+kmj_pay_pal_bridge:
+    environment: sandbox
+    sandbox:
+        clientId: '%paypal_sandbox_client_id%'
+        secret: '%paypal_sandbox_secret%'
+    production:
+        clientId: '%paypal_prod_client_id%'
+        secret: '%paypal_prod_secret%'
+    logs:
+        enabled: true
+        filename: '%kernel.root_dir%/../var/logs/paypal.log'
+        level: FINE
+    http:
+        timeout: 30
+        retry: true

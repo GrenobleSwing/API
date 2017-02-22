@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Misd\PhoneNumberBundle\MisdPhoneNumberBundle(),
+            new KMJ\PayPalBridgeBundle\KMJPayPalBridgeBundle(),
             new AppBundle\AppBundle(),
             new GS\ApiBundle\GSApiBundle(),
         ];
