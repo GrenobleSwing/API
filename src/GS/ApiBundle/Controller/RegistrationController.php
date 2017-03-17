@@ -6,42 +6,92 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use GS\ApiBundle\Entity\Registration;
-use GS\ApiBundle\Entity\Address;
 
 /**
  * @RouteResource("Registration", pluralize=false)
  */
 class RegistrationController extends FOSRestController
 {
-
-    public function deleteAction($id)
+    
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function postAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        $form = $this->get('gsapi.form_generator')->getRegistrationForm(null, 'post_registration');
+        $this->denyAccessUnlessGranted('create', $form->getData());
+        $form->handleRequest($request);
 
-        $registration = $em
-            ->getRepository('GSApiBundle:Registration')
-            ->find($id)
-            ;
+        if ($form->isValid()) {
+            $registration = $form->getData();
+            
+            $account = $this->getDoctrine()
+                    ->getRepository('GSApiBundle:Account')
+                    ->findOneByUser($this->getUser());
+            $registration->setAccount($account);
 
-        $em->remove($registration);
-        $em->flush();
+            $topic = $registration->getTopic();
+            $topic->addRegistration($registration);
+            
+            $registration->setState('SUBMITTED');
+            
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($registration);
+            $em->flush();
 
-        $view = $this->view(array(), 200);
+            $view = $this->view(array('id' => $registration->getId()), 200);
+            
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form);
+        }
         return $this->handleView($view);
     }
 
-    public function getAction($id)
+    /**
+     * @Security("is_granted('delete', registration)")
+     */
+    public function removeAction(Registration $registration)
     {
-        $year = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Registration')
-            ->find($id)
-            ;
-
-        $view = $this->view($year, 200);
+        $form = $this->get('gsapi.form_generator')->getRegistrationDeleteForm($registration);
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
 
+    /**
+     * @Security("is_granted('delete', registration)")
+     */
+    public function deleteAction(Registration $registration, Request $request)
+    {
+        $form = $this->get('gsapi.form_generator')->getRegistrationDeleteForm($registration);
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($registration);
+            $em->flush();
+
+            $view = $this->view(null, 204);
+        } else {
+            $view = $this->getFormView($form);
+        }
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('view', registration)")
+     */
+    public function getAction(Registration $registration)
+    {
+        $view = $this->view($registration, 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
     public function cgetAction()
     {
         $listRegistrations = $this->getDoctrine()->getManager()
@@ -53,108 +103,34 @@ class RegistrationController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function postAction(Request $request)
+    /**
+     * @Security("is_granted('edit', registration)")
+     */
+    public function editAction(Registration $registration)
     {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-        } else {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-        $registration = new Registration();
-        $view = $this->createUpdateRegistration($em, $registration, $data);
+        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'put_registration', 'PUT');
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
 
-    public function putAction($id, Request $request)
+    /**
+     * @Security("is_granted('edit', registration)")
+     */
+    public function putAction(Registration $registration, Request $request)
     {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-        } else {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-        $registration = $em
-            ->getRepository('GSApiBundle:Registration')
-            ->find($id)
-            ;
-        $view = $this->createUpdateRegistration($em, $registration, $data);
-        return $this->handleView($view);
-    }
-    
-    private function setRegistrationData($em, &$registration, $data)
-    {
-        $registration->setRole($data['role']);
-        
-        $account = $em
-            ->getRepository('GSApiBundle:Account')
-            ->find($data['accountId']);
-        if ($account === null) {
-            return array('message'=> 'Account is not good.');
-        }
-        $topic = $em
-            ->getRepository('GSApiBundle:Topic')
-            ->find($data['topicId']);
-        if ($topic === null) {
-            return array('message'=> 'Topic is not good.');
-        }
-        $registration->setAccount($account);
-        $registration->setTopic($topic);
-        
-        if( isset($data['state'])) {
-            $registration->setState($data['state']);
-        } else {
-            $registration->setState('received');
-        }
-        
-        if( null !== $topic->getOptions() &&
-                in_array('automatic_validation', $topic->getOptions())) {
-            $registration->setState('validated');
-        }
-        return array();
-    }
+        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'put_registration', 'PUT');
+        $form->handleRequest($request);
 
-    private function createUpdateRegistration($em, $registration, $data)
-    {
-        $errors_json = $this->setRegistrationData($em, $registration, $data);
-        $errors_validation = $this->validateRegistration($registration, $errors_json);
-        $errors = $this->saveRegistration($em, $registration, $errors_validation);
-
-        if (count($errors) > 0) {
-            $view = $this->view($errors, 301);
-        } else {
-            $view = $this->view(array('id' => $registration->getId()), 200);
-        }
-        return $view;
-    }
-    
-    private function validateRegistration($registration, $errors)
-    {
-        if (count($errors) > 0) {
-            return $errors;
-        } else {
-            $validator = $this->get('validator');
-            return $validator->validate($registration);
-        }
-    }
-
-    private function saveRegistration($em, &$registration, $errors)
-    {
-        if (count($errors) > 0) {
-            return $errors;
-        } else {
-            $em->persist($registration);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             $em->flush();
-            if(null === $registration->getId()) {
-                return array('message'=> 'Impossible to save registration, retry.');
-            } else {
-                return array();
-            }
+
+            $view = $this->view(null, 204);
+            
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form);
         }
+        return $this->handleView($view);
     }
 
 }

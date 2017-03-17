@@ -3,6 +3,7 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 
@@ -35,7 +36,7 @@ class Topic
     /**
      * @ORM\Column(type="integer")
      */
-    private $day = 0;
+    private $day = 1;
 
     /**
      * @ORM\Column(type="time")
@@ -50,19 +51,19 @@ class Topic
    /**
      * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Address", cascade={"persist", "remove"})
      */
-    private $address;
+    private $address = null;
 
     /**
      * @ORM\Column(type="string", length=16)
      */
-    private $type = 'solo';
+    private $type = 'couple';
 
     /**
      * States: draft, open, close
      * 
      * @ORM\Column(type="string", length=16)
      */
-    private $state = 'draft';
+    private $state = 'DRAFT';
 
     /**
      * automatic_validation: registrations are automatically validated
@@ -89,10 +90,32 @@ class Topic
 
     /**
      * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\Topic")
+     * @ORM\JoinTable(name="topic_requirements")
      * @SerializedName("requiredTopicIds")
      * @Type("Relation<Topic>")
      */
     private $requiredTopics;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\Registration", mappedBy="topic", cascade={"persist", "remove"})
+     * @SerializedName("registrationIds")
+     * @Type("Relation<Registration>")
+     */
+    private $registrations;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
+     * @ORM\JoinTable(name="topic_owner")
+     * @Type("Relation<User>")
+     */
+    private $owners;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
+     * @ORM\JoinTable(name="topic_manager")
+     * @Type("Relation<User>")
+     */
+    private $managers;
 
 
     public function __construct()
@@ -101,6 +124,112 @@ class Topic
         $this->startTime = new \DateTime('20:00');
         $this->endTime = new \DateTime('21:00');
         $this->address = new Address();
+        $this->registrations = new ArrayCollection();
+        $this->owners = new ArrayCollection();
+        $this->managers = new ArrayCollection();
+    }
+
+    /**
+     * Add owner
+     *
+     * @param \GS\ApiBundle\Entity\User $owner
+     *
+     * @return Topic
+     */
+    public function addOwner(\GS\ApiBundle\Entity\User $owner)
+    {
+        $this->owners[] = $owner;
+        return $this;
+    }
+
+    /**
+     * Remove owner
+     *
+     * @param \GS\ApiBundle\Entity\User $owner
+     */
+    public function removeOwner(\GS\ApiBundle\Entity\User $owner)
+    {
+        $this->owners->removeElement($owner);
+        $owner->removeTopic($this);
+    }
+
+    /**
+     * Get owners
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOwners()
+    {
+        return $this->owners;
+    }
+
+    /**
+     * Add manager
+     *
+     * @param \GS\ApiBundle\Entity\User $manager
+     *
+     * @return Topic
+     */
+    public function addManager(\GS\ApiBundle\Entity\User $manager)
+    {
+        $this->managers[] = $manager;
+        return $this;
+    }
+
+    /**
+     * Remove manager
+     *
+     * @param \GS\ApiBundle\Entity\User $manager
+     */
+    public function removeManager(\GS\ApiBundle\Entity\User $manager)
+    {
+        $this->managers->removeElement($manager);
+        $manager->removeTopic($this);
+    }
+
+    /**
+     * Get managers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getManagers()
+    {
+        return $this->managers;
+    }
+
+    /**
+     * Add registration
+     *
+     * @param \GS\ApiBundle\Entity\Registration $registration
+     *
+     * @return Topic
+     */
+    public function addRegistration(\GS\ApiBundle\Entity\Registration $registration)
+    {
+        $this->registrations[] = $registration;
+        $registration->setTopic($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove registration
+     *
+     * @param \GS\ApiBundle\Entity\Registration $registration
+     */
+    public function removeRegistration(\GS\ApiBundle\Entity\Registration $registration)
+    {
+        $this->registrations->removeElement($registration);
+    }
+
+    /**
+     * Get registrations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRegistrations()
+    {
+        return $this->registrations;
     }
 
     /**

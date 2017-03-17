@@ -31,6 +31,23 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
     // Dans l'argument de la méthode load, l'objet $manager est l'EntityManager
     public function load(ObjectManager $manager)
     {
+        $year1 = new Year();
+        $year1->setTitle('Annee 2015-2016');
+        $year1->setDescription('description pour annee 2015-2016');
+        $year1->setStartDate(new \DateTime('2015-09-01'));
+        $year1->setEndDate(new \DateTime('2016-08-31'));
+        $year1->setState('open');
+        
+        $year2 = new Year();
+        $year2->setTitle('Annee 2017-2018');
+        $year2->setDescription('description pour annee 2017-2018');
+        $year2->setStartDate(new \DateTime('2017-09-01'));
+        $year2->setEndDate(new \DateTime('2018-08-31'));
+        $year2->setState('open');
+
+        $manager->persist($year1);
+        $manager->persist($year2);
+        
         $year = new Year();
         $year->setTitle('Annee 2016-2017');
         $year->setDescription('description pour annee 2016-2017');

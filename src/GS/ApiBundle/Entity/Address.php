@@ -65,9 +65,9 @@ class Address
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=2, nullable=true)
      */
-    private $country;
+    private $country = 'FR';
 
 
     /**

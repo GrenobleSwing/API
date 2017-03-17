@@ -9,9 +9,14 @@ security:
             cost: 12
 
     role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: ROLE_ADMIN
-
+        ROLE_MEMBER:        ROLE_USER
+        ROLE_SECRETARY:     ROLE_USER
+        ROLE_TREASURER:     ROLE_USER
+        ROLE_TOPIC_MANAGER: ROLE_USER
+        ROLE_ORGANIZER:     ROLE_TOPIC_MANAGER
+        ROLE_ADMIN:         [ROLE_TREASURER, ROLE_SECRETARY, ROLE_ORGANIZER]
+        ROLE_SUPER_ADMIN:   ROLE_ADMIN
+    
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         our_db_provider:
@@ -20,12 +25,6 @@ security:
                 property: email
                 # if you're using multiple entity managers
                 # manager_name: customer
-#        in_memory:
-#            memory:
-#                users:
-#                    julien:
-#                        password: test
-#                        roles: 'ROLE_SUPER_ADMIN'
 
     firewalls:
         login:
@@ -44,31 +43,18 @@ security:
                 path:   /api/logout
                 target: /
 
-#        api:
-#            pattern:   ^/api
-#            provider: our_db_provider
-#            stateless: true
-#            guard:
-#                authenticators:
-#                    - lexik_jwt_authentication.jwt_token_authenticator
-
-#        no_security:
-#            pattern: ^/api/register
-#            security: false
+        api:
+            pattern:   ^/api
+            provider: our_db_provider
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
         main:
             pattern: ^/
             anonymous: ~
-#            http-basic: ~
-#            provider: our_db_provider
-#            #provider: in_memory
-#            logout:
-#                path:   /api/logout
-#                target: /
 
 
     access_control:
         - { path: ^/api/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
-#        - { path: ^/admin, roles: ROLE_ADMIN }
-#        - { path: ^/test, roles: ROLE_USER }

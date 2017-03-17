@@ -6,6 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+use PayPal\Api\Templates;
 
 use GS\ApiBundle\Form\Type\UserType;
 use GS\ApiBundle\Entity\User;
@@ -55,18 +58,16 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/test")
+     * @Route("/test_paypal")
      */
-    public function testAction()
+    public function testPaypalAction()
     {
-        return new Response('<html><body>Test page!</body></html>');
+        $paypal = $this->get('paypal');
+        $apiContext = $paypal->getApiContext();
+        $templates = Templates::getAll(array("fields" => "all"), $apiContext);
+        
+        $response = new Response($templates);
+        return $response;
     }
     
-    /**
-     * @Route("/admin")
-     */
-    public function adminAction()
-    {
-        return new Response('<html><body>Admin page!</body></html>');
-    }
 }

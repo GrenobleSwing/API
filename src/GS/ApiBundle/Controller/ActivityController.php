@@ -6,7 +6,12 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use GS\ApiBundle\Entity\Activity;
+use GS\ApiBundle\Entity\Topic;
+use GS\ApiBundle\Entity\Category;
+use GS\ApiBundle\Entity\Discount;
 
 /**
  * @RouteResource("Activity", pluralize=false)
@@ -14,33 +19,89 @@ use GS\ApiBundle\Entity\Activity;
 class ActivityController extends FOSRestController
 {
 
-    public function deleteAction($id)
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function newAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        
-        $activity = $em
-            ->getRepository('GSApiBundle:Activity')
-            ->find($id)
-            ;
-
-        $em->remove($activity);
-        $em->flush();
-
-        $view = $this->view(array(), 200);
+        $form = $this->get('gsapi.form_generator')->getActivityForm(null, 'post_activity');
+        $this->denyAccessUnlessGranted('create', $form->getData());
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
 
-    public function getAction($id)
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function postAction(Request $request)
     {
-        $activity = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Activity')
-            ->find($id)
-            ;
+        $form = $this->get('gsapi.form_generator')->getActivityForm(null, 'post_activity');
+        $this->denyAccessUnlessGranted('create', $form->getData());
+        $form->handleRequest($request);
 
+        if ($form->isValid()) {
+            $activity = $form->getData();
+            $activity->addOwner($this->getUser());
+            $year = $activity->getYear();
+            $year->addActivity($activity);
+            
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($activity);
+            $em->flush();
+
+            $view = $this->view(array('id' => $activity->getId()), 200);
+            
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form);
+        }
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('delete', activity)")
+     */
+    public function removeAction(Activity $activity)
+    {
+        $form = $this->get('gsapi.form_generator')->getActivityDeleteForm($activity);
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('delete', activity)")
+     */
+    public function deleteAction(Activity $activity, Request $request)
+    {
+        $form = $this->get('gsapi.form_generator')->getActivityDeleteForm($activity);
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $year = $activity->getYear();
+            $year->removeActivity($activity);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($activity);
+            $em->flush();
+
+            $view = $this->view(null, 204);
+        } else {
+            $view = $this->getFormView($form);
+        }
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('view', activity)")
+     */
+    public function getAction(Activity $activity)
+    {
         $view = $this->view($activity, 200);
         return $this->handleView($view);
     }
 
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
     public function cgetAction()
     {
         $listActivities = $this->getDoctrine()->getManager()
@@ -52,72 +113,73 @@ class ActivityController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function postAction(Request $request)
+    /**
+     * @Security("is_granted('edit', activity)")
+     */
+    public function editAction(Activity $activity)
     {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-        }
-        else
-        {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-        
-        $em = $this->getDoctrine()->getManager();
+        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'put_activity', 'PUT');
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
+    }
 
-        $activity = new Activity();
-        if (! $this->setActivityData($em, $activity, $data)) {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
+    /**
+     * @Security("is_granted('edit', activity)")
+     */
+    public function putAction(Activity $activity, Request $request)
+    {
+        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'put_activity', 'PUT');
+        $form->handleRequest($request);
 
-        $em->persist($activity);
-        $em->flush();
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
 
-        if(null != $activity->getId()) {
-            $view = $this->view(array('id' => $activity->getId()), 200);
-        }
-        else
-        {
-            $view = $this->view(array(), 301);
+            $view = $this->view(null, 204);
+            
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form);
         }
         return $this->handleView($view);
     }
 
-    public function putAction($id, Request $request)
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function newCategoryAction(Activity $activity)
     {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-        }
-        else
-        {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-        $activity = $em
-            ->getRepository('GSApiBundle:Activity')
-            ->find($id)
-            ;
-        $this->setActivityData($activity, $data);
-
-        $em->flush();
+        $category = new Category();
+        $category->setActivity($activity);
+        $this->denyAccessUnlessGranted('create', $category);
+        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'post_category');
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
     }
-    
-    private function setActivityData($em, &$activity, $data)
+
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function newDiscountAction(Activity $activity)
     {
-        $activity->setTitle($data['title']);
-        $activity->setDescription($data['description']);
-        $activity->setState($data['state']);
-
-        $year = $em
-            ->getRepository('GSApiBundle:Year')
-            ->find($data['yearId']);
-        $year->addActivity($activity);
-        if ($year === null) {
-            return false;
-        }
-        return true;
+        $discount = new Discount();
+        $discount->setActivity($activity);
+        $this->denyAccessUnlessGranted('create', $discount);
+        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'post_discount');
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
     }
+
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function newTopicAction(Activity $activity)
+    {
+        $topic = new Topic();
+        $topic->setActivity($activity);
+        $this->denyAccessUnlessGranted('create', $topic);
+        $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'post_topic');
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
+    }
+
 }

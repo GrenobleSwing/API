@@ -6,6 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use GS\ApiBundle\Entity\Discount;
 
 /**
@@ -13,109 +15,117 @@ use GS\ApiBundle\Entity\Discount;
  */
 class DiscountController extends FOSRestController
 {
-
-    public function deleteAction($id)
+    
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function postAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        $form = $this->get('gsapi.form_generator')->getDiscountForm(null, 'post_discount');
+        $this->denyAccessUnlessGranted('create', $form->getData());
+        $form->handleRequest($request);
 
-        $discount = $em
-            ->getRepository('GSApiBundle:Discount')
-            ->find($id)
-            ;
+        if ($form->isValid()) {
+            $discount = $form->getData();
+            $activity = $discount->getActivity();
+            $activity->addDiscount($discount);
+            
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($discount);
+            $em->flush();
 
-        $em->remove($discount);
-        $em->flush();
-
-        $view = $this->view(array(), 200);
+            $view = $this->view(array('id' => $discount->getId()), 200);
+            
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form);
+        }
         return $this->handleView($view);
     }
 
-    public function getAction($id)
+    /**
+     * @Security("is_granted('view', discount)")
+     */
+    public function getAction(Discount $discount)
     {
-        $discount = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Discount')
-            ->find($id)
-            ;
-
         $view = $this->view($discount, 200);
         return $this->handleView($view);
     }
 
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
     public function cgetAction()
     {
-        $listDiscounts = $this->getDoctrine()->getManager()
+        $listCategories = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Discount')
             ->findAll()
             ;
 
-        $view = $this->view($listDiscounts, 200);
+        $view = $this->view($listCategories, 200);
         return $this->handleView($view);
-    }
-
-    public function postAction(Request $request)
-    {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-        }
-        else
-        {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-
-        $activity = $em
-            ->getRepository('GSApiBundle:Activity')
-            ->find($data['activityId']);
-        if ($activity === null) {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-        
-        $discount = new Discount();
-        $this->setDiscountData($discount, $data);
-        $activity->addDiscount($discount);
-
-        $em->persist($activity);
-        $em->flush();
-
-        if(null != $discount->getId()) {
-            $view = $this->view(array('id' => $discount->getId()), 200);
-        }
-        else
-        {
-            $view = $this->view(array(), 301);
-        }
-        return $this->handleView($view);
-    }
-
-    public function putAction($id, Request $request)
-    {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-        }
-        else
-        {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-        $discount = $em
-            ->getRepository('GSApiBundle:Discount')
-            ->find($id)
-            ;
-        $this->setDiscountData($discount, $data);
-
-        $em->flush();
     }
     
-    private function setDiscountData(&$discount, $data)
+    /**
+     * @Security("is_granted('edit', discount)")
+     */
+    public function editAction(Discount $discount)
     {
-        $discount->setName($data['name']);
-        $discount->setType($data['type']);
-        $discount->setValue($data['value']);
-        $discount->setCondition($data['condition']);
+        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'put_discount', 'PUT');
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
     }
+
+    /**
+     * @Security("is_granted('edit', discount)")
+     */
+    public function putAction(Discount $discount, Request $request)
+    {
+        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'put_discount', 'PUT');
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $view = $this->view(null, 204);
+            
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form);
+        }
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('delete', discount)")
+     */
+    public function removeAction(Discount $discount)
+    {
+        $form = $this->get('gsapi.form_generator')->getDiscountDeleteForm($discount);
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('delete', discount)")
+     */
+    public function deleteAction(Discount $discount, Request $request)
+    {
+        $form = $this->get('gsapi.form_generator')->getDiscountDeleteForm($discount);
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $activity = $discount->getActivity();
+            $activity->removeDiscount($discount);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($discount);
+            $em->flush();
+
+            $view = $this->view(null, 204);
+        } else {
+            $view = $this->getFormView($form);
+        }
+        return $this->handleView($view);
+    }
+
 }

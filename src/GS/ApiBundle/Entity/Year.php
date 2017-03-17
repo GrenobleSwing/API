@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation\Type;
 /**
  * Year
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\YearRepository")
  */
 class Year
 {
@@ -48,7 +48,7 @@ class Year
      * 
      * @ORM\Column(type="string", length=16)
      */
-    private $state;
+    private $state = 'DRAFT';
 
     /**
      * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\Activity", mappedBy="year", cascade={"persist", "remove"})
@@ -56,46 +56,54 @@ class Year
      */
     private $activities;
 
-
     /**
-     * Get id
-     *
-     * @return integer
+     * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
+     * @Type("Relation<User>")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $owners;
 
-    /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return Year
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
 
-        return $this;
-    }
-
-    /**
-     * Get title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->activities = new ArrayCollection();
+        $this->owners = new ArrayCollection();
+    }
+
+    /**
+     * Add owner
+     *
+     * @param \GS\ApiBundle\Entity\User $owner
+     *
+     * @return Year
+     */
+    public function addOwner(\GS\ApiBundle\Entity\User $owner)
+    {
+        $this->owners[] = $owner;
+        return $this;
+    }
+
+    /**
+     * Remove owner
+     *
+     * @param \GS\ApiBundle\Entity\User $owner
+     */
+    public function removeOwner(\GS\ApiBundle\Entity\User $owner)
+    {
+        $this->owners->removeElement($owner);
+        $owner->removeYear($this);
+    }
+
+    /**
+     * Get owners
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOwners()
+    {
+        return $this->owners;
     }
 
     /**
@@ -133,6 +141,40 @@ class Year
         return $this->activities;
     }
 
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return Year
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    
     /**
      * Set description
      *

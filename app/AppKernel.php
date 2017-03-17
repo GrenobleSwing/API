@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Misd\PhoneNumberBundle\MisdPhoneNumberBundle(),
             new KMJ\PayPalBridgeBundle\KMJPayPalBridgeBundle(),
+            new Ivory\OrderedFormBundle\IvoryOrderedFormBundle(),
             new AppBundle\AppBundle(),
             new GS\ApiBundle\GSApiBundle(),
         ];

@@ -16,4 +16,7 @@ _main:
 coresphere_console:
     resource: .
     type: extra
-   
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation

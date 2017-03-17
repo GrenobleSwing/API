@@ -10,6 +10,8 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Address;
 
@@ -20,17 +22,12 @@ class AccountController extends FOSRestController
 {
 
     /**
+     * @Security("is_granted('delete', account)")
      * @Delete("/account/{id}")
      */
-    public function deleteAction($id)
+    public function deleteAction(Account $account)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $account = $em
-            ->getRepository('GSApiBundle:Account')
-            ->find($id)
-            ;
-
         $em->remove($account);
         $em->flush();
 
@@ -39,20 +36,17 @@ class AccountController extends FOSRestController
     }
 
     /**
+     * @Security("is_granted('view', account)")
      * @Get("/account/{id}")
      */
-    public function getAction($id)
+    public function getAction(Account $account)
     {
-        $account = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Account')
-            ->find($id)
-            ;
-
         $view = $this->view($account, 200);
         return $this->handleView($view);
     }
 
     /**
+     * @Security("has_role('ROLE_USER')")
      * @Get("/account")
      */
     public function cgetAction()
@@ -67,6 +61,7 @@ class AccountController extends FOSRestController
     }
 
     /**
+     * @Security("has_role('ROLE_USER')")
      * @Post("/account")
      */
     public function postAction(Request $request)
@@ -90,7 +85,7 @@ class AccountController extends FOSRestController
 
         $em->persist($account);
         $em->flush();
-
+        
         if(null != $account->getId()) {
             $view = $this->view(array('id' => $account->getId()), 200);
         }
@@ -102,9 +97,10 @@ class AccountController extends FOSRestController
     }
 
     /**
+     * @Security("is_granted('edit', account)")
      * @Put("/account/{id}")
      */
-    public function putAction($id, Request $request)
+    public function putAction(Account $account, Request $request)
     {
         if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
             $data = json_decode($request->getContent(), true);
@@ -115,16 +111,38 @@ class AccountController extends FOSRestController
             return $this->handleView($view);
         }
         
-        $em = $this->getDoctrine()->getManager();
-        $account = $em
-            ->getRepository('GSApiBundle:Account')
-            ->find($id)
-            ;
         $this->setAccountData($account, $data);
 
+        $em = $this->getDoctrine()->getManager();
         $em->flush();
     }
     
+    /**
+     * @Security("is_granted('view', account)")
+     * @Get("/account/{id}/balance")
+     */
+    public function getBalanceAction(Account $account)
+    {
+        $registrations = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Registration')
+            ->getValidatedRegistrationsForAccount($account);
+
+        $balance = array();
+        $totalDue = 0.0;
+        for ($i = 0; $i < count($registrations); $i++) {
+            $registration = $registrations[$i];
+            $line = $this->getPriceToPay($i, $account, $registration);
+            $balance[] = $line;
+            $totalDue += $line['due'];
+        }
+
+        $view = $this->view(array(
+            'details' => $balance,
+            'totalDue' => $totalDue,
+                ), 200);
+        return $this->handleView($view);
+    }
+
     private function setAccountData($em, &$account, $data)
     {
         $account->setFirstName($data['firstName']);
@@ -148,35 +166,6 @@ class AccountController extends FOSRestController
         $account->setUser($user);
         $account->setEmail($user->getEmail());
         return true;
-    }
-
-    /**
-     * @Get("/account/{id}/balance")
-     */
-    public function getBalanceAction($id)
-    {
-        $account = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Account')
-            ->find($id);
-        
-        $registrations = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Registration')
-            ->getValidatedRegistrationsForAccount($account);
-
-        $balance = array();
-        $totalDue = 0.0;
-        for ($i = 0; $i < count($registrations); $i++) {
-            $registration = $registrations[$i];
-            $line = $this->getPriceToPay($i, $account, $registration);
-            $balance[] = $line;
-            $totalDue += $line['due'];
-        }
-
-        $view = $this->view(array(
-            'details' => $balance,
-            'totalDue' => $totalDue,
-                ), 200);
-        return $this->handleView($view);
     }
 
     private function getPriceToPay($i, $account, $registration)

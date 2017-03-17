@@ -28,7 +28,7 @@ class Registration
     /**
      * @ORM\Column(type="string", length=16)
      */
-    private $role;
+    private $role = 'leader';
 
     /**
      * States: submitted, waiting, validated, paid, cancelled
@@ -39,12 +39,12 @@ class Registration
      * submitted ----------> waiting ----------> validated ----------> paid
      *     |                   |                   |                   |
      *     |                   | cancel            | cancel            | cancel
-     *     |    cancel         v                   |                   |
-     *     |--------------> cancelled <------------|-------------------|
+     *     |    cancel         v                   |                   v
+     *     |--------------> cancelled <------------|           partially_cancelled
      *
-     * @ORM\Column(type="string", length=16)
+     * @ORM\Column(type="string", length=20)
      */
-    private $state;
+    private $state = "DRAFT";
 
     /**
      * @ORM\Column(type="array")
@@ -52,7 +52,7 @@ class Registration
     private $options;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Topic")
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Topic", inversedBy="registrations")
      * @ORM\JoinColumn(nullable=false)
      * @SerializedName("topicId")
      * @Type("Relation")

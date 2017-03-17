@@ -35,7 +35,7 @@ class Activity
      * 
      * @ORM\Column(type="string", length=16)
      */
-    private $state;
+    private $state = 'DRAFT';
 
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Year", inversedBy="activities")
@@ -62,6 +62,12 @@ class Activity
      */
     private $discounts;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
+     * @Type("Relation<User>")
+     */
+    private $owners;
+
 
     /**
      * Constructor
@@ -71,6 +77,41 @@ class Activity
         $this->topics = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->discounts = new ArrayCollection();
+        $this->owners = new ArrayCollection();
+    }
+
+    /**
+     * Add owner
+     *
+     * @param \GS\ApiBundle\Entity\User $owner
+     *
+     * @return Activity
+     */
+    public function addOwner(\GS\ApiBundle\Entity\User $owner)
+    {
+        $this->owners[] = $owner;
+        return $this;
+    }
+
+    /**
+     * Remove owner
+     *
+     * @param \GS\ApiBundle\Entity\User $owner
+     */
+    public function removeOwner(\GS\ApiBundle\Entity\User $owner)
+    {
+        $this->owners->removeElement($owner);
+        $owner->removeActivity($this);
+    }
+
+    /**
+     * Get owners
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOwners()
+    {
+        return $this->owners;
     }
 
     /**
