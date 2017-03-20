@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -31,6 +32,13 @@ class ActivityType extends AbstractType
                 ))
                 ->add('description', TextareaType::class, array(
                     'label' => 'Description',
+                ))
+                ->add('membership', ChoiceType::class, array(
+                    'label' => 'Ensemble des adhesions possibles',
+                    'choices' => array(
+                        "Oui" => true,
+                        "Non" => false
+                    )
                 ))
                 ->add('submit', SubmitType::class)
         ;

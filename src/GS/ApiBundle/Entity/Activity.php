@@ -4,6 +4,8 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use JMS\Serializer\Annotation\Type;
 
 /**
@@ -38,6 +40,11 @@ class Activity
     private $state = 'DRAFT';
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $membership = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Year", inversedBy="activities")
      * @ORM\JoinColumn(nullable=false)
      * @Type("Relation")
@@ -68,6 +75,22 @@ class Activity
      */
     private $owners;
 
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        foreach ($this->getYear()->getActivities() as $activity) {
+            if ($activity === $this) {
+                continue;
+            } elseif (true == $activity->isMembership()) {
+                $context->buildViolation('Only one membership per year.')
+                        ->addViolation();
+                break;
+            }
+        }
+    }
 
     /**
      * Constructor
@@ -323,5 +346,29 @@ class Activity
     public function getState()
     {
         return $this->state;
+    }
+
+    /**
+     * Set membership
+     *
+     * @param string $membership
+     *
+     * @return Activity
+     */
+    public function setMembership($membership)
+    {
+        $this->membership = $membership;
+
+        return $this;
+    }
+
+    /**
+     * Is membership
+     *
+     * @return boolean
+     */
+    public function isMembership()
+    {
+        return $this->membership;
     }
 }
