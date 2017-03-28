@@ -237,4 +237,14 @@ class FormGenerator
         return $view;
     }
 
+    public function getTopicFormView($form, $template = 'form.html.twig')
+    {
+        $view = View::create($form, 200)
+            ->setTemplate("GSApiBundle:Topic:" . $template)
+            ->setTemplateVar('form')
+            ->setFormat('html')
+            ;
+        return $view;
+    }
+
 }

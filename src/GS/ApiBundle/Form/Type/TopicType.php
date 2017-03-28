@@ -7,17 +7,17 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 use GS\ApiBundle\Entity\Topic;
-use GS\ApiBundle\Form\Type\DayType;
 use GS\ApiBundle\Form\Type\AddressType;
+use GS\ApiBundle\Form\Type\ScheduleType;
 
 class TopicType extends AbstractType
 {
@@ -50,21 +50,19 @@ class TopicType extends AbstractType
                         'Couple' => 'couple',
                     ),
                 ))
-                ->add('day', DayType::class, array(
-                    'label' => 'Jour de la semaine',
-                ))
-                ->add('startTime', TimeType::class, array(
-                    'input' => 'datetime',
-                    'widget' => 'choice',
-                    'minutes' => range(0, 55, 5),
-                ))
-                ->add('endTime', TimeType::class, array(
-                    'input' => 'datetime',
-                    'widget' => 'choice',
-                    'minutes' => range(0, 55, 5),
-                ))
                 ->add('address', AddressType::class, array(
                     'label' => 'Adresse',
+                ))
+                ->add('schedules', CollectionType::class, array(
+                    'label' => 'Planning',
+                    'entry_type' => ScheduleType::class,
+                    'by_reference' => false,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'prototype' => true,
+                    'attr' => array(
+                        'class' => 'my-selector',
+                    ),
                 ))
                 ->add('submit', SubmitType::class)
         ;

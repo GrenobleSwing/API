@@ -1,0 +1,11 @@
+{{ form(form) }}
+
+{% javascripts filter='?jsqueeze'
+    '@GSApiBundle/Resources/public/js/*'
+%}
+    <script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<script type="text/javascript">
+    $('.my-selector').collection();
+</script>

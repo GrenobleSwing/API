@@ -33,21 +33,6 @@ class Topic
      */
     private $description;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $day = 1;
-
-    /**
-     * @ORM\Column(type="time")
-     */
-    private $startTime;
-
-    /**
-     * @ORM\Column(type="time")
-     */
-    private $endTime;
-
    /**
      * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Address", cascade={"persist", "remove"})
      */
@@ -71,6 +56,12 @@ class Topic
      * @ORM\Column(type="array")
      */
     private $options;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\Schedule", mappedBy="topic", cascade={"persist", "remove"})
+     * @Type("Relation<Schedule>")
+     */
+    private $schedules;
 
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Activity", inversedBy="topics")
@@ -121,12 +112,11 @@ class Topic
     public function __construct()
     {
         $this->options = array();
-        $this->startTime = new \DateTime('20:00');
-        $this->endTime = new \DateTime('21:00');
         $this->address = new Address();
         $this->registrations = new ArrayCollection();
         $this->owners = new ArrayCollection();
         $this->managers = new ArrayCollection();
+        $this->schedules = new ArrayCollection();
     }
 
     /**
@@ -553,5 +543,39 @@ class Topic
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Add schedule
+     *
+     * @param \GS\ApiBundle\Entity\Schedule $schedule
+     *
+     * @return Topic
+     */
+    public function addSchedule(\GS\ApiBundle\Entity\Schedule $schedule)
+    {
+        $this->schedules[] = $schedule;
+
+        return $this;
+    }
+
+    /**
+     * Remove schedule
+     *
+     * @param \GS\ApiBundle\Entity\Schedule $schedule
+     */
+    public function removeSchedule(\GS\ApiBundle\Entity\Schedule $schedule)
+    {
+        $this->schedules->removeElement($schedule);
+    }
+
+    /**
+     * Get schedules
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSchedules()
+    {
+        return $this->schedules;
     }
 }

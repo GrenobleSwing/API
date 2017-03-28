@@ -43,6 +43,7 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form_themes:
+        - 'GSApiBundle::jquery.collection.html.twig'
         - 'bootstrap_3_layout.html.twig'
         # - 'bootstrap_3_horizontal_layout.html.twig'
 
@@ -106,3 +107,11 @@ kmj_pay_pal_bridge:
     http:
         timeout: 30
         retry: true
+
+assetic:
+  debug:          '%kernel.debug%'
+  filters:
+    cssrewrite: ~
+    jsqueeze:   ~
+    scssphp:
+      formatter: 'Leafo\ScssPhp\Formatter\Compressed'

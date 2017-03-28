@@ -12,6 +12,7 @@ use GS\ApiBundle\Entity\Activity;
 use GS\ApiBundle\Entity\Topic;
 use GS\ApiBundle\Entity\Category;
 use GS\ApiBundle\Entity\Discount;
+use GS\ApiBundle\Entity\Schedule;
 
 /**
  * @RouteResource("Activity", pluralize=false)
@@ -176,9 +177,12 @@ class ActivityController extends FOSRestController
     {
         $topic = new Topic();
         $topic->setActivity($activity);
+        // Add one schedule since it is mandatory to have one.
+        $schedule = new Schedule();
+        $topic->addSchedule($schedule);
         $this->denyAccessUnlessGranted('create', $topic);
         $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'post_topic');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        $view = $this->get('gsapi.form_generator')->getTopicFormView($form);
         return $this->handleView($view);
     }
 
