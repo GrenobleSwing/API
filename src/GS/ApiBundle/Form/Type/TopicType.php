@@ -50,9 +50,6 @@ class TopicType extends AbstractType
                         'Couple' => 'couple',
                     ),
                 ))
-                ->add('address', AddressType::class, array(
-                    'label' => 'Adresse',
-                ))
                 ->add('schedules', CollectionType::class, array(
                     'label' => 'Planning',
                     'entry_type' => ScheduleType::class,

@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use GS\ApiBundle\Entity\Schedule;
 
@@ -39,6 +40,11 @@ class ScheduleType extends AbstractType
                         'Ponctuel' => 'once',
                         'Hebdomadaire' => 'weekly',
                     )
+                ))
+                ->add('venue', EntityType::class, array(
+                    'label' => 'Salle',
+                    'class' => 'GSApiBundle:Venue',
+                    'choice_label' => 'name',
                 ))
                 ->add('teachers', TextType::class, array(
                     'label' => 'Profs',

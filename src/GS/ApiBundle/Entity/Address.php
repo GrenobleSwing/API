@@ -25,13 +25,6 @@ class Address
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $recipient;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $street;
 
     /**
@@ -222,29 +215,5 @@ class Address
     public function getCity()
     {
         return $this->city;
-    }
-
-    /**
-     * Set recipient
-     *
-     * @param string $recipient
-     *
-     * @return Address
-     */
-    public function setRecipient($recipient)
-    {
-        $this->recipient = $recipient;
-
-        return $this;
-    }
-
-    /**
-     * Get recipient
-     *
-     * @return string
-     */
-    public function getRecipient()
-    {
-        return $this->recipient;
     }
 }

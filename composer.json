@@ -44,6 +44,7 @@
         "paypal/rest-api-sdk-php": "^1.7",
         "kmj/paypalbridgebundle": "dev-master",
         "egeloen/ordered-form-bundle": "^2.0",
+        "doctrine/doctrine-migrations-bundle": "^1.0",
         "andres-montanez/magallanes": "dev-master"
 	
     },

@@ -20,6 +20,8 @@ use GS\ApiBundle\Entity\Discount;
 use GS\ApiBundle\Form\Type\DiscountType;
 use GS\ApiBundle\Entity\Registration;
 use GS\ApiBundle\Form\Type\RegistrationType;
+use GS\ApiBundle\Entity\Venue;
+use GS\ApiBundle\Form\Type\VenueType;
 
 class FormGenerator
 {
@@ -223,6 +225,39 @@ class FormGenerator
                 ))
                 ->setMethod('DELETE')
                 ->setAction($this->router->generate('delete_registration', array('registration' => $registration->getId())))
+                ->getForm();
+        return $form;
+    }
+
+    public function getVenueForm($venue = null, $routeName = null, $method = null)
+    {
+        $options = array();
+        if (null === $venue) {
+            // Should raise an error
+            $venue = new Venue();
+            if (null !== $routeName) {
+                $options['action'] = $this->router->generate($routeName);
+            }
+        } else {
+            if (null !== $routeName) {
+                $options['action'] = $this->router->generate($routeName, array('venue' => $venue->getId()));
+            }
+        }
+        if (null !== $method) {
+            $options['method'] = $method;
+        }
+        
+        return $this->formFactory->create(VenueType::class, $venue, $options);
+    }
+    
+    public function getVenueDeleteForm($venue)
+    {
+        $form = $this->formFactory->createBuilder()
+                ->add('submit', SubmitType::class, array(
+                    'label' => 'Confirmer la supression',
+                ))
+                ->setMethod('DELETE')
+                ->setAction($this->router->generate('delete_venue', array('venue' => $venue->getId())))
                 ->getForm();
         return $form;
     }

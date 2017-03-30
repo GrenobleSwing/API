@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 
-use GS\ApiBundle\Entity\Address;
 
 /**
  * Topic
@@ -32,11 +31,6 @@ class Topic
      * @ORM\Column(type="text")
      */
     private $description;
-
-   /**
-     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Address", cascade={"persist", "remove"})
-     */
-    private $address = null;
 
     /**
      * @ORM\Column(type="string", length=16)
@@ -112,7 +106,6 @@ class Topic
     public function __construct()
     {
         $this->options = array();
-        $this->address = new Address();
         $this->registrations = new ArrayCollection();
         $this->owners = new ArrayCollection();
         $this->managers = new ArrayCollection();
@@ -279,30 +272,6 @@ class Topic
     public function getOptions()
     {
         return $this->options;
-    }
-
-    /**
-     * Set address
-     *
-     * @param \GS\ApiBundle\Entity\Address $address
-     *
-     * @return Topic
-     */
-    public function setAddress(\GS\ApiBundle\Entity\Address $address = null)
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    /**
-     * Get address
-     *
-     * @return \GS\ApiBundle\Entity\Address
-     */
-    public function getAddress()
-    {
-        return $this->address;
     }
 
     /**

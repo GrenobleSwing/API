@@ -54,6 +54,11 @@ class Schedule
      */
     private $teachers;
 
+   /**
+     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Venue", cascade={"persist", "remove"})
+     */
+    private $venue = null;
+
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Topic", inversedBy="schedules")
      * @ORM\JoinColumn(nullable=false)
@@ -252,5 +257,29 @@ class Schedule
     public function getTopic()
     {
         return $this->topic;
+    }
+
+    /**
+     * Set venue
+     *
+     * @param \GS\ApiBundle\Entity\Venue $venue
+     *
+     * @return Schedule
+     */
+    public function setVenue(\GS\ApiBundle\Entity\Venue $venue = null)
+    {
+        $this->venue = $venue;
+
+        return $this;
+    }
+
+    /**
+     * Get venue
+     *
+     * @return \GS\ApiBundle\Entity\Venue
+     */
+    public function getVenue()
+    {
+        return $this->venue;
     }
 }
