@@ -16,6 +16,12 @@
             "Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/GrenobleSwing/Magallanes"
+        }
+    ],
     "require": {
         "php": ">=5.5.9",
         "symfony/symfony": "3.2.*",
@@ -37,7 +43,9 @@
         "misd/phone-number-bundle": "^1.0",
         "paypal/rest-api-sdk-php": "^1.7",
         "kmj/paypalbridgebundle": "dev-master",
-        "egeloen/ordered-form-bundle": "^2.0"
+        "egeloen/ordered-form-bundle": "^2.0",
+        "andres-montanez/magallanes": "dev-master"
+	
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^2.3",

@@ -1,0 +1,26 @@
+magephp:
+    log_dir: ../logs
+    composer:
+        path: ../composer.phar
+    environments:
+        production:
+            bin_path: /usr/local/php5.6/bin:\$PATH
+            user: grenobler-dev
+            branch: master
+            host_path: /home/grenobler-dev/www/test_inscriptions/api
+            releases: 4
+            symfony: { env: 'dev' }
+            exclude:
+                - ./var/cache/*
+                - ./var/log/*
+                - ./web/app_dev.php
+            hosts:
+                - ftp.cluster010.hosting.ovh.net
+            pre-deploy:
+            on-deploy:
+                - symfony/cache-warmup
+                - symfony/assets-install
+                - symfony/assetic-dump
+            on-release:
+            post-release:
+            post-deploy:
