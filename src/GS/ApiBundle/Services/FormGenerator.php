@@ -22,6 +22,8 @@ use GS\ApiBundle\Entity\Registration;
 use GS\ApiBundle\Form\Type\RegistrationType;
 use GS\ApiBundle\Entity\Venue;
 use GS\ApiBundle\Form\Type\VenueType;
+use GS\ApiBundle\Entity\Account;
+use GS\ApiBundle\Form\Type\AccountType;
 
 class FormGenerator
 {
@@ -258,6 +260,39 @@ class FormGenerator
                 ))
                 ->setMethod('DELETE')
                 ->setAction($this->router->generate('delete_venue', array('venue' => $venue->getId())))
+                ->getForm();
+        return $form;
+    }
+
+    public function getAccountForm($account = null, $routeName = null, $method = null)
+    {
+        $options = array();
+        if (null === $account) {
+            // Should raise an error
+            $account = new Account();
+            if (null !== $routeName) {
+                $options['action'] = $this->router->generate($routeName);
+            }
+        } else {
+            if (null !== $routeName) {
+                $options['action'] = $this->router->generate($routeName, array('account' => $account->getId()));
+            }
+        }
+        if (null !== $method) {
+            $options['method'] = $method;
+        }
+        
+        return $this->formFactory->create(AccountType::class, $account, $options);
+    }
+    
+    public function getAccountDeleteForm($account)
+    {
+        $form = $this->formFactory->createBuilder()
+                ->add('submit', SubmitType::class, array(
+                    'label' => 'Confirmer la supression',
+                ))
+                ->setMethod('DELETE')
+                ->setAction($this->router->generate('delete_account', array('account' => $account->getId())))
                 ->getForm();
         return $form;
     }

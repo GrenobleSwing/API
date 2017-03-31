@@ -12,6 +12,7 @@ use GS\ApiBundle\Entity\User;
 class AccountVoter extends Voter
 {
     // these strings are just invented: you can use anything
+    const CREATE = 'create';
     const VIEW = 'view';
     const EDIT = 'edit';
     const DELETE = 'delete';
@@ -26,7 +27,7 @@ class AccountVoter extends Voter
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::EDIT, self::DELETE))) {
+        if (!in_array($attribute, array(self::CREATE, self::VIEW, self::EDIT, self::DELETE))) {
             return false;
         }
 
@@ -51,34 +52,55 @@ class AccountVoter extends Voter
         $account = $subject;
 
         switch ($attribute) {
+            case self::CREATE:
+                return $this->canCreate();
             case self::VIEW:
-                return $this->canView($account, $user);
+                return $this->canView($account, $user, $token);
             case self::EDIT:
-                return $this->canEdit($account, $user);
+                return $this->canEdit($account, $user, $token);
             case self::DELETE:
-                return $this->canDelete($account, $user);
+                return $this->canDelete($account, $user, $token);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(Account $account, User $user)
+    private function canCreate()
     {
-        // if they can edit, they can view
-        if ($this->canEdit($account, $user)) {
+        return true;
+    }
+
+     private function canView(Account $account, User $user, TokenInterface $token)
+    {
+        if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
+            return true;
+        }
+        if ($user === $account->getUser()) {
             return true;
         }
         return false;
     }
 
-    private function canEdit(Account $account, User $user)
+    private function canEdit(Account $account, User $user, TokenInterface $token)
     {
-        return $user === $account->getUser();
+        if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
+            return true;
+        }
+        if ($user === $account->getUser()) {
+            return true;
+        }
+        return false;
     }
 
-    private function canDelete(Account $account, User $user)
+    private function canDelete(Account $account, User $user, TokenInterface $token)
     {
-        return $user === $account->getUser();
+        if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
+            return true;
+        }
+        if ($user === $account->getUser()) {
+            return true;
+        }
+        return false;
     }
 
 }

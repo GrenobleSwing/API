@@ -5,15 +5,11 @@ namespace GS\ApiBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Put;
-use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use GS\ApiBundle\Entity\Account;
-use GS\ApiBundle\Entity\Address;
 
 /**
  * @RouteResource("Account", pluralize=false)
@@ -22,22 +18,67 @@ class AccountController extends FOSRestController
 {
 
     /**
-     * @Security("is_granted('delete', account)")
-     * @Delete("/account/{id}")
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      */
-    public function deleteAction(Account $account)
+    public function newAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($account);
-        $em->flush();
+        $form = $this->get('gsapi.form_generator')->getAccountForm(null, 'post_account');
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
+    }
 
-        $view = $this->view(array(), 200);
+    public function postAction(Request $request)
+    {
+        $form = $this->get('gsapi.form_generator')->getAccountForm(null, 'post_account');
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $account = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($account);
+            $em->flush();
+
+            $view = $this->view(array('id' => $account->getId()), 200);
+            
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form);
+        }
+        
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('delete', account)")
+     */
+    public function removeAction(Account $account)
+    {
+        $form = $this->get('gsapi.form_generator')->getAccountDeleteForm($account);
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('delete', account)")
+     */
+    public function deleteAction(Account $account, Request $request)
+    {
+        $form = $this->get('gsapi.form_generator')->getAccountDeleteForm($account);
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($account);
+            $em->flush();
+
+            $view = $this->view(null, 204);
+        } else {
+            $view = $this->getFormView($form);
+        }
         return $this->handleView($view);
     }
 
     /**
      * @Security("is_granted('view', account)")
-     * @Get("/account/{id}")
      */
     public function getAction(Account $account)
     {
@@ -47,7 +88,6 @@ class AccountController extends FOSRestController
 
     /**
      * @Security("has_role('ROLE_USER')")
-     * @Get("/account")
      */
     public function cgetAction()
     {
@@ -61,60 +101,33 @@ class AccountController extends FOSRestController
     }
 
     /**
-     * @Security("has_role('ROLE_USER')")
-     * @Post("/account")
+     * @Security("is_granted('edit', account)")
      */
-    public function postAction(Request $request)
+    public function editAction(Account $account)
     {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-        }
-        else
-        {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-
-        $account = new Account();
-        if (! $this->setAccountData($em, $account, $data)) {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-
-        $em->persist($account);
-        $em->flush();
-        
-        if(null != $account->getId()) {
-            $view = $this->view(array('id' => $account->getId()), 200);
-        }
-        else
-        {
-            $view = $this->view(array(), 301);
-        }
+        $form = $this->get('gsapi.form_generator')->getAccountForm($account, 'put_account', 'PUT');
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
 
     /**
      * @Security("is_granted('edit', account)")
-     * @Put("/account/{id}")
      */
     public function putAction(Account $account, Request $request)
     {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-        }
-        else
-        {
-            $view = $this->view(array(), 301);
-            return $this->handleView($view);
-        }
-        
-        $this->setAccountData($account, $data);
+        $form = $this->get('gsapi.form_generator')->getAccountForm($account, 'put_account', 'PUT');
+        $form->handleRequest($request);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $view = $this->view(null, 204);
+            
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form);
+        }
+        return $this->handleView($view);
     }
     
     /**
@@ -141,31 +154,6 @@ class AccountController extends FOSRestController
             'totalDue' => $totalDue,
                 ), 200);
         return $this->handleView($view);
-    }
-
-    private function setAccountData($em, &$account, $data)
-    {
-        $account->setFirstName($data['firstName']);
-        $account->setLastName($data['lastName']);
-        $account->setBirthDate(new \DateTime($data['birthDate']));
-        
-        $phoneNumber = $this->container
-                ->get('libphonenumber.phone_number_util')
-                ->parse($data['phoneNumber'], "FR");
-        $account->setPhoneNumber($phoneNumber);
-
-        $address = new Address();
-        $account->setAddress($address);
-
-        $user = $em
-            ->getRepository('GSApiBundle:User')
-            ->find($data['userId']);
-        if ($user === null) {
-            return false;
-        }
-        $account->setUser($user);
-        $account->setEmail($user->getEmail());
-        return true;
     }
 
     private function getPriceToPay($i, $account, $registration)

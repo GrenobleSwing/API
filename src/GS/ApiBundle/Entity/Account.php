@@ -214,7 +214,9 @@ class Account
         $this->email = $email;
         
         // If the email is modified, the user login should be modified.
-        $this->user->setEmail($email);
+        if (null !== $this->user) {
+            $this->user->setEmail($email);
+        }
 
         return $this;
     }
