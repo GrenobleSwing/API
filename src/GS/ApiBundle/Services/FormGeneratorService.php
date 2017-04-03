@@ -25,7 +25,7 @@ use GS\ApiBundle\Form\Type\VenueType;
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Form\Type\AccountType;
 
-class FormGenerator
+class FormGeneratorService
 {
     private $router;
     private $formFactory;

@@ -14,8 +14,12 @@ services:
             - { name: jms_serializer.handler, type: Relation<?>, direction: deserialization, format: json, method: deserializeRelation}
 
     gsapi.form_generator:
-        class: GS\ApiBundle\Services\FormGenerator
+        class: GS\ApiBundle\Services\FormGeneratorService
         arguments: [ '@router', '@form.factory' ]
+    
+    gsapi.account_balance:
+        class: GS\ApiBundle\Services\AccountBalanceService
+        arguments: [ '@doctrine.orm.entity_manager' ]
     
     gsapi.account_voter:
         class: GS\ApiBundle\Security\AccountVoter

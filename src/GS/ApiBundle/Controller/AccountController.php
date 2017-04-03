@@ -136,73 +136,13 @@ class AccountController extends FOSRestController
      */
     public function getBalanceAction(Account $account)
     {
-        $registrations = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Registration')
-            ->getValidatedRegistrationsForAccount($account);
-
-        $balance = array();
-        $totalDue = 0.0;
-        for ($i = 0; $i < count($registrations); $i++) {
-            $registration = $registrations[$i];
-            $line = $this->getPriceToPay($i, $account, $registration);
-            $balance[] = $line;
-            $totalDue += $line['due'];
-        }
+        $balance = $this->get('gsapi.account_balance')->getBalance($account);
 
         $view = $this->view(array(
-            'details' => $balance,
-            'totalDue' => $totalDue,
+            'details' => $balance['details'],
+            'totalDue' => $balance['totalDue'],
                 ), 200);
         return $this->handleView($view);
-    }
-
-    private function getPriceToPay($i, $account, $registration)
-    {
-        $topic = $registration->getTopic();
-        $category = $topic->getCategory();
-        $discounts = $category->getDiscounts();
-        $discount = $this->applyDiscounts($i, $account, $discounts);
-        $price = $category->getPrice();
-        $line = array(
-            'registrationId' => $registration->getId(),
-            'name' => $topic->getTitle(),
-            'description' => $topic->getDescription(),
-            'price' => $price,
-        );
-        $due = $price;
-        if (null !== $discount) {
-            $line['discount'] = array(
-                'type' => $discount->getType(),
-                'value' => $discount->getValue(),
-            );
-            if($discount->getType() == 'percent') {
-                $due *= 1 - $discount->getValue() / 100;
-            } else {
-                $due -= $discount->getValue();
-            }
-        }
-        $line['due'] = $due;
-        return $line;
-    }
-    
-    private function applyDiscounts($i, $account, $discounts)
-    {
-        foreach($discounts as $discount) {
-            if($i >= 4 && $discount->getCondition() == '5th') {
-                return $discount;
-            } elseif($i >= 3 && $discount->getCondition() == '4th') {
-                return $discount;
-            } elseif($i >= 2 && $discount->getCondition() == '3rd') {
-                return $discount;
-            } elseif($i >= 1 && $discount->getCondition() == '2nd') {
-                return $discount;
-            } elseif($account->isStudent() && $discount->getCondition() == 'student') {
-                return $discount;
-            } elseif($account->isMember() && $discount->getCondition() == 'member') {
-                return $discount;
-            }
-        }
-        return null;
     }
 
 }
