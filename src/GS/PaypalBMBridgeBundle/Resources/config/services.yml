@@ -1,0 +1,7 @@
+services:
+    gs_paypal_bm_bridge.bridge:
+        class: GS\PaypalBMBridgeBundle\Services\BridgeService
+        arguments: ["%gs.paypalbmbridge.parameters%"]
+    
+    paypalbm:
+        alias: gs_paypal_bm_bridge.bridge

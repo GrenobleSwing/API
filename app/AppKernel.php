@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new Ivory\OrderedFormBundle\IvoryOrderedFormBundle(),
             new AppBundle\AppBundle(),
             new GS\ApiBundle\GSApiBundle(),
+            new GS\PaypalBMBridgeBundle\GSPaypalBMBridgeBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
