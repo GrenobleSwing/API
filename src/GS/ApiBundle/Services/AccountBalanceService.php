@@ -23,17 +23,47 @@ class AccountBalanceService
             ->getValidatedRegistrationsForAccount($account);
 
         $details = array();
-        $totalDue = 0.0;
-        for ($i = 0; $i < count($registrations); $i++) {
-            $registration = $registrations[$i];
+        $totalBalance = 0.0;
+        $i = 0;
+        $currentActivity = null;
+        $currentCategory = null;
+        
+        // Registrations are sorted by Category and Price.
+        // All Discounts are linked to Category and they apply from the most
+        // expensive Category to the less expensive one.
+        foreach ($registrations as $registration) {
+            $activity = $registration->getTopic()->getActivity();
+            $category = $registration->getTopic()->getCategory();
+            
+            // For a better display, we group registrations by activity.
+            if ($currentActivity !== $activity) {
+                $currentActivity = $activity;
+                
+                // We append the name of the year for better display
+                $displayName = $currentActivity->getTitle() . ' - ' .
+                        $activity->getYear()->getTitle();
+                $details[$displayName] = array();
+                $i = 0;
+            }
+            
+            // When we change Category, we reset the index of the Registration
+            // since some discount are based on the number of Topics having the
+            // same Category.
+            if ($currentCategory !== $category) {
+                $currentCategory = $category;
+                $details[$displayName][$currentCategory->getName()] = array();
+                $i = 0;
+            }
+            
             $line = $this->getPriceToPay($i, $account, $registration);
-            $details[] = $line;
-            $totalDue += $line['due'];
+            $details[$displayName][$currentCategory->getName()][] = $line;
+            $totalBalance += $line['balance'];
+            $i++;
         }
 
         $balance = array(
             'details' => $details,
-            'totalDue' => $totalDue,
+            'totalBalance' => $totalBalance,
         );
         return $balance;
     }
@@ -45,13 +75,17 @@ class AccountBalanceService
         $discounts = $category->getDiscounts();
         $discount = $this->applyDiscounts($i, $account, $discounts);
         $price = $category->getPrice();
+        $alreadyPaid = $registration->getAmountPaid();
+        
         $line = array(
             'registrationId' => $registration->getId(),
             'name' => $topic->getTitle(),
             'description' => $topic->getDescription(),
             'price' => $price,
+            'alreadyPaid' => $alreadyPaid,
         );
         $due = $price;
+        
         if (null !== $discount) {
             $line['discount'] = array(
                 'type' => $discount->getType(),
@@ -63,7 +97,8 @@ class AccountBalanceService
                 $due -= $discount->getValue();
             }
         }
-        $line['due'] = $due;
+        
+        $line['balance'] = $due - $alreadyPaid;
         return $line;
     }
     

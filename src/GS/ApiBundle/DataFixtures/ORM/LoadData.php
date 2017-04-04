@@ -131,6 +131,17 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic4->setCategory($category2);
         $topic4->addRequiredTopic($topic1);
         
+        $topic5 = new Topic();
+        $topic5->setTitle('Lindy avance');
+        $topic5->setDescription('Cours de lindy');
+        $topic5->setDay(1);
+        $topic5->setType('couple');
+        $topic5->setStartTime(new \DateTime('21:30'));
+        $topic5->setEndTime(new \DateTime('22:30'));
+        $topic5->setState('open');
+        $topic5->setCategory($category2);
+        $topic5->addRequiredTopic($topic1);
+        
         $topic3 = new Topic();
         $topic3->setTitle('Troupe avancee');
         $topic3->setDescription('Troupe avancee');
@@ -145,6 +156,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $activity2->addTopic($topic2);
         $activity2->addTopic($topic3);
         $activity2->addTopic($topic4);
+        $activity2->addTopic($topic5);
         
         $year->addActivity($activity1);
         $year->addActivity($activity2);
@@ -153,6 +165,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $this->addReference('topic2', $topic2);
         $this->addReference('topic3', $topic3);
         $this->addReference('topic4', $topic4);
+        $this->addReference('topic5', $topic5);
         
         $manager->persist($year);
         $manager->flush();

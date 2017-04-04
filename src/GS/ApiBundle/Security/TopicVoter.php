@@ -80,6 +80,9 @@ class TopicVoter extends Voter
 
     private function canView(Topic $topic, User $user, TokenInterface $token)
     {
+        if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
+            return true;
+        }
         foreach ($topic->getOwners() as $owner) {
             if ($user === $owner) {
                 return true;
@@ -90,6 +93,9 @@ class TopicVoter extends Voter
 
     private function canEdit(Topic $topic, User $user, TokenInterface $token)
     {
+        if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
+            return true;
+        }
         foreach ($topic->getOwners() as $owner) {
             if ($user === $owner) {
                 return true;

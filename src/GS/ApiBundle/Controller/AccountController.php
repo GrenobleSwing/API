@@ -137,11 +137,7 @@ class AccountController extends FOSRestController
     public function getBalanceAction(Account $account)
     {
         $balance = $this->get('gsapi.account_balance')->getBalance($account);
-
-        $view = $this->view(array(
-            'details' => $balance['details'],
-            'totalDue' => $balance['totalDue'],
-                ), 200);
+        $view = $this->view($balance, 200);
         return $this->handleView($view);
     }
 

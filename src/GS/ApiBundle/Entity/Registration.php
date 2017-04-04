@@ -47,6 +47,17 @@ class Registration
     private $state = "DRAFT";
 
     /**
+     * To store the amount that as been paid for the registration.
+     * It is useful when computing the balance since a registration can be paid
+     * without any Discount but later with the addition of another Registration
+     * it can benefit from a Discount a thus the Account has paid too much and
+     * it has to be taken into account for the balance.
+     * 
+     * @ORM\Column(type="float")
+     */
+    private $amountPaid = 0.0;
+
+    /**
      * @ORM\Column(type="array")
      */
     private $options;
@@ -217,5 +228,40 @@ class Registration
     public function getAccount()
     {
         return $this->account;
+    }
+
+    /**
+     * Get price
+     *
+     * @return string
+     */
+    public function getPrice()
+    {
+        return $this->getTopic()->getCategory()->getPrice();
+    }
+
+
+    /**
+     * Set amountPaid
+     *
+     * @param float $amountPaid
+     *
+     * @return Registration
+     */
+    public function setAmountPaid($amountPaid)
+    {
+        $this->amountPaid = $amountPaid;
+
+        return $this;
+    }
+
+    /**
+     * Get amountPaid
+     *
+     * @return float
+     */
+    public function getAmountPaid()
+    {
+        return $this->amountPaid;
     }
 }
