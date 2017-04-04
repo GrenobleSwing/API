@@ -69,3 +69,10 @@ services:
         public: false
         tags:
             - { name: security.voter }
+
+    gsapi.payment_voter:
+        class: GS\ApiBundle\Security\PaymentVoter
+        arguments: ['@security.access.decision_manager']
+        public: false
+        tags:
+            - { name: security.voter }

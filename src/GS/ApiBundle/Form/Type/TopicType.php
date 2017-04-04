@@ -16,7 +16,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 use GS\ApiBundle\Entity\Topic;
-use GS\ApiBundle\Form\Type\AddressType;
 use GS\ApiBundle\Form\Type\ScheduleType;
 
 class TopicType extends AbstractType

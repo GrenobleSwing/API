@@ -288,4 +288,14 @@ class Account
     {
         return true;
     }
+
+    /**
+     * Get displayName
+     *
+     * @return float
+     */
+    public function getDisplayName()
+    {
+        return $this->getFirstName() . ' ' . $this->getLastName();
+    }
 }

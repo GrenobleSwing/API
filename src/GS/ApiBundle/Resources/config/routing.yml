@@ -36,3 +36,7 @@ topic:
 registration:
     type:     rest
     resource: GS\ApiBundle\Controller\RegistrationController
+
+payment:
+    type:     rest
+    resource: GS\ApiBundle\Controller\PaymentController

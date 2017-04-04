@@ -24,6 +24,9 @@ use GS\ApiBundle\Entity\Venue;
 use GS\ApiBundle\Form\Type\VenueType;
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Form\Type\AccountType;
+use GS\ApiBundle\Entity\Payment;
+use GS\ApiBundle\Entity\PaymentItem;
+use GS\ApiBundle\Form\Type\PaymentType;
 
 class FormGeneratorService
 {
@@ -297,6 +300,40 @@ class FormGeneratorService
         return $form;
     }
 
+    public function getPaymentForm($payment = null, $routeName = null, $method = null)
+    {
+        $options = array();
+        if (null === $payment) {
+            $payment = new Payment();
+            $item = new PaymentItem();
+            $payment->addItem($item);
+            if (null !== $routeName) {
+                $options['action'] = $this->router->generate($routeName);
+            }
+        } else {
+            if (null !== $routeName) {
+                $options['action'] = $this->router->generate($routeName, array('payment' => $payment->getId()));
+            }
+        }
+        if (null !== $method) {
+            $options['method'] = $method;
+        }
+        
+        return $this->formFactory->create(PaymentType::class, $payment, $options);
+    }
+    
+    public function getPaymentDeleteForm($payment)
+    {
+        $form = $this->formFactory->createBuilder()
+                ->add('submit', SubmitType::class, array(
+                    'label' => 'Confirmer la supression',
+                ))
+                ->setMethod('DELETE')
+                ->setAction($this->router->generate('delete_payment', array('payment' => $payment->getId())))
+                ->getForm();
+        return $form;
+    }
+
     public function getFormView($form, $template = 'form.html.twig')
     {
         $view = View::create($form, 200)
@@ -311,6 +348,16 @@ class FormGeneratorService
     {
         $view = View::create($form, 200)
             ->setTemplate("GSApiBundle:Topic:" . $template)
+            ->setTemplateVar('form')
+            ->setFormat('html')
+            ;
+        return $view;
+    }
+
+    public function getPaymentFormView($form, $template = 'form.html.twig')
+    {
+        $view = View::create($form, 200)
+            ->setTemplate("GSApiBundle:Payment:" . $template)
             ->setTemplateVar('form')
             ->setFormat('html')
             ;

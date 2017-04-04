@@ -264,4 +264,15 @@ class Registration
     {
         return $this->amountPaid;
     }
+
+    /**
+     * Get displayName
+     *
+     * @return float
+     */
+    public function getDisplayName()
+    {
+        return $this->getAccount()->getDisplayName() . ' - ' .
+                $this->getTopic()->getTitle();
+    }
 }
