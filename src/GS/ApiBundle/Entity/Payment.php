@@ -48,8 +48,7 @@ class Payment
     private $date;
 
     /**
-     * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\PaymentItem", mappedBy="payment")
-     * @Type("Relation<PaymentItem>")
+     * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\PaymentItem", mappedBy="payment", cascade={"persist", "remove"})
      */
     private $items;
 
@@ -94,6 +93,15 @@ class Payment
         return $this->type;
     }
 
+    public function updateAmount()
+    {
+        $amount = 0.0;
+        foreach ($this->getItems() as $item) {
+            $amount += $item->getAmount();
+        }
+        $this->setAmount($amount);
+    }
+
     /**
      * Set amount
      *
@@ -128,7 +136,8 @@ class Payment
     public function addItem(\GS\ApiBundle\Entity\PaymentItem $item)
     {
         $this->items[] = $item;
-        $this->amount += $item->getAmount();
+        $item->setPayment($this);
+        $this->updateAmount();
 
         return $this;
     }
@@ -140,8 +149,8 @@ class Payment
      */
     public function removeItem(\GS\ApiBundle\Entity\PaymentItem $item)
     {
-        $this->amount -= $item->getAmount();
         $this->items->removeElement($item);
+        $this->updateAmount();
     }
 
     /**

@@ -66,6 +66,28 @@ class PaymentItem
     }
 
 
+    private function updateAmount()
+    {
+        if (null === $this->getRegistration()) {
+            return;
+        }
+        $amount = $this->getRegistration()->getTopic()
+                ->getCategory()->getPrice();
+        $discount = $this->getDiscount();
+        if(null !== $discount) {
+            if ($discount->getType() == 'percent') {
+                $amount *= (1 - $discount->getValue() / 100);
+            } else {
+                $amount -= $discount->getValue();
+            }
+        }
+        $this->setAmount($amount);
+        
+        if (null !== $this->getPayment()) {
+            $this->getPayment()->updateAmount();
+        }
+    }
+
     /**
      * Set registration
      *
@@ -76,6 +98,7 @@ class PaymentItem
     public function setRegistration(\GS\ApiBundle\Entity\Registration $registration)
     {
         $this->registration = $registration;
+        $this->updateAmount();
 
         return $this;
     }
@@ -100,6 +123,7 @@ class PaymentItem
     public function setDiscount(\GS\ApiBundle\Entity\Discount $discount)
     {
         $this->discount = $discount;
+        $this->updateAmount();
 
         return $this;
     }

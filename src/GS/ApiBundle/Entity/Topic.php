@@ -53,7 +53,6 @@ class Topic
 
     /**
      * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\Schedule", mappedBy="topic", cascade={"persist", "remove"})
-     * @Type("Relation<Schedule>")
      */
     private $schedules;
 
@@ -524,6 +523,7 @@ class Topic
     public function addSchedule(\GS\ApiBundle\Entity\Schedule $schedule)
     {
         $this->schedules[] = $schedule;
+        $schedule->setTopic($this);
 
         return $this;
     }
