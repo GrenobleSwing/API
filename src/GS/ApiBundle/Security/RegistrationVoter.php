@@ -16,6 +16,10 @@ class RegistrationVoter extends Voter
     const VIEW = 'view';
     const EDIT = 'edit';
     const DELETE = 'delete';
+    const WAIT = 'wait';
+    const VALIDATE = 'validate';
+    const CANCEL = 'cancel';
+    const PAY = 'pay';
 
     private $decisionManager;
 
@@ -27,7 +31,8 @@ class RegistrationVoter extends Voter
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::CREATE, self::VIEW, self::EDIT, self::DELETE))) {
+        if (!in_array($attribute, array(self::CREATE, self::VIEW, self::EDIT,
+            self::DELETE, self::WAIT, self::VALIDATE, self::CANCEL, self::PAY))) {
             return false;
         }
 
@@ -60,6 +65,14 @@ class RegistrationVoter extends Voter
                 return $this->canEdit($registration, $user, $token);
             case self::DELETE:
                 return $this->canDelete($registration, $user, $token);
+            case self::WAIT:
+                return $this->canWait($registration, $user, $token);
+            case self::VALIDATE:
+                return $this->canValidate($registration, $user, $token);
+            case self::CANCEL:
+                return $this->canCancel($registration, $user, $token);
+            case self::PAY:
+                return $this->canPay($registration, $user, $token);
         }
 
         throw new \LogicException('This code should not be reached!');
@@ -119,6 +132,38 @@ class RegistrationVoter extends Voter
             return true;
         }
         return false;
+    }
+
+    private function canWait(Registration $registration, User $user, TokenInterface $token)
+    {
+        if ('SUBMITTED' != $registration->getState()) {
+            return false;
+        }
+        return $this->canEdit($registration, $user, $token);
+    }
+
+    private function canValidate(Registration $registration, User $user, TokenInterface $token)
+    {
+        if (!in_array($registration->getState(), array('SUBMITTED', 'WAITING'))) {
+            return false;
+        }
+        return $this->canEdit($registration, $user, $token);
+    }
+
+    private function canCancel(Registration $registration, User $user, TokenInterface $token)
+    {
+        if (in_array($registration->getState(), array('CANCELLED', 'PARTIALLY_CANCELLED'))) {
+            return false;
+        }
+        return $this->canEdit($registration, $user, $token);
+    }
+
+    private function canPay(Registration $registration, User $user, TokenInterface $token)
+    {
+        if ('VALIDATED' != $registration->getState()) {
+            return false;
+        }
+        return $this->canEdit($registration, $user, $token);
     }
 
 }

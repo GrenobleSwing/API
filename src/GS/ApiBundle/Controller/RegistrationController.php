@@ -5,6 +5,7 @@ namespace GS\ApiBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
@@ -16,6 +17,63 @@ use GS\ApiBundle\Entity\Registration;
 class RegistrationController extends FOSRestController
 {
     
+    /**
+     * @Security("is_granted('validate', registration)")
+     * @Get("/registration/{id}/validate")
+     */
+    public function validateAction(Registration $registration)
+    {
+        $registration->validate();
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $view = $this->view(null, 204);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('wait', registration)")
+     * @Get("/registration/{id}/wait")
+     */
+    public function waitAction(Registration $registration)
+    {
+        $registration->wait();
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $view = $this->view(null, 204);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('cancel', registration)")
+     * @Get("/registration/{id}/cancel")
+     */
+    public function cancelAction(Registration $registration)
+    {
+        $registration->cancel();
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $view = $this->view(null, 204);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Security("is_granted('pay', registration)")
+     * @Get("/registration/{id}/pay")
+     */
+    public function payAction(Registration $registration)
+    {
+        $registration->pay();
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $view = $this->view(null, 204);
+        return $this->handleView($view);
+    }
+
     /**
      * @Security("has_role('ROLE_USER')")
      */

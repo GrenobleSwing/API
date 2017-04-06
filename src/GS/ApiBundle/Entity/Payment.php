@@ -93,6 +93,16 @@ class Payment
         return $this->type;
     }
 
+    private function updateRegistrations()
+    {
+        if ('PAID' == $this->getState()) {
+            foreach ($this->getItems() as $item) {
+                $registration = $item->getRegistration();
+                $registration->pay($item->getAmount());
+            }
+        }
+    }
+
     public function updateAmount()
     {
         $amount = 0.0;
@@ -138,6 +148,8 @@ class Payment
         $this->items[] = $item;
         $item->setPayment($this);
         $this->updateAmount();
+        // Mark all the resitrations (one per item) as paid
+        $this->updateRegistrations();
 
         return $this;
     }
@@ -150,6 +162,8 @@ class Payment
     public function removeItem(\GS\ApiBundle\Entity\PaymentItem $item)
     {
         $this->items->removeElement($item);
+        // The Registration removed is not paid anymore but only validated
+        $item->getRegistration()->setAmountPaid(0.0)->validate();
         $this->updateAmount();
     }
 
@@ -173,6 +187,10 @@ class Payment
     public function setState($state)
     {
         $this->state = $state;
+        
+        // Mark all the resitrations (one per item) as paid if state is changed
+        // to PAID otherwise do nothing.
+        $this->updateRegistrations();
 
         return $this;
     }

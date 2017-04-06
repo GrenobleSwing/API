@@ -44,7 +44,7 @@ class Registration
      *
      * @ORM\Column(type="string", length=20)
      */
-    private $state = "DRAFT";
+    private $state = "SUBMITTED";
 
     /**
      * To store the amount that as been paid for the registration.
@@ -274,5 +274,38 @@ class Registration
     {
         return $this->getAccount()->getDisplayName() . ' - ' .
                 $this->getTopic()->getTitle();
+    }
+
+    public function wait()
+    {
+        $this->setState('WAITING');
+        return $this;
+    }
+
+    public function validate()
+    {
+        $this->setState('VALIDATED');
+        return $this;
+    }
+
+    public function pay($amount = null)
+    {
+        $this->setState('PAID');
+        if (null === $amount) {
+            $this->setAmountPaid($this->getTopic()->getCategory()->getPrice());
+        } else {
+            $this->setAmountPaid($amount);
+        }
+        return $this;
+    }
+
+    public function cancel()
+    {
+        if ('PAID' == $this->getState()) {
+            $this->setState('PARTIALLY_CANCELLED');
+        } else {
+            $this->setState('CANCELLED');
+        }
+        return $this;
     }
 }
