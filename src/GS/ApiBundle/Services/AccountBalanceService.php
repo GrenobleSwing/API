@@ -5,6 +5,9 @@ namespace GS\ApiBundle\Services;
 use Doctrine\ORM\EntityManager;
 
 use GS\ApiBundle\Entity\Account;
+use GS\ApiBundle\Entity\Activity;
+use GS\ApiBundle\Entity\Category;
+use GS\ApiBundle\Entity\Discount;
 use GS\ApiBundle\Entity\Registration;
 
 class AccountBalanceService
@@ -16,12 +19,20 @@ class AccountBalanceService
         $this->entityManager = $entityManager;
     }
 
-    public function getBalance(Account $account)
+    public function getBalanceForPaypal(Account $account, Activity $activity = null)
     {
-        $registrations = $this->entityManager
-            ->getRepository('GSApiBundle:Registration')
-            ->getValidatedRegistrationsForAccount($account);
+        return $this->getDetails($account, $activity, true);
+    }
 
+    public function getBalance(Account $account, Activity $activity = null)
+    {
+        return $this->getDetails($account, $activity);
+    }
+    
+    private function getDetails(Account $account, Activity $activity = null, $paypal = false)
+    {
+        $registrations = $this->getRegistrations($account, $activity);
+        
         $details = array();
         $totalBalance = 0.0;
         $i = 0;
@@ -39,28 +50,40 @@ class AccountBalanceService
             if ($currentActivity !== $activity) {
                 $currentActivity = $activity;
                 
-                // We append the name of the year for better display
-                $displayName = $currentActivity->getTitle() . ' - ' .
-                        $activity->getYear()->getTitle();
-                $details[$displayName] = array();
+                if (! $paypal) {
+                    // We append the name of the year for better display
+                    $displayName = $currentActivity->getTitle() . ' - ' .
+                            $activity->getYear()->getTitle();
+                    $details[$displayName] = array();
+                }
                 $i = 0;
             }
             
             // When we change Category, we reset the index of the Registration
             // since some discount are based on the number of Topics having the
             // same Category.
-            if ($currentCategory !== $category) {
+            if ($currentCategory !== $category && ! $paypal) {
                 $currentCategory = $category;
                 $details[$displayName][$currentCategory->getName()] = array();
                 $i = 0;
             }
             
-            $line = $this->getPriceToPay($i, $account, $registration);
-            $details[$displayName][$currentCategory->getName()][] = $line;
-            $totalBalance += $line['balance'];
+            $discounts = $category->getDiscounts();
+            $discount = $this->chooseDiscount($i, $account, $discounts);
+
+            if (!$paypal) {
+                $line = $this->getPriceToPay($registration, $category, $discount);
+                $details[$displayName][$currentCategory->getName()][] = $line;
+                $totalBalance += $line['balance'];
+            } else {
+                $details[] = array($registration, $discount);
+            }
             $i++;
         }
 
+        if ($paypal) {
+            return $details;
+        }
         $balance = array(
             'details' => $details,
             'totalBalance' => $totalBalance,
@@ -68,12 +91,23 @@ class AccountBalanceService
         return $balance;
     }
 
-    private function getPriceToPay($i, Account $account, Registration $registration)
+    private function getRegistrations(Account $account, Activity $activity = null)
+    {
+        if (null === $activity ) {
+            $registrations = $this->entityManager
+                ->getRepository('GSApiBundle:Registration')
+                ->getValidatedRegistrationsForAccount($account);
+        } else {
+            $registrations = $this->entityManager
+                ->getRepository('GSApiBundle:Registration')
+                ->getRegistrationsForAccountAndActivity($account, $activity);
+        }
+        return $registrations;
+    }
+
+    private function getPriceToPay(Registration $registration, Category $category, Discount $discount = null)
     {
         $topic = $registration->getTopic();
-        $category = $topic->getCategory();
-        $discounts = $category->getDiscounts();
-        $discount = $this->applyDiscounts($i, $account, $discounts);
         $price = $category->getPrice();
         $alreadyPaid = $registration->getAmountPaid();
         
@@ -102,7 +136,7 @@ class AccountBalanceService
         return $line;
     }
     
-    private function applyDiscounts($i, Account $account, $discounts)
+    private function chooseDiscount($i, Account $account, $discounts)
     {
         foreach($discounts as $discount) {
             if($i >= 4 && $discount->getCondition() == '5th') {

@@ -3,6 +3,7 @@
 namespace GS\ApiBundle\Repository;
 
 use GS\ApiBundle\Entity\Account;
+use GS\ApiBundle\Entity\Activity;
 
 /**
  * RegistrationRepository
@@ -36,7 +37,7 @@ class RegistrationRepository extends \Doctrine\ORM\EntityRepository
                 ->leftJoin('top.activity', 'act')
                 ->addSelect('act')
                 ->orderBy('act.title', 'ASC')
-                ->orderBy('cat.name', 'ASC')
+                ->addOrderBy('cat.name', 'ASC')
                 ->addOrderBy('cat.price', 'DESC')
                 ->where('reg.account = :acc')
                 ->andWhere($qb->expr()->orX(
@@ -51,4 +52,27 @@ class RegistrationRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getRegistrationsForAccountAndActivity(Account $account, Activity $activity)
+    {
+        $qb = $this->createQueryBuilder('reg');
+        $qb
+                ->leftJoin('reg.topic', 'top')
+                ->addSelect('top')
+                ->leftJoin('top.category', 'cat')
+                ->addSelect('cat')
+                ->orderBy('cat.name', 'ASC')
+                ->addOrderBy('cat.price', 'DESC')
+                ->where('reg.account = :acc')
+                ->andWhere('top.activity = :act')
+                ->andWhere($qb->expr()->orX(
+                    $qb->expr()->eq('reg.state', ':statev'),
+                    $qb->expr()->eq('reg.state', ':statep')
+                ))
+                ->setParameter('acc', $account)
+                ->setParameter('act', $activity)
+                ->setParameter('statev', 'VALIDATED')
+                ->setParameter('statep', 'PAID');
+
+        return $qb->getQuery()->getResult();
+    }
 }

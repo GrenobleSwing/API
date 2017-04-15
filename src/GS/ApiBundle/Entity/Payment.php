@@ -5,6 +5,7 @@ namespace GS\ApiBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
+use PayPal\Api\ItemList;
 
 /**
  * Payment
@@ -46,6 +47,11 @@ class Payment
      * @Type("DateTime<'Y-m-d'>")
      */
     private $date;
+
+    /**
+     * @ORM\Column(type="string", length=64, nullable=true)
+     */
+    private $paypalPaymentId = null;
 
     /**
      * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\PaymentItem", mappedBy="payment", cascade={"persist", "remove"})
@@ -228,4 +234,46 @@ class Payment
     {
         return $this->date;
     }
+
+    /**
+     * Set paypalPaymentId
+     *
+     * @param string $paypalPaymentId
+     *
+     * @return Payment
+     */
+    public function setPaypalPaymentId($paypalPaymentId)
+    {
+        $this->paypalPaymentId = $paypalPaymentId;
+
+        return $this;
+    }
+
+    /**
+     * Get paypalPaymentId
+     *
+     * @return string
+     */
+    public function getPaypalPaymentId()
+    {
+        return $this->paypalPaymentId;
+    }
+
+    /**
+     * Get PayPal Payment Item List
+     *
+     * @return \PayPal\Api\ItemList
+     */
+    public function getPaypalPaymentItemList()
+    {
+        $itemList = new ItemList();
+        foreach ($this->getItems() as $item) {
+            // One item for the registration and one for the discount if any
+            foreach ($item->getPaypalPaymentItems() as $paypalItem) {
+                $itemList->addItem($paypalItem);
+            }
+        }
+        return $itemList;
+    }
+
 }

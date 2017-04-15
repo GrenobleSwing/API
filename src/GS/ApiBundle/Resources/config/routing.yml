@@ -40,3 +40,7 @@ registration:
 payment:
     type:     rest
     resource: GS\ApiBundle\Controller\PaymentController
+
+paypal:
+    resource: GS\ApiBundle\Controller\PaypalController
+    type:     annotation

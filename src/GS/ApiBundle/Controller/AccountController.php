@@ -134,9 +134,16 @@ class AccountController extends FOSRestController
      * @Security("is_granted('view', account)")
      * @Get("/account/{id}/balance")
      */
-    public function getBalanceAction(Account $account)
+    public function getBalanceAction(Account $account, Request $request)
     {
-        $balance = $this->get('gsapi.account_balance')->getBalance($account);
+        $activityId = $request->query->get('activityId');
+        if (null !== $activityId) {
+            $em = $this->getDoctrine()->getManager();
+            $activity = $em->getRepository('GSApiBundle:Activity')->find($activityId);
+        } else {
+            $activity = null;
+        }
+        $balance = $this->get('gsapi.account_balance')->getBalance($account, $activity);
         $view = $this->view($balance, 200);
         return $this->handleView($view);
     }

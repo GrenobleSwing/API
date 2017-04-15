@@ -5,6 +5,7 @@ namespace GS\ApiBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
+use PayPal\Api\Item;
 
 /**
  * Payment
@@ -66,6 +67,19 @@ class PaymentItem
     }
 
 
+    private function getDiscountAmount($amount)
+    {
+        $discount = $this->getDiscount();
+        if(null !== $discount) {
+            if ($discount->getType() == 'percent') {
+                return $amount * $discount->getValue() / 100;
+            } else {
+                return $discount->getValue();
+            }
+        }
+        return 0;
+    }
+
     private function updateAmount()
     {
         if (null === $this->getRegistration()) {
@@ -73,14 +87,14 @@ class PaymentItem
         }
         $amount = $this->getRegistration()->getTopic()
                 ->getCategory()->getPrice();
-        $discount = $this->getDiscount();
-        if(null !== $discount) {
-            if ($discount->getType() == 'percent') {
-                $amount *= (1 - $discount->getValue() / 100);
-            } else {
-                $amount -= $discount->getValue();
-            }
-        }
+
+        // Apply the discount if needed
+        $amount -= $this->getDiscountAmount($amount);
+
+        // Substract the amount already paid
+        $amount -= $this->getRegistration()->getAmountPaid();
+
+        // Save the amount
         $this->setAmount($amount);
         
         if (null !== $this->getPayment()) {
@@ -120,7 +134,7 @@ class PaymentItem
      *
      * @return PaymentItem
      */
-    public function setDiscount(\GS\ApiBundle\Entity\Discount $discount)
+    public function setDiscount(\GS\ApiBundle\Entity\Discount $discount = null)
     {
         $this->discount = $discount;
         $this->updateAmount();
@@ -184,5 +198,51 @@ class PaymentItem
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Get PayPal Payment Item
+     *
+     * @return \PayPal\Api\Item[]
+     */
+    public function getPaypalPaymentItems()
+    {
+        $amount = $this->getRegistration()->getTopic()
+                ->getCategory()->getPrice();
+        
+        $item = new Item();
+        $item->setName($this->getRegistration()->getTopic()->getTitle())
+                ->setDescription($this->getRegistration()->getTopic()->getDescription())
+                ->setCurrency('EUR')
+                ->setQuantity(1)
+                ->setTax(0)
+                ->setPrice($amount);
+        
+        $itemList = array($item);
+
+        $alreadyPaid = $this->getRegistration()->getAmountPaid();
+        if (0 < $alreadyPaid) {
+            $item2 = new Item();
+            $item2->setName('Deja paye')
+                    ->setCurrency('EUR')
+                    ->setQuantity(1)
+                    ->setTax(0)
+                    ->setPrice(-1 * $alreadyPaid);
+            $itemList[] = $item2;
+        }
+        
+        $discountAmount = $this->getDiscountAmount($amount);
+        if (0 < $discountAmount) {
+            $item3 = new Item();
+            $item3->setName('Reduction')
+                    ->setDescription($this->getDiscount()->getName())
+                    ->setCurrency('EUR')
+                    ->setQuantity(1)
+                    ->setTax(0)
+                    ->setPrice(-1 * $discountAmount);
+            $itemList[] = $item3;
+        }
+        
+        return $itemList;
     }
 }

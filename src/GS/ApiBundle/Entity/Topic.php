@@ -360,30 +360,6 @@ class Topic
     }
 
     /**
-     * Set day
-     *
-     * @param integer $day
-     *
-     * @return Topic
-     */
-    public function setDay($day)
-    {
-        $this->day = $day;
-
-        return $this;
-    }
-
-    /**
-     * Get day
-     *
-     * @return integer
-     */
-    public function getDay()
-    {
-        return $this->day;
-    }
-
-    /**
      * Set startTime
      *
      * @param \DateTime $startTime
