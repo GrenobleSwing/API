@@ -44,3 +44,7 @@ payment:
 paypal:
     resource: GS\ApiBundle\Controller\PaypalController
     type:     annotation
+
+user:
+    type:     rest
+    resource: GS\ApiBundle\Controller\UserController
