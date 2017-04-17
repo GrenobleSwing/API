@@ -44,7 +44,7 @@ security:
                 target: /
 
         api:
-            pattern:   ^/api
+            pattern:   ^/api/(?!(paypal/)).*$
             provider: our_db_provider
             stateless: true
             guard:

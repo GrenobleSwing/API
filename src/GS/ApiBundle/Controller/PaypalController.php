@@ -23,7 +23,6 @@ use GS\ApiBundle\Entity\PaymentItem;
 class PaypalController extends Controller
 {
     /**
-     * @Security("has_role('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @Route("/paypal/create-payment")
      * @Method("POST")
      */
@@ -60,7 +59,6 @@ class PaypalController extends Controller
     }
 
     /**
-     * @Security("has_role('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @Route("/paypal/execute-payment")
      * @Method("GET")
      */
