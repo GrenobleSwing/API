@@ -64,15 +64,6 @@ class User implements AdvancedUserInterface, \Serializable
         $this->roles = array();
     }
 
-//    public function setRoles(array $roles)
-//    {
-//        $this->roles = array();
-//        foreach ($roles as $role) {
-//            $this->addRole($role);
-//        }
-//        return $this;
-//    }
-
     public function addRole($role)
     {
         $role = strtoupper($role);
@@ -94,11 +85,6 @@ class User implements AdvancedUserInterface, \Serializable
         return $this;
     }
     
-//    public function hasRole($role)
-//    {
-//        return in_array(strtoupper($role), $this->getRoles(), true);
-//    }
-
     public function getRoles()
     {
         $roles = $this->roles;

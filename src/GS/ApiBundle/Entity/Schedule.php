@@ -52,7 +52,7 @@ class Schedule
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private $teachers;
+    private $teachers = '';
 
    /**
      * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Venue", cascade={"persist", "remove"})

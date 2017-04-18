@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use GS\ApiBundle\Entity\User;
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Address;
+//use GS\ApiBundle\Entity\Role;
 
 class LoadUser extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -55,7 +56,7 @@ class LoadUser extends AbstractFixture implements ContainerAwareInterface, Order
         $organizer_password = $this->container->get('security.password_encoder')
             ->encodePassword($organizer_user, 'test');
         $organizer_user->setPassword($organizer_password);
-        $organizer_user->addRole('ROLE_ADMIN');
+        $organizer_user->addRole('ROLE_ORGANIZER');
 
         $organizer_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
         $organizer_account = new Account();

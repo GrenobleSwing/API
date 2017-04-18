@@ -14,6 +14,7 @@ use GS\ApiBundle\Entity\Activity;
 use GS\ApiBundle\Entity\Topic;
 use GS\ApiBundle\Entity\Category;
 use GS\ApiBundle\Entity\Discount;
+use GS\ApiBundle\Entity\Schedule;
 
 class LoadData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -66,6 +67,13 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         
         $activity1->addCategory($category1);
 
+        $schedule = new Schedule();
+        $schedule->setFrequency('weekly');
+        $schedule->setStartDate(new \DateTime('2016-09-14'));
+        $schedule->setEndDate(new \DateTime('2017-06-24'));
+        $schedule->setStartTime(new \DateTime('20:30'));
+        $schedule->setEndTime(new \DateTime('21:30'));
+
         $topic1 = new Topic();
         $topic1->setTitle('Adhesion');
         $topic1->setDescription('Adhesion annuelle');
@@ -112,46 +120,38 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic2 = new Topic();
         $topic2->setTitle('Lindy debutant');
         $topic2->setDescription('Cours de lindy');
-        $topic2->setDay(1);
         $topic2->setType('couple');
-        $topic2->setStartTime(new \DateTime('20:30'));
-        $topic2->setEndTime(new \DateTime('21:30'));
         $topic2->setState('open');
         $topic2->setCategory($category2);
         $topic2->addRequiredTopic($topic1);
+        $topic2->addSchedule($schedule);
         
         $topic4 = new Topic();
         $topic4->setTitle('Lindy intermediaire');
         $topic4->setDescription('Cours de lindy');
-        $topic4->setDay(1);
         $topic4->setType('couple');
-        $topic4->setStartTime(new \DateTime('21:30'));
-        $topic4->setEndTime(new \DateTime('22:30'));
         $topic4->setState('open');
         $topic4->setCategory($category2);
         $topic4->addRequiredTopic($topic1);
+        $topic4->addSchedule(clone $schedule);
         
         $topic5 = new Topic();
         $topic5->setTitle('Lindy avance');
         $topic5->setDescription('Cours de lindy');
-        $topic5->setDay(1);
         $topic5->setType('couple');
-        $topic5->setStartTime(new \DateTime('21:30'));
-        $topic5->setEndTime(new \DateTime('22:30'));
         $topic5->setState('open');
         $topic5->setCategory($category2);
         $topic5->addRequiredTopic($topic1);
+        $topic5->addSchedule(clone $schedule);
         
         $topic3 = new Topic();
         $topic3->setTitle('Troupe avancee');
         $topic3->setDescription('Troupe avancee');
-        $topic3->setDay(2);
         $topic3->setType('couple');
-        $topic3->setStartTime(new \DateTime('20:30'));
-        $topic3->setEndTime(new \DateTime('21:30'));
         $topic3->setState('open');
         $topic3->setCategory($category3);
         $topic3->addRequiredTopic($topic1);
+        $topic3->addSchedule(clone $schedule);
         
         $activity2->addTopic($topic2);
         $activity2->addTopic($topic3);

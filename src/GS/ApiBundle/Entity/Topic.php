@@ -360,54 +360,6 @@ class Topic
     }
 
     /**
-     * Set startTime
-     *
-     * @param \DateTime $startTime
-     *
-     * @return Topic
-     */
-    public function setStartTime($startTime)
-    {
-        $this->startTime = $startTime;
-
-        return $this;
-    }
-
-    /**
-     * Get startTime
-     *
-     * @return \DateTime
-     */
-    public function getStartTime()
-    {
-        return $this->startTime;
-    }
-
-    /**
-     * Set endTime
-     *
-     * @param \DateTime $endTime
-     *
-     * @return Topic
-     */
-    public function setEndTime($endTime)
-    {
-        $this->endTime = $endTime;
-
-        return $this;
-    }
-
-    /**
-     * Get endTime
-     *
-     * @return \DateTime
-     */
-    public function getEndTime()
-    {
-        return $this->endTime;
-    }
-
-    /**
      * Set state
      *
      * @param string $state
