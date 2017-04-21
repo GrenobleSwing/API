@@ -27,6 +27,7 @@ use GS\ApiBundle\Form\Type\AccountType;
 use GS\ApiBundle\Entity\Payment;
 use GS\ApiBundle\Entity\PaymentItem;
 use GS\ApiBundle\Form\Type\PaymentType;
+use GS\ApiBundle\Form\Type\DeleteType;
 
 class FormGeneratorService
 {
@@ -59,18 +60,6 @@ class FormGeneratorService
         return $this->formFactory->create(YearType::class, $year, $options);
     }
 
-    public function getYearDeleteForm($year)
-    {
-        $form = $this->formFactory->createBuilder()
-                ->add('submit', SubmitType::class, array(
-                    'label' => 'Confirmer la supression',
-                ))
-                ->setMethod('DELETE')
-                ->setAction($this->router->generate('delete_year', array('year' => $year->getId())))
-                ->getForm();
-        return $form;
-    }
-
     public function getActivityForm($activity = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -91,18 +80,6 @@ class FormGeneratorService
         return $this->formFactory->create(ActivityType::class, $activity, $options);
     }
     
-    public function getActivityDeleteForm($activity)
-    {
-        $form = $this->formFactory->createBuilder()
-                ->add('submit', SubmitType::class, array(
-                    'label' => 'Confirmer la supression',
-                ))
-                ->setMethod('DELETE')
-                ->setAction($this->router->generate('delete_activity', array('activity' => $activity->getId())))
-                ->getForm();
-        return $form;
-    }
-
     public function getTopicForm($topic = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -123,18 +100,6 @@ class FormGeneratorService
         return $this->formFactory->create(TopicType::class, $topic, $options);
     }
     
-    public function getTopicDeleteForm($topic)
-    {
-        $form = $this->formFactory->createBuilder()
-                ->add('submit', SubmitType::class, array(
-                    'label' => 'Confirmer la supression',
-                ))
-                ->setMethod('DELETE')
-                ->setAction($this->router->generate('delete_topic', array('topic' => $topic->getId())))
-                ->getForm();
-        return $form;
-    }
-
     public function getCategoryForm($category = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -156,18 +121,6 @@ class FormGeneratorService
         return $this->formFactory->create(CategoryType::class, $category, $options);
     }
     
-    public function getCategoryDeleteForm($category)
-    {
-        $form = $this->formFactory->createBuilder()
-                ->add('submit', SubmitType::class, array(
-                    'label' => 'Confirmer la supression',
-                ))
-                ->setMethod('DELETE')
-                ->setAction($this->router->generate('delete_category', array('category' => $category->getId())))
-                ->getForm();
-        return $form;
-    }
-
     public function getDiscountForm($discount = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -189,18 +142,6 @@ class FormGeneratorService
         return $this->formFactory->create(DiscountType::class, $discount, $options);
     }
     
-    public function getDiscountDeleteForm($discount)
-    {
-        $form = $this->formFactory->createBuilder()
-                ->add('submit', SubmitType::class, array(
-                    'label' => 'Confirmer la supression',
-                ))
-                ->setMethod('DELETE')
-                ->setAction($this->router->generate('delete_discount', array('discount' => $discount->getId())))
-                ->getForm();
-        return $form;
-    }
-
     public function getRegistrationForm($registration = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -222,18 +163,6 @@ class FormGeneratorService
         return $this->formFactory->create(RegistrationType::class, $registration, $options);
     }
     
-    public function getRegistrationDeleteForm($registration)
-    {
-        $form = $this->formFactory->createBuilder()
-                ->add('submit', SubmitType::class, array(
-                    'label' => 'Confirmer la supression',
-                ))
-                ->setMethod('DELETE')
-                ->setAction($this->router->generate('delete_registration', array('registration' => $registration->getId())))
-                ->getForm();
-        return $form;
-    }
-
     public function getVenueForm($venue = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -255,16 +184,11 @@ class FormGeneratorService
         return $this->formFactory->create(VenueType::class, $venue, $options);
     }
     
-    public function getVenueDeleteForm($venue)
+    public function getDeleteForm($entity, $paramName)
     {
-        $form = $this->formFactory->createBuilder()
-                ->add('submit', SubmitType::class, array(
-                    'label' => 'Confirmer la supression',
-                ))
-                ->setMethod('DELETE')
-                ->setAction($this->router->generate('delete_venue', array('venue' => $venue->getId())))
-                ->getForm();
-        return $form;
+        $options = array();
+        $options['action'] = $this->router->generate('delete_' . $paramName, array($paramName => $entity->getId()));
+        return $this->formFactory->create(DeleteType::class, null, $options);
     }
 
     public function getAccountForm($account = null, $routeName = null, $method = null)
@@ -288,18 +212,6 @@ class FormGeneratorService
         return $this->formFactory->create(AccountType::class, $account, $options);
     }
     
-    public function getAccountDeleteForm($account)
-    {
-        $form = $this->formFactory->createBuilder()
-                ->add('submit', SubmitType::class, array(
-                    'label' => 'Confirmer la supression',
-                ))
-                ->setMethod('DELETE')
-                ->setAction($this->router->generate('delete_account', array('account' => $account->getId())))
-                ->getForm();
-        return $form;
-    }
-
     public function getPaymentForm($payment = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -322,18 +234,6 @@ class FormGeneratorService
         return $this->formFactory->create(PaymentType::class, $payment, $options);
     }
     
-    public function getPaymentDeleteForm($payment)
-    {
-        $form = $this->formFactory->createBuilder()
-                ->add('submit', SubmitType::class, array(
-                    'label' => 'Confirmer la supression',
-                ))
-                ->setMethod('DELETE')
-                ->setAction($this->router->generate('delete_payment', array('payment' => $payment->getId())))
-                ->getForm();
-        return $form;
-    }
-
     public function getFormView($form, $template = 'form.html.twig')
     {
         $view = View::create($form, 200)

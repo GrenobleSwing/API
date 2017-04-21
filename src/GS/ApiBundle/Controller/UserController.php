@@ -5,10 +5,19 @@ namespace GS\ApiBundle\Controller;
 use Symfony\Component\Security\Core\Role\Role;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class UserController extends FOSRestController
 {
     /**
+     * @ApiDoc(
+     *   section="User",
+     *   description="Returns the current User",
+     *   output="GS\ApiBundle\Entity\User",
+     *   statusCodes={
+     *     200="Returns the User",
+     *   }
+     * )
      * @Get("/identity")
      */
     public function IdentityAction()

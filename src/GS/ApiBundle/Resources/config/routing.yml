@@ -48,3 +48,7 @@ paypal:
 user:
     type:     rest
     resource: GS\ApiBundle\Controller\UserController
+
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /doc

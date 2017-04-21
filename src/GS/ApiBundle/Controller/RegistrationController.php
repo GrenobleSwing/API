@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Get;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
@@ -18,6 +19,21 @@ class RegistrationController extends FOSRestController
 {
     
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Changes a given Registration state to VALIDATED",
+     *   requirements={
+     *     {
+     *       "name"="registration",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Registration id"
+     *     }
+     *   },
+     *   statusCodes={
+     *     204="The given Registration has been validated",
+     *   }
+     * )
      * @Security("is_granted('validate', registration)")
      * @Get("/registration/{id}/validate")
      */
@@ -32,6 +48,21 @@ class RegistrationController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Changes a given Registration state to WAITING",
+     *   requirements={
+     *     {
+     *       "name"="registration",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Registration id"
+     *     }
+     *   },
+     *   statusCodes={
+     *     204="The given Registration has been put in waiting list",
+     *   }
+     * )
      * @Security("is_granted('wait', registration)")
      * @Get("/registration/{id}/wait")
      */
@@ -46,6 +77,21 @@ class RegistrationController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Changes a given Registration state to CANCELLED",
+     *   requirements={
+     *     {
+     *       "name"="registration",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Registration id"
+     *     }
+     *   },
+     *   statusCodes={
+     *     204="The given Registration has been cancelled",
+     *   }
+     * )
      * @Security("is_granted('cancel', registration)")
      * @Get("/registration/{id}/cancel")
      */
@@ -61,6 +107,21 @@ class RegistrationController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Changes a given Registration state to PAID",
+     *   requirements={
+     *     {
+     *       "name"="registration",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Registration id"
+     *     }
+     *   },
+     *   statusCodes={
+     *     204="The given Registration has been paid",
+     *   }
+     * )
      * @Security("is_granted('pay', registration)")
      * @Get("/registration/{id}/pay")
      */
@@ -75,6 +136,14 @@ class RegistrationController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Create a new Registration",
+     *   input="GS\ApiBundle\Form\Type\RegistrationType",
+     *   statusCodes={
+     *     201="The Registration has been created",
+     *   }
+     * )
      * @Security("has_role('ROLE_USER')")
      */
     public function postAction(Request $request)
@@ -109,21 +178,53 @@ class RegistrationController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Returns a form to confirm deletion of a given Registration",
+     *   requirements={
+     *     {
+     *       "name"="registration",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Registration id"
+     *     }
+     *   },
+     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   statusCodes={
+     *     200="You have permission to delete a Registration, the form is returned",
+     *   }
+     * )
      * @Security("is_granted('delete', registration)")
      */
     public function removeAction(Registration $registration)
     {
-        $form = $this->get('gsapi.form_generator')->getRegistrationDeleteForm($registration);
+        $form = $this->get('gsapi.form_generator')->getDeleteForm($registration, 'registration');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Delete a given Registration",
+     *   requirements={
+     *     {
+     *       "name"="registration",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Registration id"
+     *     }
+     *   },
+     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   statusCodes={
+     *     204="The Registration has been deleted",
+     *   }
+     * )
      * @Security("is_granted('delete', registration)")
      */
     public function deleteAction(Registration $registration, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getRegistrationDeleteForm($registration);
+        $form = $this->get('gsapi.form_generator')->getDeleteForm($registration, 'registration');
         $form->handleRequest($request);
         
         if ($form->isValid()) {
@@ -139,6 +240,22 @@ class RegistrationController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Returns an existing Registration",
+     *   requirements={
+     *     {
+     *       "name"="registration",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Registration id"
+     *     }
+     *   },
+     *   output="GS\ApiBundle\Entity\Registration",
+     *   statusCodes={
+     *     200="Returns the Registration",
+     *   }
+     * )
      * @Security("is_granted('view', registration)")
      */
     public function getAction(Registration $registration)
@@ -148,6 +265,14 @@ class RegistrationController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Returns a collection of Registrations",
+     *   output="array<GS\ApiBundle\Entity\Registration>",
+     *   statusCodes={
+     *     200="Returns all the Registrations",
+     *   }
+     * )
      * @Security("has_role('ROLE_USER')")
      */
     public function cgetAction()
@@ -162,6 +287,22 @@ class RegistrationController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Returns a form to edit an existing Registration",
+     *   requirements={
+     *     {
+     *       "name"="registration",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Registration id"
+     *     }
+     *   },
+     *   output="GS\ApiBundle\Form\Type\RegistrationType",
+     *   statusCodes={
+     *     200="You have permission to create a Registration, the form is returned",
+     *   }
+     * )
      * @Security("is_granted('edit', registration)")
      */
     public function editAction(Registration $registration)
@@ -172,6 +313,22 @@ class RegistrationController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Registration",
+     *   description="Update an existing Registration",
+     *   input="GS\ApiBundle\Form\Type\RegistrationType",
+     *   requirements={
+     *     {
+     *       "name"="registration",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Registration id"
+     *     }
+     *   },
+     *   statusCodes={
+     *     204="The Registration has been updated",
+     *   }
+     * )
      * @Security("is_granted('edit', registration)")
      */
     public function putAction(Registration $registration, Request $request)

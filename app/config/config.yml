@@ -108,24 +108,6 @@ kmj_pay_pal_bridge:
         timeout: 30
         retry: true
 
-gs_paypal_bm_bridge:
-    environment: sandbox
-    sandbox:
-        username: '%paypal_bm_sandbox_username%'
-        password: '%paypal_bm_sandbox_password%'
-        signature: '%paypal_bm_sandbox_signature%'
-    production:
-        username: '%paypal_bm_production_username%'
-        password: '%paypal_bm_production_password%'
-        signature: '%paypal_bm_production_signature%'
-    logs:
-        enabled: true
-        filename: '%kernel.root_dir%/../var/logs/paypal.log'
-        level: FINE
-    http:
-        timeout: 30
-        retry: 2
-
 assetic:
   debug:          '%kernel.debug%'
   filters:
@@ -140,3 +122,5 @@ doctrine_migrations:
     namespace: Application\Migrations
     table_name: migration_versions
     name: Application Migrations
+
+nelmio_api_doc: ~

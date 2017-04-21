@@ -23,9 +23,9 @@ class AppKernel extends Kernel
             new Misd\PhoneNumberBundle\MisdPhoneNumberBundle(),
             new KMJ\PayPalBridgeBundle\KMJPayPalBridgeBundle(),
             new Ivory\OrderedFormBundle\IvoryOrderedFormBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new AppBundle\AppBundle(),
             new GS\ApiBundle\GSApiBundle(),
-            new GS\PaypalBMBridgeBundle\GSPaypalBMBridgeBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

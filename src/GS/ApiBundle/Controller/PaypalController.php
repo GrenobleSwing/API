@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use PayPal\Api\Amount;
 use PayPal\Api\Payer;
@@ -23,6 +24,27 @@ use GS\ApiBundle\Entity\PaymentItem;
 class PaypalController extends Controller
 {
     /**
+     * @ApiDoc(
+     *   section="Paypal",
+     *   description="Create a new Paypal payment",
+     *   parameters={
+     *     {
+     *       "name"="accountId",
+     *       "dataType"="integer",
+     *       "required"=true,
+     *       "description"="Account id"
+     *     },
+     *     {
+     *       "name"="activityId",
+     *       "dataType"="integer",
+     *       "required"=false,
+     *       "description"="Activity id, only if the payment concern only this activity"
+     *     }
+     *   },
+     *   statusCodes={
+     *     200="The payment has been created",
+     *   }
+     * )
      * @Route("/paypal/create-payment")
      * @Method("POST")
      */
@@ -55,10 +77,25 @@ class PaypalController extends Controller
         $em->persist($payment);
         $em->flush();
 
-        return new JsonResponse(array('paymentID' => $paypalPayment->getId()));
+        return new JsonResponse(array('paymentID' => $paypalPayment->getId()), 200);
     }
 
     /**
+     * @ApiDoc(
+     *   section="Paypal",
+     *   description="Execute a given Paypal payment",
+     *   parameters={
+     *     {
+     *       "name"="paymentId",
+     *       "dataType"="integer",
+     *       "required"=true,
+     *       "description"="Payment id"
+     *     },
+     *   },
+     *   statusCodes={
+     *     200="The payment has been executed",
+     *   }
+     * )
      * @Route("/paypal/execute-payment")
      * @Method("GET")
      */

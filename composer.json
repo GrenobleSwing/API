@@ -42,10 +42,10 @@
         "jms/serializer-bundle": "^1.0",
         "misd/phone-number-bundle": "^1.0",
         "paypal/rest-api-sdk-php": "^1.7",
-        "paypal/buttonmanager-sdk-php": "^4.0",
         "kmj/paypalbridgebundle": "dev-master",
         "egeloen/ordered-form-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^1.0",
+        "nelmio/api-doc-bundle": "^2.0",
         "andres-montanez/magallanes": "dev-master"
 	
     },

@@ -5,6 +5,7 @@ namespace GS\ApiBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
@@ -21,6 +22,14 @@ class ActivityController extends FOSRestController
 {
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Returns a form to create a new Activity",
+     *   output="GS\ApiBundle\Form\Type\ActivityType",
+     *   statusCodes={
+     *     200="You have permission to create a Activity, the form is returned",
+     *   }
+     * )
      * @Security("has_role('ROLE_USER')")
      */
     public function newAction()
@@ -32,6 +41,14 @@ class ActivityController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Create a new Activity",
+     *   input="GS\ApiBundle\Form\Type\ActivityType",
+     *   statusCodes={
+     *     201="The Activity has been created",
+     *   }
+     * )
      * @Security("has_role('ROLE_USER')")
      */
     public function postAction(Request $request)
@@ -50,7 +67,7 @@ class ActivityController extends FOSRestController
             $em->persist($activity);
             $em->flush();
 
-            $view = $this->view(array('id' => $activity->getId()), 200);
+            $view = $this->view(array('id' => $activity->getId()), 201);
             
         } else {
             $view = $this->get('gsapi.form_generator')->getFormView($form);
@@ -59,21 +76,53 @@ class ActivityController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Returns a form to confirm deletion of a given Activity",
+     *   requirements={
+     *     {
+     *       "name"="activity",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Activity id"
+     *     }
+     *   },
+     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   statusCodes={
+     *     200="You have permission to delete a Activity, the form is returned",
+     *   }
+     * )
      * @Security("is_granted('delete', activity)")
      */
     public function removeAction(Activity $activity)
     {
-        $form = $this->get('gsapi.form_generator')->getActivityDeleteForm($activity);
+        $form = $this->get('gsapi.form_generator')->getDeleteForm($activity, 'activity');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Delete a given Activity",
+     *   requirements={
+     *     {
+     *       "name"="activity",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Activity id"
+     *     }
+     *   },
+     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   statusCodes={
+     *     204="The Activity has been deleted",
+     *   }
+     * )
      * @Security("is_granted('delete', activity)")
      */
     public function deleteAction(Activity $activity, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getActivityDeleteForm($activity);
+        $form = $this->get('gsapi.form_generator')->getDeleteForm($activity, 'activity');
         $form->handleRequest($request);
         
         if ($form->isValid()) {
@@ -92,6 +141,22 @@ class ActivityController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Returns an existing Activity",
+     *   requirements={
+     *     {
+     *       "name"="activity",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Activity id"
+     *     }
+     *   },
+     *   output="GS\ApiBundle\Entity\Activity",
+     *   statusCodes={
+     *     200="Returns the Activity",
+     *   }
+     * )
      * @Security("is_granted('view', activity)")
      */
     public function getAction(Activity $activity)
@@ -101,6 +166,14 @@ class ActivityController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Returns a collection of Activitys",
+     *   output="array<GS\ApiBundle\Entity\Activity>",
+     *   statusCodes={
+     *     200="Returns all the Activitys",
+     *   }
+     * )
      * @Security("has_role('ROLE_USER')")
      */
     public function cgetAction()
@@ -115,6 +188,22 @@ class ActivityController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Returns a form to edit an existing Activity",
+     *   requirements={
+     *     {
+     *       "name"="activity",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Activity id"
+     *     }
+     *   },
+     *   output="GS\ApiBundle\Form\Type\ActivityType",
+     *   statusCodes={
+     *     200="You have permission to create a Activity, the form is returned",
+     *   }
+     * )
      * @Security("is_granted('edit', activity)")
      */
     public function editAction(Activity $activity)
@@ -125,6 +214,22 @@ class ActivityController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Update an existing Activity",
+     *   input="GS\ApiBundle\Form\Type\ActivityType",
+     *   requirements={
+     *     {
+     *       "name"="activity",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Activity id"
+     *     }
+     *   },
+     *   statusCodes={
+     *     204="The Activity has been updated",
+     *   }
+     * )
      * @Security("is_granted('edit', activity)")
      */
     public function putAction(Activity $activity, Request $request)
@@ -145,6 +250,14 @@ class ActivityController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Returns a form to create a new Category for the given Activity",
+     *   output="GS\ApiBundle\Form\Type\CategoryType",
+     *   statusCodes={
+     *     200="You have permission to create a Category, the form is returned",
+     *   }
+     * )
      * @Security("has_role('ROLE_USER')")
      */
     public function newCategoryAction(Activity $activity)
@@ -158,6 +271,14 @@ class ActivityController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Returns a form to create a new Discount for the given Activity",
+     *   output="GS\ApiBundle\Form\Type\DiscountType",
+     *   statusCodes={
+     *     200="You have permission to create a Discount, the form is returned",
+     *   }
+     * )
      * @Security("has_role('ROLE_USER')")
      */
     public function newDiscountAction(Activity $activity)
@@ -171,6 +292,14 @@ class ActivityController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *   section="Activity",
+     *   description="Returns a form to create a new Topic for the given Activity",
+     *   output="GS\ApiBundle\Form\Type\TopicType",
+     *   statusCodes={
+     *     200="You have permission to create a Topic, the form is returned",
+     *   }
+     * )
      * @Security("has_role('ROLE_USER')")
      */
     public function newTopicAction(Activity $activity)
