@@ -23,7 +23,7 @@ parameters:
     jwt_key_pass_phrase:  ''                                         # ssh key pass phrase
     jwt_token_ttl:        2592000  # 30 days
 
-    paypal_sandbox_client_id:   # Client Id provided from developer.paypal.com
-    paypal_sandbox_secret:      # Client Secret provided from developer.paypal.com
-    paypal_prod_client_id:      # Client Id provided from developer.paypal.com
-    paypal_prod_secret:         # Client Secret provided from developer.paypal.com
+    paypal_sandbox_client_id: 1234567890  # Client Id provided from developer.paypal.com
+    paypal_sandbox_secret: 1234567890     # Client Secret provided from developer.paypal.com
+    paypal_prod_client_id: 1234567890     # Client Id provided from developer.paypal.com
+    paypal_prod_secret: 1234567890        # Client Secret provided from developer.paypal.com
