@@ -34,7 +34,7 @@ class CategoryController extends FOSRestController
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $category = $form->getData();
             $activity = $category->getActivity();
             $activity->addCategory($category);
@@ -148,7 +148,7 @@ class CategoryController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'put_category', 'PUT');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
@@ -210,7 +210,7 @@ class CategoryController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDeleteForm($category, 'category');
         $form->handleRequest($request);
         
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $activity = $category->getActivity();
             $activity->removeCategory($category);
 

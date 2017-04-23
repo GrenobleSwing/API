@@ -38,6 +38,11 @@ class Payment
     private $state = 'DRAFT';
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
      * @ORM\Column(type="float")
      */
     private $amount = 0.0;
@@ -104,7 +109,9 @@ class Payment
         if ('PAID' == $this->getState()) {
             foreach ($this->getItems() as $item) {
                 $registration = $item->getRegistration();
-                $registration->pay($item->getAmount());
+                if (null !== $registration) {
+                    $registration->pay($item->getAmount());
+                }
             }
         }
     }
@@ -276,4 +283,28 @@ class Payment
         return $itemList;
     }
 
+
+    /**
+     * Set comment
+     *
+     * @param string $comment
+     *
+     * @return Payment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
 }

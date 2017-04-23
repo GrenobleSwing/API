@@ -25,6 +25,7 @@ class TopicType extends AbstractType
     {
         $builder
                 ->add('activity', EntityType::class, array(
+                    'label' => 'Activite',
                     'class' => 'GSApiBundle:Activity',
                     'choice_label' => 'title',
                     'position' => 'first',
@@ -32,6 +33,7 @@ class TopicType extends AbstractType
                 ->add('category')
 //                A ameliorer pour ne prendre en compte que ceux de l'annee
                 ->add('requiredTopics', EntityType::class, array(
+                    'label' => 'Pre-requis',
                     'class' => 'GSApiBundle:Topic',
                     'choice_label' => 'title',
                     'multiple' => true,
@@ -70,8 +72,8 @@ class TopicType extends AbstractType
             if (null !== $topic && null !== $topic->getActivity()) {
                 $this->disableField($form->get('activity'));
                 $form->remove('category');
-//                A ameliorer pour ne prendre en compte que ceux de l'annee
                 $form->add('category', EntityType::class, array(
+                    'label' => 'Categories',
                     'class' => 'GSApiBundle:Category',
                     'choice_label' => 'name',
                     'position' => array('after' => 'activity'),

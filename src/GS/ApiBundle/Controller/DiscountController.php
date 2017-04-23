@@ -34,7 +34,7 @@ class DiscountController extends FOSRestController
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $discount = $form->getData();
             $activity = $discount->getActivity();
             $activity->addDiscount($discount);
@@ -148,7 +148,7 @@ class DiscountController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'put_discount', 'PUT');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
@@ -210,7 +210,7 @@ class DiscountController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDeleteForm($discount, 'discount');
         $form->handleRequest($request);
         
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $activity = $discount->getActivity();
             $activity->removeDiscount($discount);
 

@@ -33,6 +33,7 @@ class CategoryType extends AbstractType
                     'label' => 'Prix',
                     'scale' => 2,
                 ))
+                ->add('discounts')
                 ->add('submit', SubmitType::class)
         ;
         
@@ -42,6 +43,15 @@ class CategoryType extends AbstractType
 
             if (null !== $category && null !== $category->getActivity()) {
                 $this->disableField($form->get('activity'));
+                $form->remove('discounts');
+                $form->add('discounts', EntityType::class, array(
+                    'label' => 'Reductions applicables',
+                    'class' => 'GSApiBundle:Discount',
+                    'choice_label' => 'name',
+                    'multiple' => true,
+                    'position' => array('after' => 'price'),
+                    'choices' => $category->getActivity()->getDiscounts(),
+                ));
             }
         });
     }

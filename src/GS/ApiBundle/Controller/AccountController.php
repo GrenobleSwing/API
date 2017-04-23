@@ -52,7 +52,7 @@ class AccountController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getAccountForm(null, 'post_account');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $account = $form->getData();
             $em = $this->getDoctrine()->getManager();
             $em->persist($account);
@@ -117,7 +117,7 @@ class AccountController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDeleteForm($account, 'account');
         $form->handleRequest($request);
         
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($account);
             $em->flush();
@@ -226,7 +226,7 @@ class AccountController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getAccountForm($account, 'put_account', 'PUT');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 

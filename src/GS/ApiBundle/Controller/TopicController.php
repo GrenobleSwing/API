@@ -35,7 +35,7 @@ class TopicController extends FOSRestController
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $topic = $form->getData();
             $topic->addOwner($this->getUser());
             $activity = $topic->getActivity();
@@ -45,7 +45,7 @@ class TopicController extends FOSRestController
             $em->persist($topic);
             $em->flush();
 
-            $view = $this->view(array('id' => $topic->getId()), 200);
+            $view = $this->view(array('id' => $topic->getId()), 201);
             
         } else {
             $view = $this->get('gsapi.form_generator')->getFormView($form);
@@ -103,7 +103,7 @@ class TopicController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDeleteForm($topic, 'topic');
         $form->handleRequest($request);
         
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($topic);
             $em->flush();
@@ -212,7 +212,7 @@ class TopicController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'put_topic', 'PUT');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 

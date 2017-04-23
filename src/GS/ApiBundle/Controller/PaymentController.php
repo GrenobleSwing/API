@@ -53,7 +53,7 @@ class PaymentController extends FOSRestController
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $payment = $form->getData();
             
             $em = $this->getDoctrine()->getManager();
@@ -118,7 +118,7 @@ class PaymentController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDeleteForm($payment, 'payment');
         $form->handleRequest($request);
         
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($payment);
             $em->flush();
@@ -227,7 +227,7 @@ class PaymentController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getPaymentForm($payment, 'put_payment', 'PUT');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 

@@ -53,7 +53,7 @@ class VenueController extends FOSRestController
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $venue = $form->getData();
             
             $em = $this->getDoctrine()->getManager();
@@ -118,7 +118,7 @@ class VenueController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDeleteForm($venue, 'venue');
         $form->handleRequest($request);
         
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($venue);
             $em->flush();
@@ -227,7 +227,7 @@ class VenueController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getVenueForm($venue, 'put_venue', 'PUT');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 

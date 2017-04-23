@@ -8,8 +8,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 use GS\ApiBundle\Entity\Payment;
 use GS\ApiBundle\Form\Type\PaymentItemType;
@@ -36,6 +40,9 @@ class PaymentType extends AbstractType
                 ->add('date', DateType::class, array(
                     'label' => 'Date du paiement',
                 ))
+                ->add('comment', TextareaType::class, array(
+                    'label' => 'Commentaire',
+                ))
                 ->add('items', CollectionType::class, array(
                     'label' => 'Liste des inscriptions',
                     'entry_type' => PaymentItemType::class,
@@ -50,6 +57,24 @@ class PaymentType extends AbstractType
                 ->add('submit', SubmitType::class)
         ;
 
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $payment = $event->getData();
+            $form = $event->getForm();
+
+            if (null !== $payment && 'PAID' == $payment->getState()) {
+                $this->disableField($form->get('items'));
+            }
+        });
+    }
+
+    private function disableField(FormInterface $field)
+    {
+        $parent = $field->getParent();
+        $options = $field->getConfig()->getOptions();
+        $name = $field->getName();
+        $type = get_class($field->getConfig()->getType()->getInnerType());
+        $parent->remove($name);
+        $parent->add($name, $type, array_merge($options, ['disabled' => true]));
     }
 
     public function configureOptions(OptionsResolver $resolver)

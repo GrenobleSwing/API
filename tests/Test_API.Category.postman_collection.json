@@ -1,0 +1,797 @@
+{
+    "variables": [],
+    "info": {
+        "name": "Test Grenoble Swing API - Category",
+        "description": "",
+        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Admin",
+            "description": "",
+            "item": [
+                {
+                    "name": "api/auth",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
+                                    "var jsonData = JSON.parse(responseBody);",
+                                    "tests[\"Token is present\"] = jsonData.token;",
+                                    "postman.setGlobalVariable(\"token\", jsonData.token);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/auth",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n\t\"login\": \"admin@test.com\",\n\t\"password\": \"test\"\n}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/year/new",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';",
+                                    "var html = cheerio(responseBody);",
+                                    "result = html.find('#year__token');",
+                                    "postman.setGlobalVariable('form_token', result.attr('value'));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/year/new",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/year",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 201\"] = responseCode.code === 201;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
+                                    "var jsonData = JSON.parse(responseBody);",
+                                    "postman.setGlobalVariable(\"yearId\", jsonData.id);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/year",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "year[title]",
+                                    "value": "Annee 2018-2019",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "year[description]",
+                                    "value": "Description de l'annee...",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "year[startDate][day]",
+                                    "value": "1",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "year[startDate][month]",
+                                    "value": "9",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "year[startDate][year]",
+                                    "value": "2018",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "year[endDate][day]",
+                                    "value": "31",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "year[endDate][month]",
+                                    "value": "8",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "year[endDate][year]",
+                                    "value": "2019",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "year[_token]",
+                                    "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/year/x/activity/new",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';",
+                                    "var html = cheerio(responseBody);",
+                                    "result = html.find('#activity__token');",
+                                    "postman.setGlobalVariable('form_token', result.attr('value'));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/year/{{yearId}}/activity/new",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/activity",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 201\"] = responseCode.code === 201;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
+                                    "var jsonData = JSON.parse(responseBody);",
+                                    "postman.setGlobalVariable(\"activityId\", jsonData.id);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/activity",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "activity[year]",
+                                    "value": "{{yearId}}",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "activity[title]",
+                                    "value": "Cours et troupes",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "activity[description]",
+                                    "value": "Listes des cours et des troupes pour l'annee",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "activity[membership]",
+                                    "value": "0",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "activity[_token]",
+                                    "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/activity/x/discount/new",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';",
+                                    "var html = cheerio(responseBody);",
+                                    "result = html.find('#discount__token');",
+                                    "postman.setGlobalVariable('form_token', result.attr('value'));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/activity/{{activityId}}/discount/new",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/discount",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 201\"] = responseCode.code === 201;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
+                                    "var jsonData = JSON.parse(responseBody);",
+                                    "postman.setGlobalVariable(\"discount1Id\", jsonData.id);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/discount",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "discount[activity]",
+                                    "value": "{{activityId}}",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[name]",
+                                    "value": "2e cours",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[type]",
+                                    "value": "percent",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[value]",
+                                    "value": "30",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[condition]",
+                                    "value": "2nd",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[_token]",
+                                    "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/discount",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 201\"] = responseCode.code === 201;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
+                                    "var jsonData = JSON.parse(responseBody);",
+                                    "postman.setGlobalVariable(\"discount2Id\", jsonData.id);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/discount",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "discount[activity]",
+                                    "value": "{{activityId}}",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[name]",
+                                    "value": "Etudiant",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[type]",
+                                    "value": "percent",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[value]",
+                                    "value": "20",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[condition]",
+                                    "value": "student",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "discount[_token]",
+                                    "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/activity/x/category/new",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';",
+                                    "var html = cheerio(responseBody);",
+                                    "result = html.find('#category__token');",
+                                    "postman.setGlobalVariable('form_token', result.attr('value'));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/activity/{{activityId}}/category/new",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/category",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 201\"] = responseCode.code === 201;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
+                                    "var jsonData = JSON.parse(responseBody);",
+                                    "postman.setGlobalVariable(\"categoryId\", jsonData.id);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "category[activity]",
+                                    "value": "{{activityId}}",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "category[name]",
+                                    "value": "Cours",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "category[price]",
+                                    "value": "190",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "category[discounts][0]",
+                                    "value": "{{discount1Id}}",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "category[discounts][1]",
+                                    "value": "{{discount2Id}}",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "category[_token]",
+                                    "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/category/x",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/category/x/edit",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';",
+                                    "var html = cheerio(responseBody);",
+                                    "result = html.find('#category__token');",
+                                    "postman.setGlobalVariable('form_token', result.attr('value'));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}/edit",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/category/x",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 204\"] = responseCode.code === 204;"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}",
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "category[activity]",
+                                    "value": "{{activityId}}",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "category[name]",
+                                    "value": "Cours",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "category[price]",
+                                    "value": "195",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "category[_token]",
+                                    "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/category/x/remove",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';",
+                                    "var html = cheerio(responseBody);",
+                                    "result = html.find('#delete__token');",
+                                    "postman.setGlobalVariable('form_token', result.attr('value'));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}/remove",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/category/x",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 204\"] = responseCode.code === 204;"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}",
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "delete[_token]",
+                                    "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}

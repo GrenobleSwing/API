@@ -55,7 +55,7 @@ class YearController extends FOSRestController
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $year = $form->getData();
             $year->addOwner($this->getUser());
             $em = $this->getDoctrine()->getManager();
@@ -120,7 +120,7 @@ class YearController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDeleteForm($year, 'year');
         $form->handleRequest($request);
         
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($year);
             $em->flush();
@@ -295,7 +295,7 @@ class YearController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getYearForm($year, 'put_year', 'PUT');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 

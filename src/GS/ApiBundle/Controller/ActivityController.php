@@ -57,7 +57,7 @@ class ActivityController extends FOSRestController
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $activity = $form->getData();
             $activity->addOwner($this->getUser());
             $year = $activity->getYear();
@@ -125,7 +125,7 @@ class ActivityController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDeleteForm($activity, 'activity');
         $form->handleRequest($request);
         
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $year = $activity->getYear();
             $year->removeActivity($activity);
 
@@ -237,7 +237,7 @@ class ActivityController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'put_activity', 'PUT');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 

@@ -1,0 +1,118 @@
+{
+    "variables": [],
+    "info": {
+        "name": "Test Grenoble Swing API - User",
+        "description": "",
+        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Admin",
+            "description": "",
+            "item": [
+                {
+                    "name": "api/auth",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
+                                    "var jsonData = JSON.parse(responseBody);",
+                                    "tests[\"Token is present\"] = jsonData.token;",
+                                    "postman.setGlobalVariable(\"token\", jsonData.token);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/auth",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n\t\"login\": \"admin@test.com\",\n\t\"password\": \"test\"\n}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/identity",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/identity",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/logout",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/logout",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}

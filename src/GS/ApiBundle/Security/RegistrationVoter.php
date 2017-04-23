@@ -136,33 +136,21 @@ class RegistrationVoter extends Voter
 
     private function canWait(Registration $registration, User $user, TokenInterface $token)
     {
-        if ('SUBMITTED' != $registration->getState()) {
-            return false;
-        }
         return $this->canEdit($registration, $user, $token);
     }
 
     private function canValidate(Registration $registration, User $user, TokenInterface $token)
     {
-        if (!in_array($registration->getState(), array('SUBMITTED', 'WAITING'))) {
-            return false;
-        }
         return $this->canEdit($registration, $user, $token);
     }
 
     private function canCancel(Registration $registration, User $user, TokenInterface $token)
     {
-        if (in_array($registration->getState(), array('CANCELLED', 'PARTIALLY_CANCELLED'))) {
-            return false;
-        }
         return $this->canEdit($registration, $user, $token);
     }
 
     private function canPay(Registration $registration, User $user, TokenInterface $token)
     {
-        if ('VALIDATED' != $registration->getState()) {
-            return false;
-        }
         return $this->canEdit($registration, $user, $token);
     }
 

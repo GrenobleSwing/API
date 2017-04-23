@@ -3,6 +3,7 @@
 namespace GS\ApiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -39,6 +40,9 @@ class RegistrationController extends FOSRestController
      */
     public function validateAction(Registration $registration)
     {
+        if (!in_array($registration->getState(), array('SUBMITTED', 'WAITING'))) {
+            throw new MethodNotAllowedHttpException('Impossible to validate Registration');
+        }
         $registration->validate();
         $em = $this->getDoctrine()->getManager();
         $em->flush();
@@ -68,6 +72,9 @@ class RegistrationController extends FOSRestController
      */
     public function waitAction(Registration $registration)
     {
+        if ('SUBMITTED' != $registration->getState()) {
+            throw new MethodNotAllowedHttpException('Impossible to put Registration in waiting list');
+        }
         $registration->wait();
         $em = $this->getDoctrine()->getManager();
         $em->flush();
@@ -97,6 +104,9 @@ class RegistrationController extends FOSRestController
      */
     public function cancelAction(Registration $registration)
     {
+        if (in_array($registration->getState(), array('CANCELLED', 'PARTIALLY_CANCELLED'))) {
+            throw new MethodNotAllowedHttpException('Impossible to cancel Registration');
+        }
         $registration->cancel();
         
         $em = $this->getDoctrine()->getManager();
@@ -127,6 +137,9 @@ class RegistrationController extends FOSRestController
      */
     public function payAction(Registration $registration)
     {
+        if ('VALIDATED' != $registration->getState()) {
+            throw new MethodNotAllowedHttpException('Impossible to mark Registration as paid');
+        }
         $registration->pay();
         $em = $this->getDoctrine()->getManager();
         $em->flush();
@@ -152,7 +165,7 @@ class RegistrationController extends FOSRestController
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $registration = $form->getData();
             
             $account = $this->getDoctrine()
@@ -169,7 +182,7 @@ class RegistrationController extends FOSRestController
             $em->persist($registration);
             $em->flush();
 
-            $view = $this->view(array('id' => $registration->getId()), 200);
+            $view = $this->view(array('id' => $registration->getId()), 201);
             
         } else {
             $view = $this->get('gsapi.form_generator')->getFormView($form);
@@ -227,7 +240,7 @@ class RegistrationController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getDeleteForm($registration, 'registration');
         $form->handleRequest($request);
         
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($registration);
             $em->flush();
@@ -336,7 +349,7 @@ class RegistrationController extends FOSRestController
         $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'put_registration', 'PUT');
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
