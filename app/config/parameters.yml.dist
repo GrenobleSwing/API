@@ -27,10 +27,3 @@ parameters:
     paypal_sandbox_secret:      # Client Secret provided from developer.paypal.com
     paypal_prod_client_id:      # Client Id provided from developer.paypal.com
     paypal_prod_secret:         # Client Secret provided from developer.paypal.com
-
-    paypal_bm_sandbox_username:  # Client Username provided from developer.paypal.com
-    paypal_bm_sandbox_password:  # Client Password provided from developer.paypal.com
-    paypal_bm_sandbox_signature: # Client Signature provided from developer.paypal.com
-    paypal_bm_production_username:  # Client Username provided from developer.paypal.com
-    paypal_bm_production_password:  # Client Password provided from developer.paypal.com
-    paypal_bm_production_signature: # Client Signature provided from developer.paypal.com
