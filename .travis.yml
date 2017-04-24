@@ -18,6 +18,7 @@ before-install:
 # Install composer dependencies,
 # Create database, schema and fixtures
 install:
+  - . $HOME/.nvm/nvm.sh && nvm install stable && nvm use stable
   - npm install -g newman
   - composer install
   - cp app/config/parameters.yml.dist app/config/parameters.yml
