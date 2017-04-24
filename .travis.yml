@@ -14,11 +14,11 @@ services:
 # Update composer
 before-install:
   - composer self-update
-  - npm install -g newman
 
 # Install composer dependencies,
 # Create database, schema and fixtures
 install:
+  - npm install -g newman
   - composer install
   - cp app/config/parameters.yml.dist app/config/parameters.yml
   - php bin/console doctrine:database:create
