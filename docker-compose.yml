@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  db:
+    image: mysql:5.6
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+
+  php:
+    build: .docker/php
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 80:80
+    environment:
+      - SYMFONY_ENV=dev
+    links:
+      - db:db
