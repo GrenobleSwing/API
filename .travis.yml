@@ -7,7 +7,7 @@ sudo: false
 php:
   - 5.6
 
-# Start mysql service
+# Start Docker service
 services:
   - docker
 
