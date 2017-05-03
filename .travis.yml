@@ -5,15 +5,19 @@ language: php
 sudo: false
 
 php:
-    - 5.6
+  - 5.6
 
 # Start mysql service
 services:
-  - mysql
+  - docker
 
 # Update composer
 before-install:
   - composer self-update
+  - docker version
+  - docker-compose version
+  - docker-compose build
+  - docker-compose up -d
 
 # Install composer dependencies,
 # Create database, schema and fixtures
@@ -22,9 +26,9 @@ install:
   - npm install -g newman
   - composer install
   - cp app/config/parameters.yml.dist app/config/parameters.yml
-  - php bin/console doctrine:database:create
-  - php bin/console doctrine:schema:create
-  - php bin/console doctrine:fixtures:load -n
+  - docker-compose exec php php bin/console doctrine:database:create
+  - docker-compose exec php php bin/console doctrine:schema:create
+  - docker-compose exec php php bin/console doctrine:fixtures:load -n
 
 # Run script
 script:
