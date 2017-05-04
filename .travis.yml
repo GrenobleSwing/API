@@ -34,9 +34,9 @@ install:
   - npm install -g newman
   - composer install
   - cp app/config/parameters.yml.dist app/config/parameters.yml
-  - docker-compose exec php php bin/console doctrine:database:create
-  - docker-compose exec php php bin/console doctrine:schema:create
-  - docker-compose exec php php bin/console doctrine:fixtures:load -n
+  - docker-compose exec -T php php bin/console doctrine:database:create
+  - docker-compose exec -T php php bin/console doctrine:schema:create
+  - docker-compose exec -T php php bin/console doctrine:fixtures:load -n
 
 # Run script
 script:

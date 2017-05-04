@@ -3,7 +3,7 @@
 # http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
     database_host:     db
-    database_port:     25565
+    database_port:     3306
     database_name:     gs_api
     database_user:     root
     database_password: password
