@@ -76,3 +76,20 @@ services:
         public: false
         tags:
             - { name: security.voter }
+
+    gsapi.user.repository:
+            class: Doctrine\ORM\EntityRepository
+            factory: ["@doctrine.orm.entity_manager", getRepository]
+            arguments:
+                - GS\ApiBundle\Entity\User
+
+    gsapi.event.jwt_created_listener:
+        class: GS\ApiBundle\EventListener\JWTCreatedListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+
+    gsapi.event.jwt_decoded_listener:
+        class: GS\ApiBundle\EventListener\JWTDecodedListener
+        arguments: [ '@gsapi.user.repository' ]
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }

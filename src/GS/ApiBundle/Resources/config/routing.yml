@@ -2,9 +2,6 @@
 api_login_check:
     path: /auth
 
-logout:
-    path: /logout
-
 account:
     type:     rest
     resource: GS\ApiBundle\Controller\AccountController

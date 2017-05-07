@@ -57,11 +57,20 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $active;
 
+    /**
+     * Create a variable to easily invalidate JWT
+     * https://github.com/lexik/LexikJWTAuthenticationBundle/issues/58#issuecomment-89641970
+     * @ORM\Column(type="string", length=64)
+     * @Exclude
+     */
+    private $hash;
+
     
     public function __construct()
     {
         $this->active = true;
         $this->roles = array();
+        $this->hash = uniqid('', true);
     }
 
     public function addRole($role)
@@ -142,6 +151,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->password,
             $this->active,
             $this->roles,
+            $this->hash,
             // $this->salt,
         ));
     }
@@ -155,6 +165,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->password,
             $this->active,
             $this->roles,
+            $this->hash,
             // $this->salt
         ) = unserialize($serialized);
     }
@@ -238,5 +249,29 @@ class User implements AdvancedUserInterface, \Serializable
     public function setPlainPassword($password)
     {
         $this->plainPassword = $password;
+    }
+
+    /**
+     * Set hash
+     *
+     * @param string $hash
+     *
+     * @return User
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
+    /**
+     * Get hash
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        return $this->hash;
     }
 }

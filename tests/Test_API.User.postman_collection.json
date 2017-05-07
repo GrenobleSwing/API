@@ -87,7 +87,38 @@
                             "script": {
                                 "type": "text/javascript",
                                 "exec": [
-                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Status code is 204\"] = responseCode.code === 204;"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/logout",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/identity",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 401\"] = responseCode.code === 401;",
                                     "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
                                     "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';"
                                 ]
@@ -95,7 +126,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/logout",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/identity",
                         "method": "GET",
                         "header": [
                             {

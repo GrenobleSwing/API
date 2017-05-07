@@ -40,4 +40,27 @@ class UserController extends FOSRestController
         $view = $this->view($result, 200);
         return $this->handleView($view);
     }
+
+    /**
+     * @ApiDoc(
+     *   section="User",
+     *   description="Logout the current User",
+     *   statusCodes={
+     *     200="The User has been logged out",
+     *   }
+     * )
+     * @Get("/logout")
+     */
+    public function LogoutAction()
+    {
+        // Generate a new hash to invalidate the JWT
+        // https://github.com/lexik/LexikJWTAuthenticationBundle/issues/58#issuecomment-89641970
+        $user = $this->getUser();
+        $user->setHash(uniqid('', true));
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $view = $this->view(null, 204);
+        return $this->handleView($view);
+    }
 }

@@ -39,9 +39,6 @@ security:
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
                 require_previous_session: false
-            logout:
-                path:   /api/logout
-                target: /
 
         api:
             pattern:   ^/api/(?!(paypal/|doc)).*$
