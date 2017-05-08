@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new KMJ\PayPalBridgeBundle\KMJPayPalBridgeBundle(),
             new Ivory\OrderedFormBundle\IvoryOrderedFormBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
+            new Nelmio\CorsBundle\NelmioCorsBundle(),
             new AppBundle\AppBundle(),
             new GS\ApiBundle\GSApiBundle(),
         ];
