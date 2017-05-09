@@ -14,9 +14,7 @@ services:
 env:
   DOCKER_COMPOSE_VERSION: 1.13.0
 
-# Update composer
 before_install:
-  - composer self-update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -27,16 +25,9 @@ before_install:
   - docker-compose build
   - docker-compose up -d
 
-# Install composer dependencies,
-# Create database, schema and fixtures
 install:
   - . $HOME/.nvm/nvm.sh && nvm install stable && nvm use stable
   - npm install -g newman
-  - composer install
-  - cp app/config/parameters.yml.dist app/config/parameters.yml
-  - docker-compose exec -T php php bin/console doctrine:database:create
-  - docker-compose exec -T php php bin/console doctrine:schema:create
-  - docker-compose exec -T php php bin/console doctrine:fixtures:load -n
 
 # Run script
 script:
