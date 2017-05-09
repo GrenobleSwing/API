@@ -53,32 +53,10 @@ RUN php -r "unlink('composer-setup.php');"
 RUN mv composer.phar /usr/local/bin/composer
 
 # Install git
-RUN apt-get install -y git-all
+RUN apt-get install -y git
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
-
-COPY . /var/www/html/.
-
-RUN mkdir -p /var/www/html/var/jwt
-RUN openssl genrsa -out /var/www/html/var/jwt/private.pem -aes256 -passout pass:untruc 4096
-RUN openssl rsa -pubout -in /var/www/html/var/jwt/private.pem -out /var/www/html/var/jwt/public.pem -passin pass:untruc
-
-# Go to app directory
-RUN cd /var/www/html
-
-# Copy config file for the tests
-RUN cp app/config/parameters.yml.dist app/config/parameters.yml
-
-# Install dependencies
-RUN composer install
-
-# Create database and tables
-RUN php bin/console doctrine:database:create
-RUN php bin/console doctrine:schema:create
-
-# Load some fixtures to test the app
-RUN php bin/console doctrine:fixtures:load -n
 
 EXPOSE 80
 
