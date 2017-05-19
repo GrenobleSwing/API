@@ -14,6 +14,7 @@ services:
       - 8080:80
     environment:
       - SYMFONY_ENV=dev
+      - APACHE_LOG_DIR=/var/www/html/var/logs
     links:
       - db:db
 
@@ -25,10 +26,10 @@ services:
       - db:db
 
   elk:
-    image: willdurand/elk
+    build: .docker/elk
     ports:
       - 8082:80
     volumes:
       - .:/var/www/html
-      - .docker/elk/logstash:/etc/logstash
+      - .docker/elk/logstash/logstash.conf:/etc/logstash/conf.d/logstash.conf
       - .docker/elk/logstash/patterns:/opt/logstash/patterns
