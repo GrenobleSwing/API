@@ -9,6 +9,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+use GS\ApiBundle\Entity\Invoice;
 use GS\ApiBundle\Entity\Payment;
 
 /**
@@ -58,6 +59,13 @@ class PaymentController extends FOSRestController
             
             $em = $this->getDoctrine()->getManager();
             $em->persist($payment);
+            
+            $repo = $em->getRepository('GSApiBundle:Invoice');
+            if ('PAID' == $payment->getState() &&
+                    null === $repo->findOneByPayment($payment)) {
+                $invoice = new Invoice($payment);
+                $em->persist($invoice);
+            }
             $em->flush();
 
             $view = $this->view(array('id' => $payment->getId()), 201);
@@ -229,6 +237,11 @@ class PaymentController extends FOSRestController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            if ('PAID' == $payment->getState()) {
+                $invoice = new Invoice($payment);
+                $em->persist($invoice);
+            }
             $em->flush();
 
             $view = $this->view(null, 204);

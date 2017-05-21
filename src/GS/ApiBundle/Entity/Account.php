@@ -2,6 +2,7 @@
 
 namespace GS\ApiBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
@@ -71,6 +72,20 @@ class Account
     */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\Payment", mappedBy="account", cascade={"persist", "remove"})
+     * @Type("Relation<Payment>")
+     */
+    private $payments;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->payments = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -297,5 +312,39 @@ class Account
     public function getDisplayName()
     {
         return $this->getFirstName() . ' ' . $this->getLastName();
+    }
+
+    /**
+     * Add payment
+     *
+     * @param \GS\ApiBundle\Entity\Payment $payment
+     *
+     * @return Account
+     */
+    public function addPayment(\GS\ApiBundle\Entity\Payment $payment)
+    {
+        $this->payments[] = $payment;
+
+        return $this;
+    }
+
+    /**
+     * Remove payment
+     *
+     * @param \GS\ApiBundle\Entity\Payment $payment
+     */
+    public function removePayment(\GS\ApiBundle\Entity\Payment $payment)
+    {
+        $this->payments->removeElement($payment);
+    }
+
+    /**
+     * Get payments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPayments()
+    {
+        return $this->payments;
     }
 }

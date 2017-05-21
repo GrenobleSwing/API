@@ -6,15 +6,18 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
-use GS\ApiBundle\Entity\Year;
 use GS\ApiBundle\Entity\Activity;
-use GS\ApiBundle\Entity\Topic;
+use GS\ApiBundle\Entity\Address;
 use GS\ApiBundle\Entity\Category;
 use GS\ApiBundle\Entity\Discount;
 use GS\ApiBundle\Entity\Schedule;
+use GS\ApiBundle\Entity\Society;
+use GS\ApiBundle\Entity\Topic;
+use GS\ApiBundle\Entity\Venue;
+use GS\ApiBundle\Entity\Year;
+
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LoadData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -32,6 +35,32 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
     // Dans l'argument de la méthode load, l'objet $manager est l'EntityManager
     public function load(ObjectManager $manager)
     {
+        $address1 = new Address();
+        $address1->setStreet('2 rue Mozart');
+        $address1->setZipCode('38000');
+        $address1->setCity('Grenoble');
+
+        $venue = new Venue();
+        $venue->setName('Les Planches');
+        $venue->setAddress($address1);
+
+        $manager->persist($venue);
+
+        $address2 = new Address();
+        $address2->setStreet('3 rue Henri Moissan');
+        $address2->setZipCode('38100');
+        $address2->setCity('Grenoble');
+
+        $society = new Society();
+        $society->setAddress($address2);
+        $society->setPhoneNumber($this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR'));
+        $society->setName('Grenoble Swing');
+        $society->setEmail('info@grenobleswing.com');
+        $society->setTaxInformation('SIRET : 22222222');
+        $society->setVatInformation('TVA Intra : FR2222222');
+
+        $manager->persist($society);
+
         $year1 = new Year();
         $year1->setTitle('Annee 2015-2016');
         $year1->setDescription('description pour annee 2015-2016');

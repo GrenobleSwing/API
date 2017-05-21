@@ -46,6 +46,10 @@ user:
     type:     rest
     resource: GS\ApiBundle\Controller\UserController
 
+invoice:
+    type:     rest
+    resource: GS\ApiBundle\Controller\InvoiceController
+
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
     prefix:   /doc

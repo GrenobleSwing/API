@@ -9,6 +9,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+use GS\ApiBundle\Entity\Invoice;
+use GS\ApiBundle\Entity\Payment;
+use GS\ApiBundle\Entity\PaymentItem;
 use GS\ApiBundle\Entity\Registration;
 
 class LoadRegistrations extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
@@ -74,11 +77,27 @@ class LoadRegistrations extends AbstractFixture implements ContainerAwareInterfa
             $registration5->setTopic($this->getReference('topic5'));
             $registration5->setState('PAID');
             $registration5->setAmountPaid($registration5->getTopic()->getCategory()->getPrice());
-            
+
+            $paymentItem1 = new PaymentItem();
+            $paymentItem1->setRegistration($registration5);
+            $paymentItem1->setAmount($registration5->getAmountPaid());
+
+            $payment1 = new Payment();
+            $payment1->setDate(new \DateTime());
+            $payment1->setState('PAID');
+            $payment1->setType('CHECK');
+            $payment1->addItem($paymentItem1);
+
+            $invoice1 = new Invoice($payment1);
+            $invoice1->setNumber('2017-0000' . $i);
+            $invoice1->setDate(new \DateTime());
+
             $manager->persist($registration2);
             $manager->persist($registration3);
             $manager->persist($registration4);
             $manager->persist($registration5);
+            $manager->persist($payment1);
+            $manager->persist($invoice1);
         }
         
         $manager->flush();

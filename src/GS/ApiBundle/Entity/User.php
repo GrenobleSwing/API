@@ -12,7 +12,6 @@ use JMS\Serializer\Annotation\Exclude;
  * User
  *
  * @ORM\Entity
- * @ORM\Table(name="gs_users")
  * @UniqueEntity(fields="email", message="Email already taken")
  */
 class User implements AdvancedUserInterface, \Serializable

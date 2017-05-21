@@ -77,6 +77,13 @@ services:
         tags:
             - { name: security.voter }
 
+    gsapi.invoice_voter:
+        class: GS\ApiBundle\Security\InvoiceVoter
+        arguments: ['@security.access.decision_manager']
+        public: false
+        tags:
+            - { name: security.voter }
+
     gsapi.user.repository:
             class: Doctrine\ORM\EntityRepository
             factory: ["@doctrine.orm.entity_manager", getRepository]

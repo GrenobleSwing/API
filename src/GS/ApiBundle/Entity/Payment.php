@@ -69,6 +69,13 @@ class Payment
         $this->date = new \DateTime();
     }
 
+    /**
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Account", inversedBy="payments")
+     * @ORM\JoinColumn(nullable=false)
+     * @Type("Relation")
+     */
+    private $account;
+
 
     /**
      * Get id
@@ -163,6 +170,7 @@ class Payment
         $this->updateAmount();
         // Mark all the resitrations (one per item) as paid
         $this->updateRegistrations();
+        $this->updateAccount();
 
         return $this;
     }
@@ -178,6 +186,7 @@ class Payment
         // The Registration removed is not paid anymore but only validated
         $item->getRegistration()->setAmountPaid(0.0)->validate();
         $this->updateAmount();
+        $this->updateAccount();
     }
 
     /**
@@ -306,5 +315,43 @@ class Payment
     public function getComment()
     {
         return $this->comment;
+    }
+
+    /**
+     * Update account
+     *
+     * @return Payment
+     */
+    private function updateAccount()
+    {
+        if (!$this->items->isEmpty()) {
+            $this->account = $this->items->first()->getRegistration()->getAccount();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set account
+     *
+     * @param \GS\ApiBundle\Entity\Account $account
+     *
+     * @return Payment
+     */
+    public function setAccount(\GS\ApiBundle\Entity\Account $account)
+    {
+        $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * Get account
+     *
+     * @return \GS\ApiBundle\Entity\Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 }
