@@ -2,7 +2,7 @@
 {% set alreadyPaid = 0.0 %}
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 col-xs-12">
         <table class="table table-bordered">
             <thead>
                 <tr style="background-color: lightgray;">
@@ -37,7 +37,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-8 col-xs-8">
         <strong>Facture acquittée<br>
         Mode de paiement :</strong>
         {% if invoice.payment.type == "CASH" %}
@@ -52,7 +52,7 @@
             carte bancaire
         {% endif %}
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 col-xs-4">
         <table class="table table-bordered">
             <thead>
                 <tr style="background-color: lightgray">
@@ -73,7 +73,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-2 col-md-offset-10">
+    <div class="col-md-2 col-xs-2 col-md-offset-10 col-xs-offset-10">
         <table class="table table-bordered">
             <thead>
                 <tr style="background-color: lightgray;">
@@ -90,7 +90,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4 col-md-offset-8" style="text-align: center;">
+    <div class="col-md-4 col-xs-4 col-md-offset-8 col-xs-offset-8" style="text-align: center;">
         TVA non applicable, art. 293 B du CGI
     </div>
 </div>

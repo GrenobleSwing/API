@@ -58,5 +58,12 @@ RUN apt-get install -y git
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Intall wkhtmltopdf
+RUN apt-get install -y wget
+RUN wget https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz /root/wkhtmltox.tar
+RUN tar -xf /root/wkhtmltox.tar -C /root/
+RUN chown -R www-data:www-data /root/wkhtmltox
+RUN chmod -R ug+x /root/wkhtmltox/bin
+
 EXPOSE 80
 

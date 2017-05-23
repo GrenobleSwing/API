@@ -7,6 +7,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use GS\ApiBundle\Entity\Invoice;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @RouteResource("Invoice", pluralize=false)
@@ -28,10 +29,9 @@ class InvoiceController extends FOSRestController
      *   },
      *   output="GS\ApiBundle\Entity\Invoice",
      *   statusCodes={
-     *     200="Returns the Invoice",
+     *     200="Returns the Invoice in PDF",
      *   }
      * )
-     * @Security("is_granted('view', invoice)")
      */
     public function getAction(Invoice $invoice)
     {
@@ -39,10 +39,17 @@ class InvoiceController extends FOSRestController
             ->getRepository('GSApiBundle:Society')
             ->findAll()
             ;
-        return $this->render('GSApiBundle:Invoice:invoice.html.twig', array(
+        $html = $this->renderView('GSApiBundle:Invoice:invoice.html.twig', array(
             'invoice' => $invoice,
             'society' => $societies[0],
         ));
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type' => 'application/pdf',
+            )
+        );
     }
 
     /**
@@ -54,7 +61,6 @@ class InvoiceController extends FOSRestController
      *     200="Returns all the Invoices",
      *   }
      * )
-     * @Security("has_role('ROLE_TREASURER')")
      */
     public function cgetAction()
     {

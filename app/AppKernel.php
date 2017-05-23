@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new AppBundle\AppBundle(),
+            new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new GS\ApiBundle\GSApiBundle(),
         ];
 

@@ -135,3 +135,10 @@ nelmio_cors:
             max_age: 3600
 
 gs_api: ~
+
+knp_snappy:
+    temporary_folder: %kernel.cache_dir%/snappy
+    pdf:
+        enabled:    true
+        binary:     %wkhtmltopdf.binary%
+        options:    []

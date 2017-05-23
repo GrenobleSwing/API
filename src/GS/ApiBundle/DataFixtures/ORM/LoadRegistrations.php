@@ -89,7 +89,7 @@ class LoadRegistrations extends AbstractFixture implements ContainerAwareInterfa
             $payment1->addItem($paymentItem1);
 
             $invoice1 = new Invoice($payment1);
-            $invoice1->setNumber('2017-0000' . $i);
+            $invoice1->setNumber('2017' . sprintf('%05d', $i));
             $invoice1->setDate(new \DateTime());
 
             $manager->persist($registration2);

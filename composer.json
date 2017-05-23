@@ -47,6 +47,7 @@
         "doctrine/doctrine-migrations-bundle": "^1.0",
         "nelmio/api-doc-bundle": "^2.0",
         "nelmio/cors-bundle": "^1.5",
+        "knplabs/knp-snappy-bundle": "^1.4",
         "andres-montanez/magallanes": "dev-master"
 	
     },

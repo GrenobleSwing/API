@@ -63,7 +63,10 @@ class PaymentController extends FOSRestController
             $repo = $em->getRepository('GSApiBundle:Invoice');
             if ('PAID' == $payment->getState() &&
                     null === $repo->findOneByPayment($payment)) {
+                $prefix = $payment->getDate()->format('Y');
+                $invoiceNumber = $repo->countByNumber($prefix) + 1;
                 $invoice = new Invoice($payment);
+                $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));
                 $em->persist($invoice);
             }
             $em->flush();
@@ -239,7 +242,11 @@ class PaymentController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
 
             if ('PAID' == $payment->getState()) {
+                $prefix = $payment->getDate()->format('Y');
+                $invoiceNumber = $em->getRepository('GSApiBundle:Invoice')
+                        ->countByNumber($prefix) + 1;
                 $invoice = new Invoice($payment);
+                $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));
                 $em->persist($invoice);
             }
             $em->flush();
