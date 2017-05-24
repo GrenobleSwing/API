@@ -32,6 +32,7 @@ class InvoiceController extends FOSRestController
      *     200="Returns the Invoice in PDF",
      *   }
      * )
+     * @Security("is_granted('view', invoice)")
      */
     public function getAction(Invoice $invoice)
     {
@@ -61,6 +62,7 @@ class InvoiceController extends FOSRestController
      *     200="Returns all the Invoices",
      *   }
      * )
+     * @Security("has_role('ROLE_TREASURER')")
      */
     public function cgetAction()
     {

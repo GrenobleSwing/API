@@ -160,11 +160,6 @@ class Society
     public function setEmail($email)
     {
         $this->email = $email;
-        
-        // If the email is modified, the user login should be modified.
-        if (null !== $this->user) {
-            $this->user->setEmail($email);
-        }
 
         return $this;
     }

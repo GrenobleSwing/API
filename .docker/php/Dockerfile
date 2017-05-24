@@ -60,10 +60,10 @@ RUN a2enmod rewrite
 
 # Intall wkhtmltopdf
 RUN apt-get install -y wget
-RUN wget https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz /root/wkhtmltox.tar
-RUN tar -xf /root/wkhtmltox.tar -C /root/
-RUN chown -R www-data:www-data /root/wkhtmltox
-RUN chmod -R ug+x /root/wkhtmltox/bin
+RUN wget https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz -O/var/local/wkhtmltox.tar
+RUN tar -xf /var/local/wkhtmltox.tar -C /var/local/
+RUN chown -R www-data:www-data /var/local/wkhtmltox
+RUN chmod -R ug+x /var/local/wkhtmltox/bin
 
 EXPOSE 80
 
