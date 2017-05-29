@@ -4,6 +4,7 @@ namespace GS\ApiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -273,7 +274,16 @@ class RegistrationController extends FOSRestController
      */
     public function getAction(Registration $registration)
     {
+        $context = new Context();
+        $context->setGroups(array(
+            'Default',
+            'topic' => array(
+                'registration_group'
+            ),
+        ));
+
         $view = $this->view($registration, 200);
+        $view->setContext($context);
         return $this->handleView($view);
     }
 
@@ -295,7 +305,16 @@ class RegistrationController extends FOSRestController
             ->findAll()
             ;
 
+        $context = new Context();
+        $context->setGroups(array(
+            'Default',
+            'topic' => array(
+                'registration_group'
+            ),
+        ));
+
         $view = $this->view($listRegistrations, 200);
+        $view->setContext($context);
         return $this->handleView($view);
     }
 

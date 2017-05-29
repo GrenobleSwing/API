@@ -4,6 +4,7 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 
@@ -19,11 +20,13 @@ class Topic
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"registration_group"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=200)
+     * @Groups({"registration_group"})
      */
     private $title;
 
@@ -34,6 +37,7 @@ class Topic
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Groups({"registration_group"})
      */
     private $type = 'couple';
 

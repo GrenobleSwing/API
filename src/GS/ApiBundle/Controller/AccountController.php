@@ -3,6 +3,7 @@
 namespace GS\ApiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
@@ -314,7 +315,16 @@ class AccountController extends FOSRestController
                     ->findBy(array('account' => $account));
         }
 
+        $context = new Context();
+        $context->setGroups(array(
+            'Default',
+            'topic' => array(
+                'registration_group'
+            ),
+        ));
+
         $view = $this->view($registrations, 200);
+        $view->setContext($context);
         return $this->handleView($view);
     }
 

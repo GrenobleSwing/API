@@ -65,8 +65,6 @@ class Registration
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Topic", inversedBy="registrations")
      * @ORM\JoinColumn(nullable=false)
-     * @SerializedName("topicId")
-     * @Type("Relation")
      */
     private $topic;
 
