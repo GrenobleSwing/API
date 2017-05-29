@@ -17,7 +17,7 @@ class YearRepository extends \Doctrine\ORM\EntityRepository
                 ->where($qb->expr()->between(':date', 'y.startDate', 'y.endDate'))
                 ->setParameter('date', $now, \Doctrine\DBAL\Types\Type::DATETIME)
                 ;
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     public function findPreviousYear()
@@ -27,10 +27,10 @@ class YearRepository extends \Doctrine\ORM\EntityRepository
         
         $qb = $this->createQueryBuilder('y');
         $qb
-                ->where($qb->expr()->between(':date', 'y.startDate', 'y.startDate'))
+                ->where($qb->expr()->between(':date', 'y.startDate', 'y.endDate'))
                 ->setParameter('date', $date, \Doctrine\DBAL\Types\Type::DATETIME)
                 ;
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     public function findNextYear()
@@ -40,10 +40,10 @@ class YearRepository extends \Doctrine\ORM\EntityRepository
         
         $qb = $this->createQueryBuilder('y');
         $qb
-                ->where($qb->expr()->between(':date', 'y.startDate', 'y.startDate'))
+                ->where($qb->expr()->between(':date', 'y.startDate', 'y.endDate'))
                 ->setParameter('date', $date, \Doctrine\DBAL\Types\Type::DATETIME)
                 ;
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
 }

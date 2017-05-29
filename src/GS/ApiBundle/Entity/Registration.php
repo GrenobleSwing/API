@@ -31,7 +31,7 @@ class Registration
     private $role = 'leader';
 
     /**
-     * States: submitted, waiting, validated, paid, cancelled
+     * States: submitted, waiting, validated, paid, cancelled and partially_cancelled
      *                      validate
      *     |---------------------------------------|
      *     |                                       |

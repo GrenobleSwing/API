@@ -4,6 +4,7 @@ namespace GS\ApiBundle\Repository;
 
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Activity;
+use GS\ApiBundle\Entity\Year;
 
 /**
  * RegistrationRepository
@@ -72,6 +73,25 @@ class RegistrationRepository extends \Doctrine\ORM\EntityRepository
                 ->setParameter('act', $activity)
                 ->setParameter('statev', 'VALIDATED')
                 ->setParameter('statep', 'PAID');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getRegistrationsForAccountAndYear(Account $account, Year $year)
+    {
+        $qb = $this->createQueryBuilder('reg');
+        $qb
+                ->leftJoin('reg.topic', 'top')
+                ->addSelect('top')
+                ->leftJoin('top.category', 'cat')
+                ->addSelect('cat')
+                ->leftJoin('top.activity', 'act')
+                ->addSelect('act')
+                ->orderBy('cat.name', 'ASC')
+                ->where('reg.account = :acc')
+                ->andWhere('act.year = :y')
+                ->setParameter('acc', $account)
+                ->setParameter('y', $year);
 
         return $qb->getQuery()->getResult();
     }

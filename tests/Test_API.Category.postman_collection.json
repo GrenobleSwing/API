@@ -29,7 +29,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -65,7 +65,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/year/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/new",
                         "method": "GET",
                         "header": [
                             {
@@ -100,7 +100,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/year",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year",
                         "method": "POST",
                         "header": [
                             {
@@ -191,7 +191,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/year/{{yearId}}/activity/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/{{yearId}}/activity/new",
                         "method": "GET",
                         "header": [
                             {
@@ -226,7 +226,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/activity",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity",
                         "method": "POST",
                         "header": [
                             {
@@ -298,7 +298,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/activity/{{activityId}}/discount/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity/{{activityId}}/discount/new",
                         "method": "GET",
                         "header": [
                             {
@@ -333,7 +333,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/discount",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount",
                         "method": "POST",
                         "header": [
                             {
@@ -410,7 +410,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/discount",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount",
                         "method": "POST",
                         "header": [
                             {
@@ -488,7 +488,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/activity/{{activityId}}/category/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity/{{activityId}}/category/new",
                         "method": "GET",
                         "header": [
                             {
@@ -523,7 +523,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/category",
                         "method": "POST",
                         "header": [
                             {
@@ -598,7 +598,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/category/{{categoryId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -634,7 +634,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}/edit",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/category/{{categoryId}}/edit",
                         "method": "GET",
                         "header": [
                             {
@@ -665,7 +665,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/category/{{categoryId}}",
                         "method": "PUT",
                         "header": [
                             {
@@ -731,7 +731,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}/remove",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/category/{{categoryId}}/remove",
                         "method": "GET",
                         "header": [
                             {
@@ -762,7 +762,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/category/{{categoryId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/category/{{categoryId}}",
                         "method": "DELETE",
                         "header": [
                             {

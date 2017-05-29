@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -268,6 +269,52 @@ class AccountController extends FOSRestController
         }
         $balance = $this->get('gsapi.account_balance')->getBalance($account, $activity);
         $view = $this->view($balance, 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @ApiDoc(
+     *   section="Account",
+     *   description="Returns all the registrations of a specified Account",
+     *   requirements={
+     *     {
+     *       "name"="account",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Account id"
+     *     }
+     *   },
+     *   output="array<GS\ApiBundle\Entity\Registration>",
+     *   statusCodes={
+     *     200="Returns the Registrations of the specified Account",
+     *   }
+     * )
+     * @RequestParam(
+     *   name="yearId",
+     *   requirements="",
+     *   default=null,
+     *   description="",
+     *   nullable=true
+     * )
+     * @Security("is_granted('view', account)")
+     */
+    public function getRegistrationsAction(Account $account, Request $request)
+    {
+        if ( $request->query->has('yearId') ) {
+            $year = $this->getDoctrine()->getManager()
+                    ->getRepository('GSApiBundle:Year')
+                    ->find($request->query->get('yearId'));
+            $registrations = $this->getDoctrine()->getManager()
+                    ->getRepository('GSApiBundle:Registration')
+                    ->getRegistrationsForAccountAndYear($account, $year);
+        }
+        else {
+            $registrations = $this->getDoctrine()->getManager()
+                    ->getRepository('GSApiBundle:Registration')
+                    ->findBy(array('account' => $account));
+        }
+
+        $view = $this->view($registrations, 200);
         return $this->handleView($view);
     }
 

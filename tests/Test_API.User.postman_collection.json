@@ -29,7 +29,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -62,7 +62,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/identity",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/identity",
                         "method": "GET",
                         "header": [
                             {
@@ -93,7 +93,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/logout",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/logout",
                         "method": "GET",
                         "header": [
                             {
@@ -126,7 +126,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/identity",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/identity",
                         "method": "GET",
                         "header": [
                             {

@@ -29,7 +29,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -65,7 +65,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/account/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/account/new",
                         "method": "GET",
                         "header": [
                             {
@@ -100,7 +100,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/account",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/account",
                         "method": "POST",
                         "header": [
                             {
@@ -205,7 +205,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/account/{{accountId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/account/{{accountId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -238,7 +238,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/account",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/account",
                         "method": "GET",
                         "header": [
                             {
@@ -274,7 +274,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/account/{{accountId}}/edit",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/account/{{accountId}}/edit",
                         "method": "GET",
                         "header": [
                             {
@@ -305,7 +305,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/account/{{accountId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/account/{{accountId}}",
                         "method": "PUT",
                         "header": [
                             {
@@ -419,7 +419,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/account/{{accountId}}/remove",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/account/{{accountId}}/remove",
                         "method": "GET",
                         "header": [
                             {
@@ -450,7 +450,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/account/{{accountId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/account/{{accountId}}",
                         "method": "DELETE",
                         "header": [
                             {

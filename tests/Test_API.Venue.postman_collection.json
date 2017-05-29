@@ -29,7 +29,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -65,7 +65,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/venue/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/venue/new",
                         "method": "GET",
                         "header": [
                             {
@@ -100,7 +100,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/venue",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/venue",
                         "method": "POST",
                         "header": [
                             {
@@ -169,7 +169,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/venue/{{venueId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/venue/{{venueId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -205,7 +205,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/venue/{{venueId}}/edit",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/venue/{{venueId}}/edit",
                         "method": "GET",
                         "header": [
                             {
@@ -236,7 +236,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/venue/{{venueId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/venue/{{venueId}}",
                         "method": "PUT",
                         "header": [
                             {
@@ -314,7 +314,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/venue/{{venueId}}/remove",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/venue/{{venueId}}/remove",
                         "method": "GET",
                         "header": [
                             {
@@ -345,7 +345,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web{{debug}}/api/venue/{{venueId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/venue/{{venueId}}",
                         "method": "DELETE",
                         "header": [
                             {
