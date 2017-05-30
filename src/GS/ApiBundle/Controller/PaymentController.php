@@ -67,6 +67,7 @@ class PaymentController extends FOSRestController
                 $invoiceNumber = $repo->countByNumber($prefix) + 1;
                 $invoice = new Invoice($payment);
                 $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));
+                $invoice->setDate($payment->getDate());
                 $em->persist($invoice);
             }
             $em->flush();
@@ -247,6 +248,7 @@ class PaymentController extends FOSRestController
                         ->countByNumber($prefix) + 1;
                 $invoice = new Invoice($payment);
                 $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));
+                $invoice->setDate($payment->getDate());
                 $em->persist($invoice);
             }
             $em->flush();

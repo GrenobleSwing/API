@@ -324,8 +324,9 @@ class Payment
      */
     private function updateAccount()
     {
-        if (!$this->items->isEmpty()) {
-            $this->account = $this->items->first()->getRegistration()->getAccount();
+        if (!$this->items->isEmpty() &&
+                ($registration = $this->items->first()->getRegistration()) !== null) {
+            $this->account = $registration->getAccount();
         }
 
         return $this;
