@@ -5,8 +5,14 @@ namespace GS\ApiBundle\Controller;
 use Symfony\Component\Security\Core\Role\Role;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
+use GS\ApiBundle\Entity\User;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * @RouteResource("User", pluralize=false)
+ */
 class UserController extends FOSRestController
 {
     /**
@@ -63,4 +69,35 @@ class UserController extends FOSRestController
         $view = $this->view(null, 204);
         return $this->handleView($view);
     }
+
+    /**
+     * @ApiDoc(
+     *   section="User",
+     *   description="Returns the account of an existing User",
+     *   requirements={
+     *     {
+     *       "name"="user",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="User id"
+     *     }
+     *   },
+     *   output="GS\ApiBundle\Entity\Account",
+     *   statusCodes={
+     *     200="Returns the Account",
+     *   }
+     * )
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function getAccountAction(User $user)
+    {
+        $account = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Account')
+            ->findOneByUser($user)
+            ;
+        $view = $this->view($account, 200);
+        return $this->handleView($view);
+    }
+
+
 }
