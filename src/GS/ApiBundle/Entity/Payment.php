@@ -4,12 +4,34 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Type;
 use PayPal\Api\ItemList;
 
 /**
  * Payment
  *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *         "get_payment",
+ *         parameters = { "payment" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "edit",
+ *     href = @Hateoas\Route(
+ *         "edit_payment",
+ *         parameters = { "payment" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "remove",
+ *     href = @Hateoas\Route(
+ *         "remove_payment",
+ *         parameters = { "payment" = "expr(object.getId())" }
+ *     )
+ * )
  * @ORM\Entity
  */
 class Payment

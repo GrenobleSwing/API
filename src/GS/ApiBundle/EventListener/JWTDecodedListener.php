@@ -29,7 +29,12 @@ class JWTDecodedListener
     public function onJWTDecoded(JWTDecodedEvent $event)
     {
         $payload = $event->getPayload();
-        $hash = $this->repository->findOneBy(array('email' => $payload['username']))->getHash();
+        $user = $this->repository->findOneBy(array('email' => $payload['username']));
+        if ($user === null) {
+            $event->markAsInvalid();
+            return;
+        }
+        $hash = $user->getHash();
         
         if (!isset($payload['hash']) || $payload['hash'] != $hash) {
             $event->markAsInvalid();

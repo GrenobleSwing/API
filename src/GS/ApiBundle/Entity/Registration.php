@@ -3,17 +3,70 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Registration
  *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *         "get_registration",
+ *         parameters = { "registration" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "validate",
+ *     href = @Hateoas\Route(
+ *         "validate_registration",
+ *         parameters = { "id" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "wait",
+ *     href = @Hateoas\Route(
+ *         "wait_registration",
+ *         parameters = { "id" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "cancel",
+ *     href = @Hateoas\Route(
+ *         "cancel_registration",
+ *         parameters = { "id" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "pay",
+ *     href = @Hateoas\Route(
+ *         "pay_registration",
+ *         parameters = { "id" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "edit",
+ *     href = @Hateoas\Route(
+ *         "edit_registration",
+ *         parameters = { "registration" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "remove",
+ *     href = @Hateoas\Route(
+ *         "remove_registration",
+ *         parameters = { "registration" = "expr(object.getId())" }
+ *     )
+ * )
+ *
  * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\RegistrationRepository")
  * @UniqueEntity(
- *     fields={"topic", "account"},
- *     message="This registration already exists."
+ *     fields = {"topic", "account"},
+ *     repositoryMethod = "checkUniqueness",
+ *     message = "This registration already exists."
  * )
  */
 class Registration
@@ -29,6 +82,30 @@ class Registration
      * @ORM\Column(type="string", length=16)
      */
     private $role = 'leader';
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $withPartner = false;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     strict = true
+     * )
+     */
+    private $partnerEmail;
+
+    /**
+     * @ORM\Column(type="string", length=64, nullable=true)
+     */
+    private $partnerFirstName;
+
+    /**
+     * @ORM\Column(type="string", length=64, nullable=true)
+     */
+    private $partnerLastName;
 
     /**
      * States: submitted, waiting, validated, paid, cancelled and partially_cancelled
@@ -75,6 +152,13 @@ class Registration
      * @Type("Relation")
      */
     private $account;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Registration")
+     * @SerializedName("partnerRegistrationId")
+     * @Type("Relation")
+     */
+    private $partnerRegistration = null;
 
     public function __construct()
     {
@@ -305,5 +389,128 @@ class Registration
             $this->setState('CANCELLED');
         }
         return $this;
+    }
+
+    /**
+     * Set partnerEmail
+     *
+     * @param string $partnerEmail
+     *
+     * @return Registration
+     */
+    public function setPartnerEmail($partnerEmail)
+    {
+        $this->partnerEmail = $partnerEmail;
+
+        return $this;
+    }
+
+    /**
+     * Get partnerEmail
+     *
+     * @return string
+     */
+    public function getPartnerEmail()
+    {
+        return $this->partnerEmail;
+    }
+
+    /**
+     * Set partnerFirstName
+     *
+     * @param string $partnerFirstName
+     *
+     * @return Registration
+     */
+    public function setPartnerFirstName($partnerFirstName)
+    {
+        $this->partnerFirstName = $partnerFirstName;
+
+        return $this;
+    }
+
+    /**
+     * Get partnerFirstName
+     *
+     * @return string
+     */
+    public function getPartnerFirstName()
+    {
+        return $this->partnerFirstName;
+    }
+
+    /**
+     * Set partnerLastName
+     *
+     * @param string $partnerLastName
+     *
+     * @return Registration
+     */
+    public function setPartnerLastName($partnerLastName)
+    {
+        $this->partnerLastName = $partnerLastName;
+
+        return $this;
+    }
+
+    /**
+     * Get partnerLastName
+     *
+     * @return string
+     */
+    public function getPartnerLastName()
+    {
+        return $this->partnerLastName;
+    }
+
+    /**
+     * Set withPartner
+     *
+     * @param boolean $withPartner
+     *
+     * @return Registration
+     */
+    public function setWithPartner($withPartner)
+    {
+        $this->withPartner = $withPartner;
+
+        return $this;
+    }
+
+    /**
+     * Get withPartner
+     *
+     * @return boolean
+     */
+    public function getWithPartner()
+    {
+        return $this->withPartner;
+    }
+
+    /**
+     * Set partnerRegistration
+     *
+     * @param \GS\ApiBundle\Entity\Registration $partnerRegistration
+     *
+     * @return Registration
+     */
+    public function setPartnerRegistration(\GS\ApiBundle\Entity\Registration $partnerRegistration = null)
+    {
+        $this->partnerRegistration = $partnerRegistration;
+        if ($this !== $partnerRegistration->getPartnerRegistration()) {
+            $partnerRegistration->setPartnerRegistration($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get partnerRegistration
+     *
+     * @return \GS\ApiBundle\Entity\Registration
+     */
+    public function getPartnerRegistration()
+    {
+        return $this->partnerRegistration;
     }
 }

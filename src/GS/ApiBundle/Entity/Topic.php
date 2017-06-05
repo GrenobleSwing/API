@@ -4,6 +4,7 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
@@ -12,6 +13,41 @@ use JMS\Serializer\Annotation\SerializedName;
 /**
  * Topic
  *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *         "get_topic",
+ *         parameters = { "topic" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "edit",
+ *     href = @Hateoas\Route(
+ *         "edit_topic",
+ *         parameters = { "topic" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "remove",
+ *     href = @Hateoas\Route(
+ *         "remove_topic",
+ *         parameters = { "topic" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "new_registration",
+ *     href = @Hateoas\Route(
+ *         "new_topic_registration",
+ *         parameters = { "topic" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "registrations",
+ *     href = @Hateoas\Route(
+ *         "get_topic_registrations",
+ *         parameters = { "topic" = "expr(object.getId())" }
+ *     )
+ * )
  * @ORM\Entity
  */
 class Topic
@@ -100,10 +136,10 @@ class Topic
 
     /**
      * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
-     * @ORM\JoinTable(name="topic_manager")
+     * @ORM\JoinTable(name="topic_moderator")
      * @Type("Relation<User>")
      */
-    private $managers;
+    private $moderators;
 
 
     public function __construct()
@@ -111,7 +147,7 @@ class Topic
         $this->options = array();
         $this->registrations = new ArrayCollection();
         $this->owners = new ArrayCollection();
-        $this->managers = new ArrayCollection();
+        $this->moderators = new ArrayCollection();
         $this->schedules = new ArrayCollection();
     }
 
@@ -150,37 +186,37 @@ class Topic
     }
 
     /**
-     * Add manager
+     * Add moderator
      *
-     * @param \GS\ApiBundle\Entity\User $manager
+     * @param \GS\ApiBundle\Entity\User $moderator
      *
      * @return Topic
      */
-    public function addManager(\GS\ApiBundle\Entity\User $manager)
+    public function addManager(\GS\ApiBundle\Entity\User $moderator)
     {
-        $this->managers[] = $manager;
+        $this->moderators[] = $moderator;
         return $this;
     }
 
     /**
-     * Remove manager
+     * Remove moderator
      *
-     * @param \GS\ApiBundle\Entity\User $manager
+     * @param \GS\ApiBundle\Entity\User $moderator
      */
-    public function removeManager(\GS\ApiBundle\Entity\User $manager)
+    public function removeManager(\GS\ApiBundle\Entity\User $moderator)
     {
-        $this->managers->removeElement($manager);
-        $manager->removeTopic($this);
+        $this->moderators->removeElement($moderator);
+        $moderator->removeTopic($this);
     }
 
     /**
-     * Get managers
+     * Get moderators
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getManagers()
     {
-        return $this->managers;
+        return $this->moderators;
     }
 
     /**

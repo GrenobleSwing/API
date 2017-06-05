@@ -4,12 +4,41 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 use JMS\Serializer\Annotation\Type;
 
 /**
  * Year
  *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *         "get_year",
+ *         parameters = { "year" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "edit",
+ *     href = @Hateoas\Route(
+ *         "edit_year",
+ *         parameters = { "year" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "remove",
+ *     href = @Hateoas\Route(
+ *         "remove_year",
+ *         parameters = { "year" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "new_activity",
+ *     href = @Hateoas\Route(
+ *         "new_year_activity",
+ *         parameters = { "year" = "expr(object.getId())" }
+ *     )
+ * )
  * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\YearRepository")
  */
 class Year

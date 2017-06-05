@@ -4,6 +4,7 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
@@ -12,6 +13,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Account
  *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *         "get_account",
+ *         parameters = { "account" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "edit",
+ *     href = @Hateoas\Route(
+ *         "edit_account",
+ *         parameters = { "account" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "remove",
+ *     href = @Hateoas\Route(
+ *         "remove_account",
+ *         parameters = { "account" = "expr(object.getId())" }
+ *     )
+ * )
  * @ORM\Entity
  */
 class Account
