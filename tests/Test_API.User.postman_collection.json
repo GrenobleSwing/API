@@ -142,6 +142,96 @@
                         "description": ""
                     },
                     "response": []
+                },
+                {
+                    "name": "api/user/new",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';",
+                                    "var html = cheerio(responseBody);",
+                                    "result = html.find('#user__token');",
+                                    "postman.setGlobalVariable('form_token', result.attr('value'));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/user/new",
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/user",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 201\"] = responseCode.code === 201;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
+                                    "var jsonData = JSON.parse(responseBody);",
+                                    "postman.setGlobalVariable(\"venueId\", jsonData.id);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/user",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "user[email]",
+                                    "value": "titi@bing.com",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "user[plainPassword][first]",
+                                    "value": "motdepasse",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "user[plainPassword][second]",
+                                    "value": "motdepasse",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "user[_token]",
+                                    "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
                 }
             ]
         }

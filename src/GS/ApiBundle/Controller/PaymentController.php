@@ -59,6 +59,10 @@ class PaymentController extends FOSRestController
             
             $em = $this->getDoctrine()->getManager();
             $em->persist($payment);
+
+            $repoAccount = $em->getRepository('GSApiBundle:Account');
+            $account = $repoAccount->findOneByUser($this->getUser());
+            $account->addPayment($payment);
             
             $repo = $em->getRepository('GSApiBundle:Invoice');
             if ('PAID' == $payment->getState() &&
@@ -101,6 +105,10 @@ class PaymentController extends FOSRestController
      */
     public function removeAction(Payment $payment)
     {
+        if ('PAID' == $payment->getState()) {
+            $view = $this->view(null, 403);
+            return $this->handleView($view);
+        }
         $form = $this->get('gsapi.form_generator')->getDeleteForm($payment, 'payment');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
@@ -127,10 +135,16 @@ class PaymentController extends FOSRestController
      */
     public function deleteAction(Payment $payment, Request $request)
     {
+        if ('PAID' == $payment->getState()) {
+            $view = $this->view(null, 403);
+            return $this->handleView($view);
+        }
+
         $form = $this->get('gsapi.form_generator')->getDeleteForm($payment, 'payment');
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+            $payment->getAccount()->removePayment($payment);
             $em = $this->getDoctrine()->getManager();
             $em->remove($payment);
             $em->flush();
@@ -242,7 +256,9 @@ class PaymentController extends FOSRestController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            if ('PAID' == $payment->getState()) {
+            $invoice = $em->getRepository('GSApiBundle:Invoice')
+                ->findOneByPayment($payment);
+            if ('PAID' == $payment->getState() && null === $invoice) {
                 $prefix = $payment->getDate()->format('Y');
                 $invoiceNumber = $em->getRepository('GSApiBundle:Invoice')
                         ->countByNumber($prefix) + 1;
@@ -254,7 +270,7 @@ class PaymentController extends FOSRestController
             $em->flush();
 
             $view = $this->view(null, 204);
-            
+
         } else {
             $view = $this->get('gsapi.form_generator')->getFormView($form);
         }

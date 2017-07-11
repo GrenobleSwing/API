@@ -33,6 +33,19 @@ class ActivityType extends AbstractType
                 ->add('description', TextareaType::class, array(
                     'label' => 'Description',
                 ))
+                ->add('membersOnly', ChoiceType::class, array(
+                    'label' => 'Reserve aux membres de l\'association',
+                    'choices' => array(
+                        "Oui" => true,
+                        "Non" => false
+                    )
+                ))
+                ->add('membershipTopic', EntityType::class, array(
+                    'class' => 'GSApiBundle:Topic',
+                    'choice_label' => 'title',
+                    'choices' => $options['membership_topics'],
+                    'placeholder' => 'Choissisez l\'adhesion obligatoire',
+                ))
                 ->add('membership', ChoiceType::class, array(
                     'label' => 'Ensemble des adhesions possibles',
                     'choices' => array(
@@ -43,31 +56,33 @@ class ActivityType extends AbstractType
                 ->add('submit', SubmitType::class)
         ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $activity = $event->getData();
-            $form = $event->getForm();
-
-            if (null !== $activity && null !== $activity->getYear()) {
-                $this->disableField($form->get('year'));
-            }
-        });
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $activity = $event->getData();
+//            $form = $event->getForm();
+//
+//            if (null !== $activity && null !== $activity->getYear()) {
+//                $this->disableField($form->get('year'));
+//            }
+//        });
     }
 
-    private function disableField(FormInterface $field)
-    {
-        $parent = $field->getParent();
-        $options = $field->getConfig()->getOptions();
-        $name = $field->getName();
-        $type = get_class($field->getConfig()->getType()->getInnerType());
-        $parent->remove($name);
-        $parent->add($name, $type, array_merge($options, ['disabled' => true]));
-    }
+//    private function disableField(FormInterface $field)
+//    {
+//        $parent = $field->getParent();
+//        $options = $field->getConfig()->getOptions();
+//        $name = $field->getName();
+//        $type = get_class($field->getConfig()->getType()->getInnerType());
+//        $parent->remove($name);
+//        $parent->add($name, $type, array_merge($options, ['disabled' => true]));
+//    }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => Activity::class,
         ));
+
+        $resolver->setRequired('membership_topics');
     }
 
 }

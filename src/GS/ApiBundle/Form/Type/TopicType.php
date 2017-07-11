@@ -30,7 +30,12 @@ class TopicType extends AbstractType
                     'choice_label' => 'title',
                     'position' => 'first',
                 ))
-                ->add('category')
+                ->add('category', EntityType::class, array(
+                    'label' => 'Categories',
+                    'class' => 'GSApiBundle:Category',
+                    'choice_label' => 'name',
+                    'position' => array('after' => 'activity'),
+                ))
 //                A ameliorer pour ne prendre en compte que ceux de l'annee
                 ->add('requiredTopics', EntityType::class, array(
                     'label' => 'Pre-requis',
@@ -49,7 +54,15 @@ class TopicType extends AbstractType
                     'choices' => array(
                         'Solo' => 'solo',
                         'Couple' => 'couple',
+                        'Adhesion' => 'adhesion',
                     ),
+                ))
+                ->add('autoValidation', ChoiceType::class, array(
+                    'label' => 'Validation automatique des inscriptions a ce topic ?',
+                    'choices' => array(
+                        "Oui" => true,
+                        "Non" => false
+                    )
                 ))
                 ->add('schedules', CollectionType::class, array(
                     'label' => 'Planning',

@@ -346,6 +346,7 @@ class Account
     public function addPayment(\GS\ApiBundle\Entity\Payment $payment)
     {
         $this->payments[] = $payment;
+        $payment->setAccount($this);
 
         return $this;
     }

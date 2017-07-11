@@ -310,6 +310,32 @@ class YearController extends FOSRestController
     /**
      * @ApiDoc(
      *   section="Year",
+     *   description="Returns all member Accounts of an existing Year",
+     *   requirements={
+     *     {
+     *       "name"="year",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Year id"
+     *     }
+     *   },
+     *   output="array<GS\ApiBundle\Entity\Account>",
+     *   statusCodes={
+     *     200="Returns the Year",
+     *   }
+     * )
+     * @Security("has_role('ROLE_SECRETARY')")
+     */
+    public function getMembersAction(Year $year)
+    {
+        $members = $this->get('gsapi.user.membership')->getMembers($year);
+        $view = $this->view($members, 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @ApiDoc(
+     *   section="Year",
      *   description="Returns a form to create a new Activity for the given Year",
      *   input="GS\ApiBundle\Form\Type\ActivityType",
      *   requirements={

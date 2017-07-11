@@ -48,7 +48,7 @@ use JMS\Serializer\Annotation\SerializedName;
  *         parameters = { "topic" = "expr(object.getId())" }
  *     )
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\TopicRepository")
  */
 class Topic
 {
@@ -85,8 +85,11 @@ class Topic
     private $state = 'DRAFT';
 
     /**
-     * automatic_validation: registrations are automatically validated
-     * 
+     * @ORM\Column(type="boolean")
+     */
+    private $autoValidation = false;
+
+    /**
      * @ORM\Column(type="array")
      */
     private $options;
@@ -192,7 +195,7 @@ class Topic
      *
      * @return Topic
      */
-    public function addManager(\GS\ApiBundle\Entity\User $moderator)
+    public function addModerator(\GS\ApiBundle\Entity\User $moderator)
     {
         $this->moderators[] = $moderator;
         return $this;
@@ -203,7 +206,7 @@ class Topic
      *
      * @param \GS\ApiBundle\Entity\User $moderator
      */
-    public function removeManager(\GS\ApiBundle\Entity\User $moderator)
+    public function removeModerator(\GS\ApiBundle\Entity\User $moderator)
     {
         $this->moderators->removeElement($moderator);
         $moderator->removeTopic($this);
@@ -214,7 +217,7 @@ class Topic
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getManagers()
+    public function getModerators()
     {
         return $this->moderators;
     }
@@ -515,4 +518,29 @@ class Topic
     {
         return $this->schedules;
     }
+
+    /**
+     * Set autoValidation
+     *
+     * @param boolean $autoValidation
+     *
+     * @return Topic
+     */
+    public function setAutoValidation($autoValidation)
+    {
+        $this->autoValidation = $autoValidation;
+
+        return $this;
+    }
+
+    /**
+     * Get autoValidation
+     *
+     * @return boolean
+     */
+    public function getAutoValidation()
+    {
+        return $this->autoValidation;
+    }
+
 }

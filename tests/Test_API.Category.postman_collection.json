@@ -262,6 +262,12 @@
                                     "enabled": true
                                 },
                                 {
+                                    "key": "activity[membersOnly]",
+                                    "value": "1",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
                                     "key": "activity[membership]",
                                     "value": "0",
                                     "type": "text",
@@ -599,6 +605,39 @@
                     ],
                     "request": {
                         "url": "{{protocol}}://{{domain}}{{folder}}/web/api/category/{{categoryId}}",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/category",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/category",
                         "method": "GET",
                         "header": [
                             {

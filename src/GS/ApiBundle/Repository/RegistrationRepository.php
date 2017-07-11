@@ -4,6 +4,7 @@ namespace GS\ApiBundle\Repository;
 
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Activity;
+use GS\ApiBundle\Entity\Topic;
 use GS\ApiBundle\Entity\Year;
 
 /**
@@ -95,4 +96,71 @@ class RegistrationRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getMembershipRegistrationsForAccountAndYear(Account $account, Year $year)
+    {
+        $qb = $this->createQueryBuilder('reg');
+        $qb
+                ->leftJoin('reg.topic', 'top')
+                ->addSelect('top')
+                ->leftJoin('top.category', 'cat')
+                ->addSelect('cat')
+                ->leftJoin('top.activity', 'act')
+                ->addSelect('act')
+                ->where('reg.account = :acc')
+                ->andWhere('act.year = :y')
+                ->andWhere('act.membership = :true')
+                ->setParameter('acc', $account)
+                ->setParameter('true', true)
+                ->setParameter('y', $year);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getMembershipRegistrationsForYear(Year $year)
+    {
+        $qb = $this->createQueryBuilder('reg');
+        $qb
+                ->leftJoin('reg.topic', 'top')
+                ->addSelect('top')
+                ->leftJoin('top.category', 'cat')
+                ->addSelect('cat')
+                ->leftJoin('top.activity', 'act')
+                ->addSelect('act')
+                ->where('act.year = :y')
+                ->andWhere('act.membership = :true')
+                ->setParameter('true', true)
+                ->setParameter('y', $year);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function checkUniqueness(array $criteria) {
+        $qb = $this->createQueryBuilder('reg');
+        $qb
+                ->where('reg.account = :account')
+                ->andWhere('reg.topic = :topic')
+                ->andWhere('reg.state != :cancel')
+                ->setParameter('cancel', 'CANCELLED')
+                ->setParameter('topic', $criteria['topic'])
+                ->setParameter('account', $criteria['account']);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getRegistrationsForAccountAndTopic(Account $account, Topic $topic)
+    {
+        $qb = $this->createQueryBuilder('reg');
+        $qb
+                ->select('count(reg.id)')
+                ->where('reg.account = :acc')
+                ->andWhere('reg.topic = :topic')
+                ->andWhere($qb->expr()->notLike('reg.state', ':cancel'))
+                ->setParameter('acc', $account)
+                ->setParameter('topic', $topic)
+                ->setParameter('cancel', '%CANCELLED');
+
+        return $qb->getQuery()->getResult();
+    }
+
 }

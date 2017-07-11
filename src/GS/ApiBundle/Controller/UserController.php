@@ -2,11 +2,13 @@
 
 namespace GS\ApiBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Role\Role;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use GS\ApiBundle\Entity\User;
+use GS\ApiBundle\Form\Type\UserType;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
@@ -99,5 +101,56 @@ class UserController extends FOSRestController
         return $this->handleView($view);
     }
 
+    /**
+     * @ApiDoc(
+     *   section="User",
+     *   description="Returns a form to create a new User",
+     *   output="GS\ApiBundle\Form\Type\UserType",
+     *   statusCodes={
+     *     200="You have permission to create an User, the form is returned",
+     *   }
+     * )
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     */
+    public function newAction()
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        return $this->handleView($view);
+    }
 
+    /**
+     * @ApiDoc(
+     *   section="User",
+     *   description="Create a new User",
+     *   input="GS\ApiBundle\Form\Type\UserType",
+     *   statusCodes={
+     *     201="The User has been created",
+     *   }
+     * )
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     */
+    public function postAction(Request $request)
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $this->get('security.password_encoder')
+                ->encodePassword($user, $user->getPlainPassword());
+            $user->setPassword($password);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            $view = $this->view(array('id' => $user->getId()), 201);
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form);
+        }
+
+        return $this->handleView($view);
+    }
 }

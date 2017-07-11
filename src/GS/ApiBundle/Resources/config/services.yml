@@ -15,12 +15,12 @@ services:
 
     gsapi.form_generator:
         class: GS\ApiBundle\Services\FormGeneratorService
-        arguments: [ '@router', '@form.factory' ]
-    
+        arguments: [ '@router', '@form.factory', '@doctrine.orm.entity_manager' ]
+
     gsapi.account_balance:
         class: GS\ApiBundle\Services\AccountBalanceService
         arguments: [ '@doctrine.orm.entity_manager' ]
-    
+
     gsapi.account_voter:
         class: GS\ApiBundle\Security\AccountVoter
         arguments: ['@security.access.decision_manager']
@@ -107,3 +107,11 @@ services:
         arguments: ['']
         tags:
             - { name: doctrine.event_subscriber }
+
+    gsapi.user.membership:
+        class: GS\ApiBundle\Services\MembershipService
+        arguments: [ '@doctrine.orm.entity_manager' ]
+
+    gsapi.registration.service:
+        class: GS\ApiBundle\Services\RegistrationService
+        arguments: [ '@doctrine.orm.entity_manager' ]

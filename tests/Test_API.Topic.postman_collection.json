@@ -1,13 +1,13 @@
 {
     "variables": [],
     "info": {
-        "name": "Test Grenoble Swing API - Year",
+        "name": "Test Grenoble Swing API - Topic",
         "description": "",
         "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
     },
     "item": [
         {
-            "name": "Topic",
+            "name": "Admin",
             "description": "",
             "item": [
                 {
@@ -365,6 +365,12 @@
                                 {
                                     "key": "activity[description]",
                                     "value": "Listes des cours et des troupes pour l'annee",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "activity[membersOnly]",
+                                    "value": "1",
                                     "type": "text",
                                     "enabled": true
                                 },
@@ -791,6 +797,12 @@
                                     "enabled": true
                                 },
                                 {
+                                    "key": "topic[autoValidation]",
+                                    "value": "0",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
                                     "key": "topic[schedules][0][startDate][day]",
                                     "value": "26",
                                     "type": "text",
@@ -897,6 +909,39 @@
                     ],
                     "request": {
                         "url": "{{protocol}}://{{domain}}{{folder}}/web/api/topic/{{topicId}}",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/topic",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/topic",
                         "method": "GET",
                         "header": [
                             {

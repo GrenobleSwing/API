@@ -48,6 +48,7 @@ class LoadUser extends AbstractFixture implements ContainerAwareInterface, Order
         $admin_account->setPhoneNumber($admin_phoneNumber);
 
         $this->addReference('admin_account', $admin_account);
+        $this->addReference('admin_user', $admin_user);
 
         $manager->persist($admin_account);
         
@@ -69,8 +70,44 @@ class LoadUser extends AbstractFixture implements ContainerAwareInterface, Order
         $organizer_account->setPhoneNumber($organizer_phoneNumber);
 
         $this->addReference('organizer_account', $organizer_account);
+        $this->addReference('organizer_user', $organizer_user);
 
         $manager->persist($organizer_account);
+        
+        $user1 = new User();
+        $user1->setEmail('john.doe@test.com');
+        $user1_password = $this->container->get('security.password_encoder')
+            ->encodePassword($user1, 'test');
+        $user1->setPassword($user1_password);
+
+        $user1_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
+        $user1_account = new Account();
+        $user1_account->setFirstName('John');
+        $user1_account->setLastName('Doe');
+        $user1_account->setAddress(new Address());
+        $user1_account->setBirthDate(new \DateTime('1986-04-26'));
+        $user1_account->setUser($user1);
+        $user1_account->setEmail($user1->getEmail());
+        $user1_account->setPhoneNumber($user1_phoneNumber);
+
+        $user2 = new User();
+        $user2->setEmail('jane.doe@test.com');
+        $user2_password = $this->container->get('security.password_encoder')
+            ->encodePassword($user2, 'test');
+        $user2->setPassword($user2_password);
+
+        $user2_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
+        $user2_account = new Account();
+        $user2_account->setFirstName('Jane');
+        $user2_account->setLastName('Doe');
+        $user2_account->setAddress(new Address());
+        $user2_account->setBirthDate(new \DateTime('1986-04-26'));
+        $user2_account->setUser($user2);
+        $user2_account->setEmail($user2->getEmail());
+        $user2_account->setPhoneNumber($user2_phoneNumber);
+
+        $manager->persist($user1_account);
+        $manager->persist($user2_account);
         
         for ($i = 0; $i < 10; $i++) {
             $user = new User();

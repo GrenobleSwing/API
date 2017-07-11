@@ -39,6 +39,13 @@ use JMS\Serializer\Annotation\Type;
  *         parameters = { "year" = "expr(object.getId())" }
  *     )
  * )
+ * @Hateoas\Relation(
+ *     "members",
+ *     href = @Hateoas\Route(
+ *         "get_year_members",
+ *         parameters = { "year" = "expr(object.getId())" }
+ *     )
+ * )
  * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\YearRepository")
  */
 class Year

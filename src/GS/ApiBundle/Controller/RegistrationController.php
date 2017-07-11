@@ -2,6 +2,7 @@
 
 namespace GS\ApiBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use FOS\RestBundle\Context\Context;
@@ -46,10 +47,38 @@ class RegistrationController extends FOSRestController
         }
         $registration->validate();
         $em = $this->getDoctrine()->getManager();
+
+        $this->fulfillMembershipRegistration($registration, $em);
+
+        # In case of a registration with a partner, validate also the partner
+        if (null !== $registration->getPartnerRegistration()) {
+            $registration->getPartnerRegistration()->validate();
+            $this->fulfillMembershipRegistration($registration->getPartnerRegistration(), $em);
+        }
         $em->flush();
 
         $view = $this->view(null, 204);
         return $this->handleView($view);
+    }
+
+    # Check if the membership is mandatory for the Registration
+    # and do the needed work in case it is.
+    private function fulfillMembershipRegistration (Registration $registration, EntityManager $em) {
+        $topic = $registration->getTopic();
+        $account = $registration->getAccount();
+        $activity = $topic->getActivity();
+        $year = $activity->getYear();
+
+        if ($activity->getMembersOnly() &&
+                !$this->get('gsapi.user.membership')->isMember($account, $year) &&
+                null !== $activity->getMembershipTopic()) {
+            $membership = new Registration();
+            $membership->setAccount($account);
+            $membership->setTopic($activity->getMembershipTopic());
+            $membership->validate();
+            $em->persist($membership);
+        }
+        return $this;
     }
 
     /**
@@ -109,7 +138,12 @@ class RegistrationController extends FOSRestController
             throw new MethodNotAllowedHttpException('Impossible to cancel Registration');
         }
         $registration->cancel();
-        
+
+        if (null !== $registration->getPartnerRegistration()) {
+            $registration->getPartnerRegistration()->setPartnerRegistration(null);
+            $registration->setPartnerRegistration(null);
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->flush();
 
@@ -162,33 +196,94 @@ class RegistrationController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getRegistrationForm(null, 'post_registration');
+        $registration = new Registration();
+        $account = $this->getDoctrine()
+                ->getRepository('GSApiBundle:Account')
+                ->findOneByUser($this->getUser());
+        $registration->setAccount($account);
+
+        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'post_registration');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $registration = $form->getData();
-            
-            $account = $this->getDoctrine()
-                    ->getRepository('GSApiBundle:Account')
-                    ->findOneByUser($this->getUser());
-            $registration->setAccount($account);
+
+            if ($registration->getWithPartner() &&
+                    null === $registration->getPartnerRegistration()) {
+                $partner = $this->findPartner($registration);
+
+                if (null !== $partner &&
+                        null === $partner->getPartnerRegistration()) {
+                    $registration->setPartnerRegistration($partner);
+                }
+            }
 
             $topic = $registration->getTopic();
             $topic->addRegistration($registration);
-            
-            $registration->setState('SUBMITTED');
-            
+
+            if ($topic->getAutoValidation()) {
+                $registration->validate();
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($registration);
             $em->flush();
 
             $view = $this->view(array('id' => $registration->getId()), 201);
-            
+
         } else {
             $view = $this->get('gsapi.form_generator')->getFormView($form);
         }
         return $this->handleView($view);
+    }
+
+    private function findPartner (Registration $registration)
+    {
+        $partnerAccount = $this->findPartnerAccount($registration);
+        if ($partnerAccount === null) {
+            return null;
+        }
+        if ($registration->getRole() == 'leader') {
+            $partnerRole = 'follower';
+        } else {
+            $partnerRole = 'leader';
+        }
+        $partnerRegistrations = $this->getDoctrine()
+                ->getRepository('GSApiBundle:Registration')
+                ->findBy(array(
+                    'account' => $partnerAccount,
+                    'topic' => $registration->getTopic(),
+                    'role' => $partnerRole,
+                    ));
+        if ($partnerRegistrations === null || count($partnerRegistrations) != 1) {
+            return null;
+        }
+        return $partnerRegistrations[0];
+    }
+
+    private function findPartnerAccount (Registration $registration)
+    {
+        $partnerAccounts = null;
+        if ($registration->getPartnerEmail() !== null) {
+            $partnerAccounts = $this->getDoctrine()
+                    ->getRepository('GSApiBundle:Account')
+                    ->findByEmail($registration->getPartnerEmail());
+        }
+        elseif ($registration->getPartnerFirstName() !== null &&
+                $registration->getPartnerLastName() !== null) {
+            $partnerAccounts = $this->getDoctrine()
+                    ->getRepository('GSApiBundle:Account')
+                    ->findBy(array(
+                        'firstName' => $registration->getPartnerFirstName(),
+                        'lastName' => $registration->getPartnerLastName()));
+        }
+
+        $partnerAccount = null;
+        if ($partnerAccounts !== null && count($partnerAccounts) == 1) {
+            $partnerAccount = $partnerAccounts[0];
+        }
+        return $partnerAccount;
     }
 
     /**

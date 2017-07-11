@@ -2,6 +2,7 @@
 
 namespace GS\ApiBundle\Services;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -33,11 +34,14 @@ class FormGeneratorService
 {
     private $router;
     private $formFactory;
+    private $em;
     
-    public function __construct(RouterInterface $router, FormFactoryInterface $formFactory)
+    public function __construct(RouterInterface $router, FormFactoryInterface $formFactory,
+            EntityManagerInterface $em)
     {
         $this->router = $router;
         $this->formFactory = $formFactory;
+        $this->em = $em;
     }
     
     public function getYearForm($year = null, $routeName = null, $method = null)
@@ -65,10 +69,24 @@ class FormGeneratorService
         $options = array();
         if (null === $activity) {
             $activity = new Activity();
+            $options['membership_topics'] = array();
             if (null !== $routeName) {
                 $options['action'] = $this->router->generate($routeName);
             }
         } else {
+            if ($activity->getId() !== null) {
+                $options['membership_topics'] = $this->em
+                        ->getRepository('GSApiBundle:Topic')
+                        ->getMembershipTopicsForActivity($activity);
+            }
+            elseif ($activity->getYear() !== null)
+            {
+                $options['membership_topics'] = $this->em
+                        ->getRepository('GSApiBundle:Topic')
+                        ->getMembershipTopicsForYear($activity->getYear());
+            } else {
+                $options['membership_topics'] = array();
+            }
             if (null !== $routeName) {
                 $options['action'] = $this->router->generate($routeName, array('activity' => $activity->getId()));
             }

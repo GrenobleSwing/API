@@ -41,7 +41,7 @@ security:
                 require_previous_session: false
 
         api:
-            pattern:   ^/api/(?!(paypal/|doc)).*$
+            pattern:   ^/api/(?!(paypal/|doc|user)).*$
             provider: our_db_provider
             stateless: true
             guard:

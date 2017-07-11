@@ -93,6 +93,12 @@ class Activity
     private $membersOnly = false;
 
     /**
+     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Topic")
+     * @Type("Relation")
+     */
+    private $membershipTopic = null;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Year", inversedBy="activities")
      * @ORM\JoinColumn(nullable=false)
      * @Type("Relation")
@@ -129,6 +135,9 @@ class Activity
      */
     public function validate(ExecutionContextInterface $context, $payload)
     {
+        if ($this->getMembership() == false) {
+            return;
+        }
         foreach ($this->getYear()->getActivities() as $activity) {
             if ($activity === $this) {
                 continue;
@@ -442,5 +451,39 @@ class Activity
     public function getMembersOnly()
     {
         return $this->membersOnly;
+    }
+
+    /**
+     * Get membership
+     *
+     * @return boolean
+     */
+    public function getMembership()
+    {
+        return $this->membership;
+    }
+
+    /**
+     * Set membershipTopic
+     *
+     * @param \GS\ApiBundle\Entity\Topic $membershipTopic
+     *
+     * @return Activity
+     */
+    public function setMembershipTopic(\GS\ApiBundle\Entity\Topic $membershipTopic = null)
+    {
+        $this->membershipTopic = $membershipTopic;
+
+        return $this;
+    }
+
+    /**
+     * Get membershipTopic
+     *
+     * @return \GS\ApiBundle\Entity\Topic
+     */
+    public function getMembershipTopic()
+    {
+        return $this->membershipTopic;
     }
 }

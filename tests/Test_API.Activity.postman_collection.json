@@ -262,6 +262,12 @@
                                     "enabled": true
                                 },
                                 {
+                                    "key": "activity[membersOnly]",
+                                    "value": "1",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
                                     "key": "activity[membership]",
                                     "value": "0",
                                     "type": "text",
@@ -296,6 +302,39 @@
                     ],
                     "request": {
                         "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity/{{activityId}}",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/activity",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity",
                         "method": "GET",
                         "header": [
                             {
@@ -394,6 +433,18 @@
                                 {
                                     "key": "activity[description]",
                                     "value": "Listes des cours et des troupes pour l'annee 2018-2019",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "activity[membersOnly]",
+                                    "value": "1",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "activity[membership]",
+                                    "value": "0",
                                     "type": "text",
                                     "enabled": true
                                 },
@@ -574,6 +625,12 @@
                                 {
                                     "key": "activity[description]",
                                     "value": "Listes des cours et des troupes pour l'annee",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "activity[membersOnly]",
+                                    "value": "1",
                                     "type": "text",
                                     "enabled": true
                                 },

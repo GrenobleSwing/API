@@ -369,6 +369,12 @@
                                     "enabled": true
                                 },
                                 {
+                                    "key": "activity[membersOnly]",
+                                    "value": "1",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
                                     "key": "activity[membership]",
                                     "value": "0",
                                     "type": "text",
@@ -791,6 +797,12 @@
                                     "enabled": true
                                 },
                                 {
+                                    "key": "topic[autoValidation]",
+                                    "value": "0",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
                                     "key": "topic[schedules][0][startDate][day]",
                                     "value": "26",
                                     "type": "text",
@@ -928,66 +940,7 @@
                                     "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
                                     "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
                                     "var jsonData = JSON.parse(responseBody);",
-                                    "postman.setGlobalVariable(\"registration1Id\", jsonData.id);"
-                                ]
-                            }
-                        }
-                    ],
-                    "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration",
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}",
-                                "description": ""
-                            },
-                            {
-                                "key": "Content-Type",
-                                "value": "application/x-www-form-urlencoded",
-                                "description": ""
-                            }
-                        ],
-                        "body": {
-                            "mode": "urlencoded",
-                            "urlencoded": [
-                                {
-                                    "key": "registration[topic]",
-                                    "value": "{{topicId}}",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "registration[role]",
-                                    "value": "follower",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "registration[_token]",
-                                    "value": "{{form_token}}",
-                                    "type": "text",
-                                    "enabled": true
-                                }
-                            ]
-                        },
-                        "description": ""
-                    },
-                    "response": []
-                },
-                {
-                    "name": "api/registration",
-                    "event": [
-                        {
-                            "listen": "test",
-                            "script": {
-                                "type": "text/javascript",
-                                "exec": [
-                                    "tests[\"Status code is 201\"] = responseCode.code === 201;",
-                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
-                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';",
-                                    "var jsonData = JSON.parse(responseBody);",
-                                    "postman.setGlobalVariable(\"registration2Id\", jsonData.id);"
+                                    "postman.setGlobalVariable(\"registrationId\", jsonData.id);"
                                 ]
                             }
                         }
@@ -1048,38 +1001,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{registration1Id}}/validate",
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}",
-                                "description": ""
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": ""
-                        },
-                        "description": ""
-                    },
-                    "response": []
-                },
-                {
-                    "name": "api/registration/x/validate",
-                    "event": [
-                        {
-                            "listen": "test",
-                            "script": {
-                                "type": "text/javascript",
-                                "exec": [
-                                    "tests[\"Status code is 204\"] = responseCode.code === 204;"
-                                ]
-                            }
-                        }
-                    ],
-                    "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{registration2Id}}/validate",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{registrationId}}/validate",
                         "method": "GET",
                         "header": [
                             {
@@ -1199,25 +1121,13 @@
                                 },
                                 {
                                     "key": "payment[items][0][registration]",
-                                    "value": "{{registration1Id}}",
+                                    "value": "{{registrationId}}",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
                                     "key": "payment[items][0][discount]",
                                     "value": "{{discount1Id}}",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "payment[items][1][registration]",
-                                    "value": "{{registration2Id}}",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "payment[items][1][discount]",
-                                    "value": "",
                                     "type": "text",
                                     "enabled": true
                                 },
@@ -1250,6 +1160,39 @@
                     ],
                     "request": {
                         "url": "{{protocol}}://{{domain}}{{folder}}/web/api/payment/{{paymentId}}",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/payment",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/payment",
                         "method": "GET",
                         "header": [
                             {
@@ -1330,8 +1273,6 @@
                                 "description": ""
                             }
                         ],
-                        "description": ""
-                    },
                         "body": {
                             "mode": "urlencoded",
                             "urlencoded": [
@@ -1367,25 +1308,13 @@
                                 },
                                 {
                                     "key": "payment[items][0][registration]",
-                                    "value": "{{registration1Id}}",
+                                    "value": "{{registrationId}}",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
                                     "key": "payment[items][0][discount]",
                                     "value": "{{discount1Id}}",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "payment[items][1][registration]",
-                                    "value": "{{registration2Id}}",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "payment[items][1][discount]",
-                                    "value": "{{discount2Id}}",
                                     "type": "text",
                                     "enabled": true
                                 },
@@ -1397,6 +1326,8 @@
                                 }
                             ]
                         },
+                        "description": ""
+                    },
                     "response": []
                 },
                 {
@@ -1407,12 +1338,7 @@
                             "script": {
                                 "type": "text/javascript",
                                 "exec": [
-                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
-                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
-                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';",
-                                    "var html = cheerio(responseBody);",
-                                    "result = html.find('#delete__token');",
-                                    "postman.setGlobalVariable('form_token', result.attr('value'));"
+                                    "tests[\"Status code is 403\"] = responseCode.code === 403;"
                                 ]
                             }
                         }
@@ -1430,49 +1356,6 @@
                         "body": {
                             "mode": "raw",
                             "raw": ""
-                        },
-                        "description": ""
-                    },
-                    "response": []
-                },
-                {
-                    "name": "api/payment/x",
-                    "event": [
-                        {
-                            "listen": "test",
-                            "script": {
-                                "type": "text/javascript",
-                                "exec": [
-                                    "tests[\"Status code is 204\"] = responseCode.code === 204;"
-                                ]
-                            }
-                        }
-                    ],
-                    "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/payment/{{paymentId}}",
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}",
-                                "description": ""
-                            },
-                            {
-                                "key": "Content-Type",
-                                "value": "application/x-www-form-urlencoded",
-                                "description": ""
-                            }
-                        ],
-                        "body": {
-                            "mode": "urlencoded",
-                            "urlencoded": [
-                                {
-                                    "key": "delete[_token]",
-                                    "value": "{{form_token}}",
-                                    "type": "text",
-                                    "enabled": true
-                                }
-                            ]
                         },
                         "description": ""
                     },

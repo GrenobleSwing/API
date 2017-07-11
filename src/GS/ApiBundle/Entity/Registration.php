@@ -79,7 +79,7 @@ class Registration
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=16)
+     * @ORM\Column(type="string", length=16, nullable=true)
      */
     private $role = 'leader';
 
@@ -135,11 +135,6 @@ class Registration
     private $amountPaid = 0.0;
 
     /**
-     * @ORM\Column(type="array")
-     */
-    private $options;
-
-    /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Topic", inversedBy="registrations")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -154,17 +149,11 @@ class Registration
     private $account;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Registration")
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Registration", cascade={"persist"})
      * @SerializedName("partnerRegistrationId")
      * @Type("Relation")
      */
     private $partnerRegistration = null;
-
-    public function __construct()
-    {
-        $this->options = array();
-    }
-
 
     /**
      * Get id
@@ -222,46 +211,6 @@ class Registration
     public function getState()
     {
         return $this->state;
-    }
-
-    public function addOption($option)
-    {
-        if (!in_array($option, $this->options, true)) {
-            $this->options[] = $option;
-        }
-        return $this;
-    }
-    
-    public function removeOption($option)
-    {
-        if (($key = array_search($option, $this->options)) != false) {
-            unset($this->options[$key]);
-        }
-    }
-    
-    /**
-     * Get options
-     *
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-
-    /**
-     * Set options
-     *
-     * @param array $options
-     *
-     * @return Registration
-     */
-    public function setOptions($options)
-    {
-        $this->options = $options;
-
-        return $this;
     }
 
     /**

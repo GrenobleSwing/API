@@ -2,6 +2,7 @@
 
 namespace GS\ApiBundle\Security;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -91,9 +92,12 @@ class RegistrationVoter extends Voter
         if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
             return true;
         }
+        if ($user === $registration->getAccount()->getUser()) {
+            return true;
+        }
         $editors = new ArrayCollection(
                 array_merge($registration->getTopic()->getOwners()->toArray(),
-                        $registration->getTopic()->getManagers()->toArray(),
+                        $registration->getTopic()->getModerators()->toArray(),
                         $registration->getTopic()->getActivity()->getOwners()->toArray())
         );
         foreach ($editors as $editor) {
@@ -115,7 +119,7 @@ class RegistrationVoter extends Voter
         }
         $editors = new ArrayCollection(
                 array_merge($registration->getTopic()->getOwners()->toArray(),
-                        $registration->getTopic()->getManagers()->toArray(),
+                        $registration->getTopic()->getModerators()->toArray(),
                         $registration->getTopic()->getActivity()->getOwners()->toArray())
         );
         foreach ($editors as $editor) {

@@ -35,6 +35,9 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
     // Dans l'argument de la méthode load, l'objet $manager est l'EntityManager
     public function load(ObjectManager $manager)
     {
+        $organizerUser = $this->getReference('organizer_user');
+        $adminUser = $this->getReference('admin_user');
+
         $address1 = new Address();
         $address1->setStreet('2 rue Mozart');
         $address1->setZipCode('38000');
@@ -67,6 +70,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $year1->setStartDate(new \DateTime('2015-09-01'));
         $year1->setEndDate(new \DateTime('2016-08-31'));
         $year1->setState('open');
+        $year1->addOwner($adminUser);
         
         $year2 = new Year();
         $year2->setTitle('Annee 2017-2018');
@@ -74,6 +78,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $year2->setStartDate(new \DateTime('2017-09-01'));
         $year2->setEndDate(new \DateTime('2018-08-31'));
         $year2->setState('open');
+        $year2->addOwner($adminUser);
 
         $manager->persist($year1);
         $manager->persist($year2);
@@ -84,12 +89,15 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $year->setStartDate(new \DateTime('2016-09-01'));
         $year->setEndDate(new \DateTime('2017-08-31'));
         $year->setState('open');
+        $year->addOwner($adminUser);
         
         $activity1 = new Activity();
         $activity1->setTitle('Adhesion');
         $activity1->setDescription('Adhesion annuelle a Grenoble Swing');
         $activity1->setState('open');
-        
+        $activity1->setMembership(true);
+        $activity1->addOwner($organizerUser);
+
         $category1 = new Category();
         $category1->setName('Adhesion');
         $category1->setPrice(10.0);
@@ -109,14 +117,17 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic1->setType('adhesion');
         $topic1->setCategory($category1);
         $topic1->setState('open');
-        $topic1->addOption('automatic_validation');
+        $topic1->setAutoValidation(true);
         
         $activity1->addTopic($topic1);
         
         $activity2 = new Activity();
         $activity2->setTitle('Cours et troupes');
         $activity2->setDescription('Les cours et les troupes');
-        $activity2->setState('draft');
+        $activity2->setState('open');
+        $activity2->setMembersOnly(true);
+        $activity2->setMembershipTopic($topic1);
+        $activity2->addOwner($organizerUser);
         
         $category2 = new Category();
         $category2->setName('Cours');
@@ -155,8 +166,17 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic2->addRequiredTopic($topic1);
         $topic2->addSchedule($schedule);
         
+        $topic3 = new Topic();
+        $topic3->setTitle('Lindy intermediaire');
+        $topic3->setDescription('Cours de lindy');
+        $topic3->setType('couple');
+        $topic3->setState('open');
+        $topic3->setCategory($category2);
+        $topic3->addRequiredTopic($topic1);
+        $topic3->addSchedule(clone $schedule);
+        
         $topic4 = new Topic();
-        $topic4->setTitle('Lindy intermediaire');
+        $topic4->setTitle('Lindy avance');
         $topic4->setDescription('Cours de lindy');
         $topic4->setType('couple');
         $topic4->setState('open');
@@ -165,27 +185,28 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic4->addSchedule(clone $schedule);
         
         $topic5 = new Topic();
-        $topic5->setTitle('Lindy avance');
-        $topic5->setDescription('Cours de lindy');
+        $topic5->setTitle('Troupe avancee');
+        $topic5->setDescription('Troupe avancee');
         $topic5->setType('couple');
         $topic5->setState('open');
-        $topic5->setCategory($category2);
+        $topic5->setCategory($category3);
         $topic5->addRequiredTopic($topic1);
         $topic5->addSchedule(clone $schedule);
         
-        $topic3 = new Topic();
-        $topic3->setTitle('Troupe avancee');
-        $topic3->setDescription('Troupe avancee');
-        $topic3->setType('couple');
-        $topic3->setState('open');
-        $topic3->setCategory($category3);
-        $topic3->addRequiredTopic($topic1);
-        $topic3->addSchedule(clone $schedule);
+        $topic6 = new Topic();
+        $topic6->setTitle('Troupe charleston');
+        $topic6->setDescription('Troupe charleston');
+        $topic6->setType('solo');
+        $topic6->setState('open');
+        $topic6->setCategory($category3);
+        $topic6->addRequiredTopic($topic1);
+        $topic6->addSchedule(clone $schedule);
         
         $activity2->addTopic($topic2);
         $activity2->addTopic($topic3);
         $activity2->addTopic($topic4);
         $activity2->addTopic($topic5);
+        $activity2->addTopic($topic6);
         
         $year->addActivity($activity1);
         $year->addActivity($activity2);
