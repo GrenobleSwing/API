@@ -41,9 +41,10 @@ security:
                 require_previous_session: false
 
         api:
-            pattern:   ^/api/(?!(paypal/|doc|user)).*$
+            pattern:   ^/api/(?!(paypal/|doc)).*$
             provider: our_db_provider
             stateless: true
+            anonymous: true
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
@@ -55,3 +56,5 @@ security:
 
     access_control:
         - { path: ^/api/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/user/new, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/user, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [POST] }
