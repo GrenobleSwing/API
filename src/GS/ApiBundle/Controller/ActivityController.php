@@ -62,15 +62,15 @@ class ActivityController extends FOSRestController
             $activity->addOwner($this->getUser());
             $year = $activity->getYear();
             $year->addActivity($activity);
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($activity);
             $em->flush();
 
             $view = $this->view(array('id' => $activity->getId()), 201);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -124,7 +124,7 @@ class ActivityController extends FOSRestController
     {
         $form = $this->get('gsapi.form_generator')->getDeleteForm($activity, 'activity');
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $year = $activity->getYear();
             $year->removeActivity($activity);
@@ -135,7 +135,7 @@ class ActivityController extends FOSRestController
 
             $view = $this->view(null, 204);
         } else {
-            $view = $this->getFormView($form);
+            $view = $this->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -242,9 +242,9 @@ class ActivityController extends FOSRestController
             $em->flush();
 
             $view = $this->view(null, 204);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }

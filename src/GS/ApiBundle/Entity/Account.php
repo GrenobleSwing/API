@@ -57,12 +57,12 @@ class Account
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $firstName;
+    private $firstName = "";
 
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $lastName;
+    private $lastName = "";
 
     /**
      * @ORM\Column(type="date")
@@ -107,6 +107,8 @@ class Account
     public function __construct()
     {
         $this->payments = new ArrayCollection();
+        $this->birthDate = new \DateTime();
+        $this->phoneNumber = new \libphonenumber\PhoneNumber();
     }
 
     /**
@@ -249,7 +251,7 @@ class Account
     public function setEmail($email)
     {
         $this->email = $email;
-        
+
         // If the email is modified, the user login should be modified.
         if (null !== $this->user) {
             $this->user->setEmail($email);
@@ -315,7 +317,7 @@ class Account
     {
         return $this->student;
     }
-    
+
     /**
      * Is member
      *

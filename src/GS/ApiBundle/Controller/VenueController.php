@@ -55,15 +55,15 @@ class VenueController extends FOSRestController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $venue = $form->getData();
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($venue);
             $em->flush();
 
             $view = $this->view(array('id' => $venue->getId()), 201);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -117,7 +117,7 @@ class VenueController extends FOSRestController
     {
         $form = $this->get('gsapi.form_generator')->getDeleteForm($venue, 'venue');
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($venue);
@@ -125,7 +125,7 @@ class VenueController extends FOSRestController
 
             $view = $this->view(null, 204);
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -232,11 +232,11 @@ class VenueController extends FOSRestController
             $em->flush();
 
             $view = $this->view(null, 204);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
-    
+
 }

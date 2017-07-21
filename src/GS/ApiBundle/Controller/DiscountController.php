@@ -16,7 +16,7 @@ use GS\ApiBundle\Entity\Discount;
  */
 class DiscountController extends FOSRestController
 {
-    
+
     /**
      * @ApiDoc(
      *   section="Discount",
@@ -38,15 +38,15 @@ class DiscountController extends FOSRestController
             $discount = $form->getData();
             $activity = $discount->getActivity();
             $activity->addDiscount($discount);
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($discount);
             $em->flush();
 
             $view = $this->view(array('id' => $discount->getId()), 201);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -97,7 +97,7 @@ class DiscountController extends FOSRestController
         $view = $this->view($listCategories, 200);
         return $this->handleView($view);
     }
-    
+
     /**
      * @ApiDoc(
      *   section="Discount",
@@ -153,9 +153,9 @@ class DiscountController extends FOSRestController
             $em->flush();
 
             $view = $this->view(null, 204);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -209,7 +209,7 @@ class DiscountController extends FOSRestController
     {
         $form = $this->get('gsapi.form_generator')->getDeleteForm($discount, 'discount');
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $activity = $discount->getActivity();
             $activity->removeDiscount($discount);
@@ -220,7 +220,7 @@ class DiscountController extends FOSRestController
 
             $view = $this->view(null, 204);
         } else {
-            $view = $this->getFormView($form);
+            $view = $this->getFormView($form, 412);
         }
         return $this->handleView($view);
     }

@@ -63,9 +63,9 @@ class YearController extends FOSRestController
             $em->flush();
 
             $view = $this->view(array('id' => $year->getId()), 201);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -119,7 +119,7 @@ class YearController extends FOSRestController
     {
         $form = $this->get('gsapi.form_generator')->getDeleteForm($year, 'year');
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($year);
@@ -127,7 +127,7 @@ class YearController extends FOSRestController
 
             $view = $this->view(null, 204);
         } else {
-            $view = $this->getFormView($form);
+            $view = $this->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -300,13 +300,13 @@ class YearController extends FOSRestController
             $em->flush();
 
             $view = $this->view(null, 204);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
-    
+
     /**
      * @ApiDoc(
      *   section="Year",

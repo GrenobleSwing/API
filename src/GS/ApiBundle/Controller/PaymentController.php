@@ -56,14 +56,14 @@ class PaymentController extends FOSRestController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $payment = $form->getData();
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($payment);
 
             $repoAccount = $em->getRepository('GSApiBundle:Account');
             $account = $repoAccount->findOneByUser($this->getUser());
             $account->addPayment($payment);
-            
+
             $repo = $em->getRepository('GSApiBundle:Invoice');
             if ('PAID' == $payment->getState() &&
                     null === $repo->findOneByPayment($payment)) {
@@ -77,9 +77,9 @@ class PaymentController extends FOSRestController
             $em->flush();
 
             $view = $this->view(array('id' => $payment->getId()), 201);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -142,7 +142,7 @@ class PaymentController extends FOSRestController
 
         $form = $this->get('gsapi.form_generator')->getDeleteForm($payment, 'payment');
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $payment->getAccount()->removePayment($payment);
             $em = $this->getDoctrine()->getManager();
@@ -151,7 +151,7 @@ class PaymentController extends FOSRestController
 
             $view = $this->view(null, 204);
         } else {
-            $view = $this->getFormView($form);
+            $view = $this->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -272,9 +272,9 @@ class PaymentController extends FOSRestController
             $view = $this->view(null, 204);
 
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
-    
+
 }

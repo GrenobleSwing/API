@@ -3,10 +3,13 @@
 namespace GS\ApiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use GS\ApiBundle\Entity\Account;
+use GS\ApiBundle\Entity\Address;
 use GS\ApiBundle\Entity\User;
 use GS\ApiBundle\Form\Type\UserType;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -114,8 +117,7 @@ class UserController extends FOSRestController
      */
     public function newAction()
     {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->get('gsapi.form_generator')->getUserForm(null, 'post_user');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -134,7 +136,7 @@ class UserController extends FOSRestController
     public function postAction(Request $request)
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->get('gsapi.form_generator')->getUserForm($user, 'post_user');
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -142,13 +144,19 @@ class UserController extends FOSRestController
                 ->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
 
+            $address = new Address();
+            $account = new Account();
+            $account->setUser($user);
+            $account->setEmail($user->getEmail());
+            $account->setAddress($address);
+
             $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
+            $em->persist($account);
             $em->flush();
 
             $view = $this->view(array('id' => $user->getId()), 201);
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
 
         return $this->handleView($view);

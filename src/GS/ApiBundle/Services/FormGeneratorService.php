@@ -29,13 +29,15 @@ use GS\ApiBundle\Entity\Payment;
 use GS\ApiBundle\Entity\PaymentItem;
 use GS\ApiBundle\Form\Type\PaymentType;
 use GS\ApiBundle\Form\Type\DeleteType;
+use GS\ApiBundle\Entity\User;
+use GS\ApiBundle\Form\Type\UserType;
 
 class FormGeneratorService
 {
     private $router;
     private $formFactory;
     private $em;
-    
+
     public function __construct(RouterInterface $router, FormFactoryInterface $formFactory,
             EntityManagerInterface $em)
     {
@@ -43,7 +45,7 @@ class FormGeneratorService
         $this->formFactory = $formFactory;
         $this->em = $em;
     }
-    
+
     public function getYearForm($year = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -60,7 +62,7 @@ class FormGeneratorService
         if (null !== $method) {
             $options['method'] = $method;
         }
-        
+
         return $this->formFactory->create(YearType::class, $year, $options);
     }
 
@@ -94,10 +96,10 @@ class FormGeneratorService
         if (null !== $method) {
             $options['method'] = $method;
         }
-        
+
         return $this->formFactory->create(ActivityType::class, $activity, $options);
     }
-    
+
     public function getTopicForm($topic = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -114,10 +116,10 @@ class FormGeneratorService
         if (null !== $method) {
             $options['method'] = $method;
         }
-        
+
         return $this->formFactory->create(TopicType::class, $topic, $options);
     }
-    
+
     public function getCategoryForm($category = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -135,10 +137,10 @@ class FormGeneratorService
         if (null !== $method) {
             $options['method'] = $method;
         }
-        
+
         return $this->formFactory->create(CategoryType::class, $category, $options);
     }
-    
+
     public function getDiscountForm($discount = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -156,10 +158,10 @@ class FormGeneratorService
         if (null !== $method) {
             $options['method'] = $method;
         }
-        
+
         return $this->formFactory->create(DiscountType::class, $discount, $options);
     }
-    
+
     public function getRegistrationForm($registration = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -177,10 +179,10 @@ class FormGeneratorService
         if (null !== $method) {
             $options['method'] = $method;
         }
-        
+
         return $this->formFactory->create(RegistrationType::class, $registration, $options);
     }
-    
+
     public function getVenueForm($venue = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -198,10 +200,10 @@ class FormGeneratorService
         if (null !== $method) {
             $options['method'] = $method;
         }
-        
+
         return $this->formFactory->create(VenueType::class, $venue, $options);
     }
-    
+
     public function getDeleteForm($entity, $paramName)
     {
         $options = array();
@@ -226,10 +228,10 @@ class FormGeneratorService
         if (null !== $method) {
             $options['method'] = $method;
         }
-        
+
         return $this->formFactory->create(AccountType::class, $account, $options);
     }
-    
+
     public function getPaymentForm($payment = null, $routeName = null, $method = null)
     {
         $options = array();
@@ -248,13 +250,33 @@ class FormGeneratorService
         if (null !== $method) {
             $options['method'] = $method;
         }
-        
+
         return $this->formFactory->create(PaymentType::class, $payment, $options);
     }
-    
-    public function getFormView($form, $template = 'form.html.twig')
+
+    public function getUserForm($user = null, $routeName = null, $method = null)
     {
-        $view = View::create($form, 200)
+        $options = array();
+        if (null === $user) {
+            $user = new User();
+            if (null !== $routeName) {
+                $options['action'] = $this->router->generate($routeName);
+            }
+        } else {
+            if (null !== $routeName) {
+                $options['action'] = $this->router->generate($routeName, array('user' => $user->getId()));
+            }
+        }
+        if (null !== $method) {
+            $options['method'] = $method;
+        }
+
+        return $this->formFactory->create(UserType::class, $user, $options);
+    }
+
+    public function getFormView($form, $statusCode = 200, $template = 'form.html.twig')
+    {
+        $view = View::create($form, $statusCode)
             ->setTemplate("GSApiBundle:Default:" . $template)
             ->setTemplateVar('form')
             ->setFormat('html')
@@ -262,9 +284,9 @@ class FormGeneratorService
         return $view;
     }
 
-    public function getTopicFormView($form, $template = 'form.html.twig')
+    public function getTopicFormView($form, $statusCode = 200, $template = 'form.html.twig')
     {
-        $view = View::create($form, 200)
+        $view = View::create($form, $statusCode)
             ->setTemplate("GSApiBundle:Topic:" . $template)
             ->setTemplateVar('form')
             ->setFormat('html')
@@ -272,9 +294,9 @@ class FormGeneratorService
         return $view;
     }
 
-    public function getPaymentFormView($form, $template = 'form.html.twig')
+    public function getPaymentFormView($form, $statusCode = 200, $template = 'form.html.twig')
     {
-        $view = View::create($form, 200)
+        $view = View::create($form, $statusCode)
             ->setTemplate("GSApiBundle:Payment:" . $template)
             ->setTemplateVar('form')
             ->setFormat('html')

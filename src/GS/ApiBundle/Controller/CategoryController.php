@@ -38,15 +38,15 @@ class CategoryController extends FOSRestController
             $category = $form->getData();
             $activity = $category->getActivity();
             $activity->addCategory($category);
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($category);
             $em->flush();
 
             $view = $this->view(array('id' => $category->getId()), 201);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -97,7 +97,7 @@ class CategoryController extends FOSRestController
         $view = $this->view($listCategories, 200);
         return $this->handleView($view);
     }
-    
+
     /**
      * @ApiDoc(
      *   section="Category",
@@ -153,9 +153,9 @@ class CategoryController extends FOSRestController
             $em->flush();
 
             $view = $this->view(null, 204);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -209,7 +209,7 @@ class CategoryController extends FOSRestController
     {
         $form = $this->get('gsapi.form_generator')->getDeleteForm($category, 'category');
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $activity = $category->getActivity();
             $activity->removeCategory($category);
@@ -220,7 +220,7 @@ class CategoryController extends FOSRestController
 
             $view = $this->view(null, 204);
         } else {
-            $view = $this->getFormView($form);
+            $view = $this->getFormView($form, 412);
         }
         return $this->handleView($view);
     }

@@ -40,15 +40,15 @@ class TopicController extends FOSRestController
             $topic->addOwner($this->getUser());
             $activity = $topic->getActivity();
             $activity->addTopic($topic);
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($topic);
             $em->flush();
 
             $view = $this->view(array('id' => $topic->getId()), 201);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -102,7 +102,7 @@ class TopicController extends FOSRestController
     {
         $form = $this->get('gsapi.form_generator')->getDeleteForm($topic, 'topic');
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($topic);
@@ -110,7 +110,7 @@ class TopicController extends FOSRestController
 
             $view = $this->view(null, 204);
         } else {
-            $view = $this->getFormView($form);
+            $view = $this->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -217,13 +217,13 @@ class TopicController extends FOSRestController
             $em->flush();
 
             $view = $this->view(null, 204);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
-    
+
     /**
      * @ApiDoc(
      *   section="Topic",
@@ -249,11 +249,11 @@ class TopicController extends FOSRestController
                 ->getRepository('GSApiBundle:Registration')
                 ->findBy(array('topic' => $topic))
                 ;
-        
+
         $view = $this->view($registrations, 200);
         return $this->handleView($view);
     }
-    
+
     /**
      * @ApiDoc(
      *   section="Topic",

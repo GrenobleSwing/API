@@ -61,11 +61,11 @@ class AccountController extends FOSRestController
             $em->flush();
 
             $view = $this->view(array('id' => $account->getId()), 201);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
-        
+
         return $this->handleView($view);
     }
 
@@ -118,7 +118,7 @@ class AccountController extends FOSRestController
     {
         $form = $this->get('gsapi.form_generator')->getDeleteForm($account, 'account');
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($account);
@@ -126,7 +126,7 @@ class AccountController extends FOSRestController
 
             $view = $this->view(null, 204);
         } else {
-            $view = $this->getFormView($form);
+            $view = $this->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
@@ -233,13 +233,13 @@ class AccountController extends FOSRestController
             $em->flush();
 
             $view = $this->view(null, 204);
-            
+
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
         return $this->handleView($view);
     }
-    
+
     /**
      * @ApiDoc(
      *   section="Account",
