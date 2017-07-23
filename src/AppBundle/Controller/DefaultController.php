@@ -25,49 +25,5 @@ class DefaultController extends Controller
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }
-    
-    /**
-     * @Route("/register", name="register")
-     */
-    public function registerAction(Request $request)
-    {
-        // 1) build the form
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
 
-        // 2) handle the submit (will only happen on POST)
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            // 3) Encode the password (you could also do this via Doctrine listener)
-            $password = $this->get('security.password_encoder')
-                ->encodePassword($user, $user->getPlainPassword());
-            $user->setPassword($password);
-
-            // 4) save the User!
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            return $this->redirectToRoute('homepage');
-        }
-
-        return $this->render('GSApiBundle:User:register.html.twig', array(
-                'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * @Route("/test_paypal")
-     */
-    public function testPaypalAction()
-    {
-        $paypal = $this->get('paypal');
-        $apiContext = $paypal->getApiContext();
-        $templates = Templates::getAll(array("fields" => "all"), $apiContext);
-        
-        $response = new Response($templates);
-        return $response;
-    }
-    
 }
