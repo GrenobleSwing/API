@@ -17,6 +17,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "get_activity",
  *         parameters = { "activity" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -24,6 +27,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "edit_activity",
  *         parameters = { "activity" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -31,6 +37,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "remove_activity",
  *         parameters = { "activity" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('delete', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -38,6 +47,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "new_activity_topic",
  *         parameters = { "activity" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -45,6 +57,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "new_activity_category",
  *         parameters = { "activity" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -52,6 +67,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "new_activity_discount",
  *         parameters = { "activity" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @ORM\Entity
@@ -77,7 +95,7 @@ class Activity
 
     /**
      * States: draft, open, close
-     * 
+     *
      * @ORM\Column(type="string", length=16)
      */
     private $state = 'DRAFT';

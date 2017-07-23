@@ -28,7 +28,7 @@ class YearController extends FOSRestController
      *     200="You have permission to create a Year, the form is returned",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function newAction()
     {
@@ -47,7 +47,7 @@ class YearController extends FOSRestController
      *     201="The Year has been created",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function postAction(Request $request)
     {
@@ -350,7 +350,7 @@ class YearController extends FOSRestController
      *     200="You have permission to create an Activity, the form is returned",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function newActivityAction(Year $year)
     {

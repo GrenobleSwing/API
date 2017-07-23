@@ -26,7 +26,7 @@ class DiscountController extends FOSRestController
      *     201="The Discount has been created",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function postAction(Request $request)
     {
@@ -85,7 +85,7 @@ class DiscountController extends FOSRestController
      *     200="Returns all the Discounts",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function cgetAction()
     {

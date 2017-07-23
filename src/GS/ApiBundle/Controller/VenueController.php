@@ -26,7 +26,7 @@ class VenueController extends FOSRestController
      *     200="You have permission to create a Venue, the form is returned",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function newAction()
     {
@@ -45,7 +45,7 @@ class VenueController extends FOSRestController
      *     201="The Venue has been created",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function postAction(Request $request)
     {
@@ -164,7 +164,7 @@ class VenueController extends FOSRestController
      *     200="Returns all the Venues",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function cgetAction()
     {

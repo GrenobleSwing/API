@@ -16,6 +16,9 @@ use JMS\Serializer\Annotation\SerializedName;
  *     href = @Hateoas\Route(
  *         "get_category",
  *         parameters = { "category" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -23,6 +26,9 @@ use JMS\Serializer\Annotation\SerializedName;
  *     href = @Hateoas\Route(
  *         "edit_category",
  *         parameters = { "category" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -30,6 +36,9 @@ use JMS\Serializer\Annotation\SerializedName;
  *     href = @Hateoas\Route(
  *         "remove_category",
  *         parameters = { "category" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('delete', object))"
  *     )
  * )
  * @ORM\Entity

@@ -27,7 +27,7 @@ class TopicController extends FOSRestController
      *     201="The Topic has been created",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function postAction(Request $request)
     {

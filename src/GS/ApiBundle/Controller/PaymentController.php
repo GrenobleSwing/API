@@ -27,7 +27,7 @@ class PaymentController extends FOSRestController
      *     200="You have permission to create a Payment, the form is returned",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function newAction()
     {
@@ -46,7 +46,7 @@ class PaymentController extends FOSRestController
      *     201="The Payment has been created",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function postAction(Request $request)
     {

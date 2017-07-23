@@ -165,7 +165,7 @@ class AccountController extends FOSRestController
      *     200="Returns all the Accounts",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function cgetAction()
     {

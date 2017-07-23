@@ -30,7 +30,7 @@ class ActivityController extends FOSRestController
      *     200="You have permission to create a Activity, the form is returned",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function newAction()
     {
@@ -49,7 +49,7 @@ class ActivityController extends FOSRestController
      *     201="The Activity has been created",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function postAction(Request $request)
     {
@@ -258,7 +258,7 @@ class ActivityController extends FOSRestController
      *     200="You have permission to create a Category, the form is returned",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('edit', activity)")
      */
     public function newCategoryAction(Activity $activity)
     {
@@ -279,7 +279,7 @@ class ActivityController extends FOSRestController
      *     200="You have permission to create a Discount, the form is returned",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('edit', activity)")
      */
     public function newDiscountAction(Activity $activity)
     {
@@ -300,7 +300,7 @@ class ActivityController extends FOSRestController
      *     200="You have permission to create a Topic, the form is returned",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('edit', activity)")
      */
     public function newTopicAction(Activity $activity)
     {

@@ -391,7 +391,7 @@ class RegistrationController extends FOSRestController
      *     200="Returns all the Registrations",
      *   }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ORGANIZER')")
      */
     public function cgetAction()
     {

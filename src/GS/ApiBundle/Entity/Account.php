@@ -18,6 +18,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "get_account",
  *         parameters = { "account" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -25,6 +28,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "edit_account",
  *         parameters = { "account" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -32,6 +38,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "remove_account",
  *         parameters = { "account" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('delete', object))"
  *     )
  * )
  * @ORM\Entity

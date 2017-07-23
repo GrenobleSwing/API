@@ -16,6 +16,9 @@ use PayPal\Api\ItemList;
  *     href = @Hateoas\Route(
  *         "get_payment",
  *         parameters = { "payment" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -23,6 +26,9 @@ use PayPal\Api\ItemList;
  *     href = @Hateoas\Route(
  *         "edit_payment",
  *         parameters = { "payment" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -30,6 +36,9 @@ use PayPal\Api\ItemList;
  *     href = @Hateoas\Route(
  *         "remove_payment",
  *         parameters = { "payment" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('delete', object))"
  *     )
  * )
  * @ORM\Entity
@@ -45,7 +54,7 @@ class Payment
 
     /**
      * Valid types: CASH, TRANSFER, CHECK, PAYPAL, CARD
-     * 
+     *
      * @ORM\Column(type="string", length=10)
      */
     private $type;
@@ -54,7 +63,7 @@ class Payment
      * States:
      *   - DRAFT: for online payments: once a payment is received moved to PAID
      *   - PAID
-     * 
+     *
      * @ORM\Column(type="string", length=6)
      */
     private $state = 'DRAFT';
@@ -231,7 +240,7 @@ class Payment
     public function setState($state)
     {
         $this->state = $state;
-        
+
         // Mark all the resitrations (one per item) as paid if state is changed
         // to PAID otherwise do nothing.
         $this->updateRegistrations();

@@ -16,6 +16,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "get_year",
  *         parameters = { "year" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -23,6 +26,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "edit_year",
  *         parameters = { "year" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -30,6 +36,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "remove_year",
  *         parameters = { "year" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('delete', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -37,6 +46,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "new_year_activity",
  *         parameters = { "year" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted(['ROLE_ORGANIZER']))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -44,6 +56,9 @@ use JMS\Serializer\Annotation\Type;
  *     href = @Hateoas\Route(
  *         "get_year_members",
  *         parameters = { "year" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted(['ROLE_SECRETARY']))"
  *     )
  * )
  * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\YearRepository")
@@ -81,7 +96,7 @@ class Year
 
     /**
      * States: draft, open, close
-     * 
+     *
      * @ORM\Column(type="string", length=16)
      */
     private $state = 'DRAFT';
@@ -210,7 +225,7 @@ class Year
     {
         return $this->title;
     }
-    
+
     /**
      * Set description
      *

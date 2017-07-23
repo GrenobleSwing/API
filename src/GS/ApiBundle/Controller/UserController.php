@@ -30,6 +30,7 @@ class UserController extends FOSRestController
      *   }
      * )
      * @Get("/identity")
+     * @Security("has_role('ROLE_USER')")
      */
     public function IdentityAction()
     {
@@ -61,6 +62,7 @@ class UserController extends FOSRestController
      *   }
      * )
      * @Get("/logout")
+     * @Security("has_role('ROLE_USER')")
      */
     public function LogoutAction()
     {

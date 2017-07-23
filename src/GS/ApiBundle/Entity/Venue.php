@@ -13,6 +13,9 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *     href = @Hateoas\Route(
  *         "get_venue",
  *         parameters = { "venue" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -20,6 +23,9 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *     href = @Hateoas\Route(
  *         "edit_venue",
  *         parameters = { "venue" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -27,6 +33,9 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *     href = @Hateoas\Route(
  *         "remove_venue",
  *         parameters = { "venue" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('delete', object))"
  *     )
  * )
  * @ORM\Entity
@@ -48,7 +57,7 @@ class Venue
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $name;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Address", cascade={"persist", "remove"})
      */

@@ -17,6 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "get_registration",
  *         parameters = { "registration" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -24,6 +27,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "validate_registration",
  *         parameters = { "id" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('validate', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -31,6 +37,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "wait_registration",
  *         parameters = { "id" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('wait', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -38,6 +47,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "cancel_registration",
  *         parameters = { "id" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('cancel', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -45,6 +57,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "pay_registration",
  *         parameters = { "id" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('pay', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -52,6 +67,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "edit_registration",
  *         parameters = { "registration" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -59,6 +77,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     href = @Hateoas\Route(
  *         "remove_registration",
  *         parameters = { "registration" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('delete', object))"
  *     )
  * )
  *
@@ -129,7 +150,7 @@ class Registration
      * without any Discount but later with the addition of another Registration
      * it can benefit from a Discount a thus the Account has paid too much and
      * it has to be taken into account for the balance.
-     * 
+     *
      * @ORM\Column(type="float")
      */
     private $amountPaid = 0.0;

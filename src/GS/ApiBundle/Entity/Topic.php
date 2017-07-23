@@ -18,6 +18,9 @@ use JMS\Serializer\Annotation\SerializedName;
  *     href = @Hateoas\Route(
  *         "get_topic",
  *         parameters = { "topic" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -25,6 +28,9 @@ use JMS\Serializer\Annotation\SerializedName;
  *     href = @Hateoas\Route(
  *         "edit_topic",
  *         parameters = { "topic" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('edit', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -32,6 +38,9 @@ use JMS\Serializer\Annotation\SerializedName;
  *     href = @Hateoas\Route(
  *         "remove_topic",
  *         parameters = { "topic" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('delete', object))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -39,6 +48,9 @@ use JMS\Serializer\Annotation\SerializedName;
  *     href = @Hateoas\Route(
  *         "new_topic_registration",
  *         parameters = { "topic" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted(['ROLE_USER']))"
  *     )
  * )
  * @Hateoas\Relation(
@@ -46,6 +58,9 @@ use JMS\Serializer\Annotation\SerializedName;
  *     href = @Hateoas\Route(
  *         "get_topic_registrations",
  *         parameters = { "topic" = "expr(object.getId())" }
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(
+ *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\TopicRepository")
@@ -79,7 +94,7 @@ class Topic
 
     /**
      * States: draft, open, close
-     * 
+     *
      * @ORM\Column(type="string", length=16)
      */
     private $state = 'DRAFT';
@@ -129,7 +144,7 @@ class Topic
      * @Type("Relation<Registration>")
      */
     private $registrations;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
      * @ORM\JoinTable(name="topic_owner")
@@ -298,14 +313,14 @@ class Topic
         }
         return $this;
     }
-    
+
     public function removeOption($option)
     {
         if (($key = array_search($option, $this->options)) != false) {
             unset($this->options[$key]);
         }
     }
-    
+
     /**
      * Get options
      *
