@@ -29,7 +29,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -65,7 +65,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/new",
                         "method": "GET",
                         "header": [
                             {
@@ -100,7 +100,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year",
                         "method": "POST",
                         "header": [
                             {
@@ -191,7 +191,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/{{yearId}}/activity/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/{{yearId}}/activity/new",
                         "method": "GET",
                         "header": [
                             {
@@ -226,7 +226,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/activity",
                         "method": "POST",
                         "header": [
                             {
@@ -304,7 +304,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity/{{activityId}}/discount/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/activity/{{activityId}}/discount/new",
                         "method": "GET",
                         "header": [
                             {
@@ -339,7 +339,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/discount",
                         "method": "POST",
                         "header": [
                             {
@@ -414,7 +414,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount/{{discountId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/discount/{{discountId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -447,7 +447,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/discount",
                         "method": "GET",
                         "header": [
                             {
@@ -483,7 +483,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount/{{discountId}}/edit",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/discount/{{discountId}}/edit",
                         "method": "GET",
                         "header": [
                             {
@@ -514,7 +514,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount/{{discountId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/discount/{{discountId}}",
                         "method": "PUT",
                         "header": [
                             {
@@ -592,7 +592,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount/{{discountId}}/remove",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/discount/{{discountId}}/remove",
                         "method": "GET",
                         "header": [
                             {
@@ -623,7 +623,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount/{{discountId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/discount/{{discountId}}",
                         "method": "DELETE",
                         "header": [
                             {

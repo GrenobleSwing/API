@@ -29,7 +29,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -65,7 +65,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/new",
                         "method": "GET",
                         "header": [
                             {
@@ -100,7 +100,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year",
                         "method": "POST",
                         "header": [
                             {
@@ -190,7 +190,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/{{yearId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/{{yearId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -223,7 +223,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year",
                         "method": "GET",
                         "header": [
                             {
@@ -259,7 +259,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/{{yearId}}/edit",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/{{yearId}}/edit",
                         "method": "GET",
                         "header": [
                             {
@@ -290,7 +290,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/{{yearId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/{{yearId}}",
                         "method": "PUT",
                         "header": [
                             {
@@ -386,7 +386,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/{{yearId}}/remove",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/{{yearId}}/remove",
                         "method": "GET",
                         "header": [
                             {
@@ -417,7 +417,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/{{yearId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/{{yearId}}",
                         "method": "DELETE",
                         "header": [
                             {

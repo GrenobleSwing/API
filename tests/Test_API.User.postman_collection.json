@@ -29,7 +29,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -62,7 +62,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/identity",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/identity",
                         "method": "GET",
                         "header": [
                             {
@@ -93,7 +93,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/logout",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/logout",
                         "method": "GET",
                         "header": [
                             {
@@ -126,7 +126,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/identity",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/identity",
                         "method": "GET",
                         "header": [
                             {
@@ -162,7 +162,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/user/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/user/new",
                         "method": "GET",
                         "header": [],
                         "body": {
@@ -191,7 +191,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/user",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/user",
                         "method": "POST",
                         "header": [
                             {

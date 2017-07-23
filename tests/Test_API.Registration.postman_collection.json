@@ -29,7 +29,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -65,7 +65,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/venue/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/venue/new",
                         "method": "GET",
                         "header": [
                             {
@@ -100,7 +100,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/venue",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/venue",
                         "method": "POST",
                         "header": [
                             {
@@ -172,7 +172,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/new",
                         "method": "GET",
                         "header": [
                             {
@@ -207,7 +207,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year",
                         "method": "POST",
                         "header": [
                             {
@@ -298,7 +298,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/year/{{yearId}}/activity/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/year/{{yearId}}/activity/new",
                         "method": "GET",
                         "header": [
                             {
@@ -333,7 +333,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/activity",
                         "method": "POST",
                         "header": [
                             {
@@ -411,7 +411,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity/{{activityId}}/discount/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/activity/{{activityId}}/discount/new",
                         "method": "GET",
                         "header": [
                             {
@@ -446,7 +446,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/discount",
                         "method": "POST",
                         "header": [
                             {
@@ -523,7 +523,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/discount",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/discount",
                         "method": "POST",
                         "header": [
                             {
@@ -601,7 +601,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity/{{activityId}}/category/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/activity/{{activityId}}/category/new",
                         "method": "GET",
                         "header": [
                             {
@@ -636,7 +636,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/category",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/category",
                         "method": "POST",
                         "header": [
                             {
@@ -714,7 +714,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/activity/{{activityId}}/topic/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/activity/{{activityId}}/topic/new",
                         "method": "GET",
                         "header": [
                             {
@@ -749,7 +749,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/topic",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/topic",
                         "method": "POST",
                         "header": [
                             {
@@ -911,7 +911,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/topic/{{topicId}}/registration/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/topic/{{topicId}}/registration/new",
                         "method": "GET",
                         "header": [
                             {
@@ -946,7 +946,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration",
                         "method": "POST",
                         "header": [
                             {
@@ -1003,7 +1003,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{registrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{registrationId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -1036,7 +1036,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration",
                         "method": "GET",
                         "header": [
                             {
@@ -1067,7 +1067,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{registrationId}}/validate",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{registrationId}}/validate",
                         "method": "GET",
                         "header": [
                             {
@@ -1103,7 +1103,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{registrationId}}/edit",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{registrationId}}/edit",
                         "method": "GET",
                         "header": [
                             {
@@ -1134,7 +1134,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{registrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{registrationId}}",
                         "method": "PUT",
                         "header": [
                             {
@@ -1194,7 +1194,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{registrationId}}/remove",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{registrationId}}/remove",
                         "method": "GET",
                         "header": [
                             {
@@ -1225,7 +1225,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{registrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{registrationId}}",
                         "method": "DELETE",
                         "header": [
                             {
@@ -1279,7 +1279,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -1315,7 +1315,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -1351,7 +1351,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -1387,7 +1387,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/auth",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/auth",
                         "method": "POST",
                         "header": [
                             {
@@ -1423,7 +1423,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/topic/4/registration/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/topic/4/registration/new",
                         "method": "GET",
                         "header": [
                             {
@@ -1458,7 +1458,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration",
                         "method": "POST",
                         "header": [
                             {
@@ -1518,7 +1518,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{johnClassRegistrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{johnClassRegistrationId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -1554,7 +1554,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/topic/5/registration/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/topic/5/registration/new",
                         "method": "GET",
                         "header": [
                             {
@@ -1589,7 +1589,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration",
                         "method": "POST",
                         "header": [
                             {
@@ -1661,7 +1661,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/topic/1/registration/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/topic/1/registration/new",
                         "method": "GET",
                         "header": [
                             {
@@ -1696,7 +1696,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration",
                         "method": "POST",
                         "header": [
                             {
@@ -1750,7 +1750,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/topic/4/registration/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/topic/4/registration/new",
                         "method": "GET",
                         "header": [
                             {
@@ -1785,7 +1785,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration",
                         "method": "POST",
                         "header": [
                             {
@@ -1857,7 +1857,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/topic/5/registration/new",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/topic/5/registration/new",
                         "method": "GET",
                         "header": [
                             {
@@ -1892,7 +1892,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration",
                         "method": "POST",
                         "header": [
                             {
@@ -1963,7 +1963,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{janeMembershipRegistrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{janeMembershipRegistrationId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -1999,7 +1999,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{johnClassRegistrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{johnClassRegistrationId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -2035,7 +2035,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{janeClassRegistrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{janeClassRegistrationId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -2071,7 +2071,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{johnTeamRegistrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{johnTeamRegistrationId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -2107,7 +2107,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{janeTeamRegistrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{janeTeamRegistrationId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -2138,7 +2138,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{johnClassRegistrationId}}/validate",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{johnClassRegistrationId}}/validate",
                         "method": "GET",
                         "header": [
                             {
@@ -2173,7 +2173,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{johnClassRegistrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{johnClassRegistrationId}}",
                         "method": "GET",
                         "header": [
                             {
@@ -2208,7 +2208,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/web/api/registration/{{janeClassRegistrationId}}",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/registration/{{janeClassRegistrationId}}",
                         "method": "GET",
                         "header": [
                             {
