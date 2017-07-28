@@ -51,6 +51,8 @@
         "egulias/email-validator": "~2.1",
         "shapecode/hidden-entity-type-bundle": "^2.0",
         "willdurand/hateoas-bundle": "^1.2",
+        "vich/uploader-bundle": "~1.4",
+        "stof/doctrine-extensions-bundle": "^1.2",
         "andres-montanez/magallanes": "dev-master"
 	
     },

@@ -107,81 +107,70 @@
                                 "key": "Authorization",
                                 "value": "Bearer {{token}}",
                                 "description": ""
-                            },
-                            {
-                                "key": "Content-Type",
-                                "value": "application/x-www-form-urlencoded",
-                                "description": ""
                             }
                         ],
                         "body": {
-                            "mode": "urlencoded",
-                            "urlencoded": [
+                            "mode": "formdata",
+                            "formdata": [
                                 {
                                     "key": "account[email]",
                                     "value": "julien@bibispirit42.fr",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[firstName]",
                                     "value": "Julien",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[lastName]",
                                     "value": "Billoudet",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[birthDate][day]",
                                     "value": "26",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[birthDate][month]",
                                     "value": "4",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[birthDate][year]",
                                     "value": "1986",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[phoneNumber]",
                                     "value": "0633305113",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[address][street]",
                                     "value": "20 rue de Alouettes",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[address][zipCode]",
                                     "value": "38180",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[address][city]",
                                     "value": "Seyssins",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
                                 },
                                 {
                                     "key": "account[_token]",
                                     "value": "{{form_token}}",
-                                    "type": "text",
-                                    "enabled": true
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "account[imageFile][file]",
+                                    "type": "file",
+                                    "src": "./tests/image_cool.png"
                                 }
                             ]
                         },

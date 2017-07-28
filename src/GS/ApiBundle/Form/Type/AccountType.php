@@ -14,6 +14,7 @@ use libphonenumber\PhoneNumberFormat;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Form\Type\AddressType;
@@ -44,6 +45,10 @@ class AccountType extends AbstractType
                 ->add('address', AddressType::class, array(
                     'label' => 'Adresse',
                 ))
+                ->add('imageFile', VichImageType::class, [
+                    'label' => 'Photo du compte',
+                    'required' => false,
+                ])
                 ->add('submit', SubmitType::class)
         ;
 

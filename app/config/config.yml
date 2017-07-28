@@ -45,6 +45,7 @@ twig:
         - 'GSApiBundle::jquery.collection.html.twig'
         - 'bootstrap_3_layout.html.twig'
         - 'GSApiBundle::custom_form.html.twig'
+        - 'VichUploaderBundle:Form:fields.html.twig'
         # - 'bootstrap_3_horizontal_layout.html.twig'
 
 # Doctrine Configuration
@@ -141,3 +142,18 @@ knp_snappy:
         enabled:    true
         binary:     %wkhtmltopdf.binary%
         options:    []
+
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        account_image:
+            uri_prefix:         /images/account
+            namer:              vich_uploader.namer_uniqid
+            upload_destination: '%kernel.root_dir%/../web/images/account'
+
+stof_doctrine_extensions:
+    default_locale: fr_FR
+    orm:
+        default:
+            timestampable: true
