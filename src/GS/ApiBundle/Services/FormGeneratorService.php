@@ -52,11 +52,15 @@ class FormGeneratorService
         if (null === $year) {
             $year = new Year();
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('year' => $year->getId()));
+                $route = $this->router->generate($routeName, array('year' => $year->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
@@ -73,7 +77,9 @@ class FormGeneratorService
             $activity = new Activity();
             $options['membership_topics'] = array();
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if ($activity->getId() !== null) {
@@ -90,7 +96,9 @@ class FormGeneratorService
                 $options['membership_topics'] = array();
             }
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('activity' => $activity->getId()));
+                $route = $this->router->generate($routeName, array('activity' => $activity->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
@@ -106,11 +114,15 @@ class FormGeneratorService
         if (null === $topic) {
             $topic = new Topic();
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('topic' => $topic->getId()));
+                $route = $this->router->generate($routeName, array('topic' => $topic->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
@@ -127,11 +139,15 @@ class FormGeneratorService
             // Should raise an error
             $category = new Category();
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('category' => $category->getId()));
+                $route = $this->router->generate($routeName, array('category' => $category->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
@@ -148,11 +164,15 @@ class FormGeneratorService
             // Should raise an error
             $discount = new Discount();
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('discount' => $discount->getId()));
+                $route = $this->router->generate($routeName, array('discount' => $discount->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
@@ -169,11 +189,15 @@ class FormGeneratorService
             // Should raise an error
             $registration = new Registration();
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('registration' => $registration->getId()));
+                $route = $this->router->generate($routeName, array('registration' => $registration->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
@@ -190,11 +214,15 @@ class FormGeneratorService
             // Should raise an error
             $venue = new Venue();
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('venue' => $venue->getId()));
+                $route = $this->router->generate($routeName, array('venue' => $venue->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
@@ -218,11 +246,15 @@ class FormGeneratorService
             // Should raise an error
             $account = new Account();
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('account' => $account->getId()));
+                $route = $this->router->generate($routeName, array('account' => $account->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
@@ -240,11 +272,15 @@ class FormGeneratorService
             $item = new PaymentItem();
             $payment->addItem($item);
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('payment' => $payment->getId()));
+                $route = $this->router->generate($routeName, array('payment' => $payment->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
@@ -260,11 +296,15 @@ class FormGeneratorService
         if (null === $user) {
             $user = new User();
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName);
+                $route = $this->router->generate($routeName);
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         } else {
             if (null !== $routeName) {
-                $options['action'] = $this->router->generate($routeName, array('user' => $user->getId()));
+                $route = $this->router->generate($routeName, array('user' => $user->getId()));
+                $i = strrpos($route, '/api');
+                $options['action'] = substr($route, $i+4);
             }
         }
         if (null !== $method) {
