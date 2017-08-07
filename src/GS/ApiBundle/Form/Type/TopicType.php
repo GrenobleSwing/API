@@ -12,7 +12,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 use GS\ApiBundle\Entity\Topic;
@@ -24,24 +23,14 @@ class TopicType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('activity', EntityType::class, array(
-                    'label' => 'Activite',
-                    'class' => 'GSApiBundle:Activity',
-                    'choice_label' => 'title',
-                    'position' => 'first',
-                ))
-                ->add('category', EntityType::class, array(
-                    'label' => 'Categories',
-                    'class' => 'GSApiBundle:Category',
-                    'choice_label' => 'name',
-                    'position' => array('after' => 'activity'),
-                ))
+                ->add('category')
 //                A ameliorer pour ne prendre en compte que ceux de l'annee
                 ->add('requiredTopics', EntityType::class, array(
                     'label' => 'Pre-requis',
                     'class' => 'GSApiBundle:Topic',
                     'choice_label' => 'title',
                     'multiple' => true,
+                    'required' => false,
                 ))
                 ->add('title', TextType::class, array(
                     'label' => 'Titre',
@@ -83,27 +72,16 @@ class TopicType extends AbstractType
             $form = $event->getForm();
 
             if (null !== $topic && null !== $topic->getActivity()) {
-                $this->disableField($form->get('activity'));
                 $form->remove('category');
                 $form->add('category', EntityType::class, array(
                     'label' => 'Categories',
                     'class' => 'GSApiBundle:Category',
                     'choice_label' => 'name',
-                    'position' => array('after' => 'activity'),
+                    'position' => 'first',
                     'choices' => $topic->getActivity()->getCategories(),
                 ));
             }
         });
-    }
-
-    private function disableField(FormInterface $field)
-    {
-        $parent = $field->getParent();
-        $options = $field->getConfig()->getOptions();
-        $name = $field->getName();
-        $type = get_class($field->getConfig()->getType()->getInnerType());
-        $parent->remove($name);
-        $parent->add($name, $type, array_merge($options, ['disabled' => true]));
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -1,0 +1,112 @@
+{% extends "GSApiBundle::layout.html.twig" %}
+
+{% block gs_body %}
+    {{ parent() }}
+
+    <h2>{{ activity.title }}</h2>
+
+    <p>
+        <a href="{{ path('homepage') }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Retour à l'accueil
+        </a>
+        <a href="{{ path('view_year', {'id': activity.year.id}) }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Retour à l'année
+        </a>
+        {% if activity.state == 'DRAFT' and is_granted("edit", activity) %}
+            <a href="{{ path('open_activity', {'id': activity.id}) }}" class="btn btn-default">
+                Ouvrir l'activité
+            </a>
+        {% elseif activity.state == 'OPEN' and is_granted("edit", activity) %}
+            <a href="{{ path('close_activity', {'id': activity.id}) }}" class="btn btn-default">
+                Clore l'activité
+            </a>
+        {% endif %}
+        {% if activity.state != 'CLOSE' and ((activity.state == 'DRAFT' and is_granted("edit", activity)) or is_granted("ROLE_ADMIN")) %}
+            <a href="{{ path('edit_activity', {'id': activity.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-edit"></i>
+                Modifier l'activité
+            </a>
+        {% endif %}
+        {% if (activity.state == 'DRAFT' and is_granted("edit", activity)) or is_granted("ROLE_SUPER_ADMIN") %}
+            <a href="{{ path('delete_activity', {'id': activity.id}) }}" class="btn btn-danger">
+                <i class="glyphicon glyphicon-trash"></i>
+                Supprimer l'activité
+            </a>
+        {% endif %}
+    </p>
+    <p>
+        {% if activity.state != 'CLOSE' and is_granted("edit", activity) %}
+            <a href="{{ path('add_topic', {'id': activity.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-plus"></i>
+                Ajouter un topic
+            </a>
+            <a href="{{ path('add_category', {'id': activity.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-plus"></i>
+                Ajouter une catégorie
+            </a>
+            <a href="{{ path('add_discount', {'id': activity.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-plus"></i>
+                Ajouter une réduction
+            </a>
+        {% endif %}
+    </p>
+
+    <h3>Description</h3>
+    <div class="well">
+        {{ activity.description }}
+    </div>
+
+    <h3>Liste des topics :</h3>
+    <ul>
+        {% for topic in activity.topics %}
+            <li>
+                {{ topic.title }}
+                {% if topic not in user_topics %}
+                    <a href="{{ path('add_registration', {'id': topic.id}) }}" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> S'inscrire
+                    </a>
+                {% else %}
+                    (déja inscrit)
+                {% endif %}
+                <a href="{{ path('view_topic', {'id': topic.id}) }}" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
+                </a>
+            </li>
+        {% else %}
+            <li>Pas (encore !) de topics</li>
+        {% endfor %}
+    </ul>
+
+    {% if is_granted("edit", activity) %}
+        <h3>Liste des catégories :</h3>
+        <ul>
+            {% for category in activity.categories %}
+                <li>
+                    {{ category.name }}
+                    <a href="{{ path('view_category', {'id': category.id}) }}" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
+                    </a>
+                </li>
+            {% else %}
+                <li>Pas (encore !) de catégories</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Liste des réductions :</h3>
+        <ul>
+            {% for discount in activity.discounts %}
+                <li>
+                    {{ discount.name }}
+                    <a href="{{ path('view_discount', {'id': discount.id}) }}" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
+                    </a>
+                </li>
+            {% else %}
+                <li>Pas (encore !) de réductions</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

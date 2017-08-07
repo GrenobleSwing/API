@@ -3,6 +3,16 @@ services:
 #        class: GS\ApiBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
 
+    gsapi.form.user.registration:
+            class: GS\ApiBundle\Form\Type\UserRegistrationType
+            tags:
+                - { name: form.type, alias: gsapi_user_registration }
+
+    gsapi.form.user.profile:
+            class: GS\ApiBundle\Form\Type\UserProfileType
+            tags:
+                - { name: form.type, alias: gsapi_user_profile }
+
     jms_serializer.handler.relation:
         class: GS\ApiBundle\Serializer\RelationsHandler
         arguments:
@@ -13,9 +23,12 @@ services:
             - { name: jms_serializer.handler, type: Relation<?>, direction: serialization, format: json, method: serializeRelation}
             - { name: jms_serializer.handler, type: Relation<?>, direction: deserialization, format: json, method: deserializeRelation}
 
-    gsapi.form_generator:
-        class: GS\ApiBundle\Services\FormGeneratorService
-        arguments: [ '@router', '@form.factory', '@doctrine.orm.entity_manager' ]
+    gsapi.user.registration:
+        class: GS\ApiBundle\EventListener\UserRegistrationListener
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_subscriber }
 
     gsapi.account_balance:
         class: GS\ApiBundle\Services\AccountBalanceService
@@ -90,17 +103,6 @@ services:
             arguments:
                 - GS\ApiBundle\Entity\User
 
-    gsapi.event.jwt_created_listener:
-        class: GS\ApiBundle\EventListener\JWTCreatedListener
-        tags:
-            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
-
-    gsapi.event.jwt_decoded_listener:
-        class: GS\ApiBundle\EventListener\JWTDecodedListener
-        arguments: [ '@gsapi.user.repository' ]
-        tags:
-            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
-
     gsapi.event.table_prefix_subscriber:
         class: GS\ApiBundle\EventSubscriber\TablePrefixSubscriber
         public: false
@@ -112,6 +114,6 @@ services:
         class: GS\ApiBundle\Services\MembershipService
         arguments: [ '@doctrine.orm.entity_manager' ]
 
-    gsapi.registration.service:
-        class: GS\ApiBundle\Services\RegistrationService
-        arguments: [ '@doctrine.orm.entity_manager' ]
+#    gsapi.registration.service:
+#        class: GS\ApiBundle\Services\RegistrationService
+#        arguments: [ '@doctrine.orm.entity_manager' ]

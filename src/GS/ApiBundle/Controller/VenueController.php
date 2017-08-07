@@ -2,57 +2,26 @@
 
 namespace GS\ApiBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
 use GS\ApiBundle\Entity\Venue;
+use GS\ApiBundle\Form\Type\VenueType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @RouteResource("Venue", pluralize=false)
- */
-class VenueController extends FOSRestController
+class VenueController extends Controller
 {
 
     /**
-     * @ApiDoc(
-     *   section="Venue",
-     *   description="Returns a form to create a new Venue",
-     *   output="GS\ApiBundle\Form\Type\VenueType",
-     *   statusCodes={
-     *     200="You have permission to create a Venue, the form is returned",
-     *   }
-     * )
+     * @Route("/venue/add", name="add_venue")
      * @Security("has_role('ROLE_ORGANIZER')")
      */
-    public function newAction()
+    public function addAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getVenueForm(null, 'post_venue');
-        $this->denyAccessUnlessGranted('create', $form->getData());
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
+        $venue = new Venue();
+        $form = $this->createForm(VenueType::class, $venue);
 
-    /**
-     * @ApiDoc(
-     *   section="Venue",
-     *   description="Create a new Venue",
-     *   input="GS\ApiBundle\Form\Type\VenueType",
-     *   statusCodes={
-     *     201="The Venue has been created",
-     *   }
-     * )
-     * @Security("has_role('ROLE_ORGANIZER')")
-     */
-    public function postAction(Request $request)
-    {
-        $form = $this->get('gsapi.form_generator')->getVenueForm(null, 'post_venue');
-        $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $venue = $form->getData();
 
@@ -60,183 +29,90 @@ class VenueController extends FOSRestController
             $em->persist($venue);
             $em->flush();
 
-            $view = $this->view(array('id' => $venue->getId()), 201);
+            $request->getSession()->getFlashBag()->add('success', 'Salle bien enregistrée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('index_venue');
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Venue:add.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Venue",
-     *   description="Returns a form to confirm deletion of a given Venue",
-     *   requirements={
-     *     {
-     *       "name"="venue",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Venue id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     200="You have permission to delete a Venue, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('delete', venue)")
-     */
-    public function removeAction(Venue $venue)
-    {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($venue, 'venue');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Venue",
-     *   description="Delete a given Venue",
-     *   requirements={
-     *     {
-     *       "name"="venue",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Venue id"
-     *     }
-     *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     204="The Venue has been deleted",
-     *   }
-     * )
+     * @Route("/venue/{id}/delete", name="delete_venue", requirements={"id": "\d+"})
      * @Security("is_granted('delete', venue)")
      */
     public function deleteAction(Venue $venue, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($venue, 'venue');
-        $form->handleRequest($request);
+        $form = $this->createFormBuilder()->getForm();
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($venue);
             $em->flush();
 
-            $view = $this->view(null, 204);
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            $request->getSession()->getFlashBag()->add('success', "La salle a bien été supprimée.");
+
+            return $this->redirectToRoute('homepage');
         }
-        return $this->handleView($view);
+
+        // Si la requête est en GET, on affiche une page de confirmation avant de supprimer
+        return $this->render('GSApiBundle:Venue:delete.html.twig', array(
+                    'venue' => $venue,
+                    'form' => $form->createView()
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Venue",
-     *   description="Returns an existing Venue",
-     *   requirements={
-     *     {
-     *       "name"="venue",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Venue id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Entity\Venue",
-     *   statusCodes={
-     *     200="Returns the Venue",
-     *   }
-     * )
+     * @Route("/venue/{id}", name="view_venue", requirements={"id": "\d+"})
      * @Security("is_granted('view', venue)")
      */
-    public function getAction(Venue $venue)
+    public function viewAction(Venue $venue)
     {
-        $view = $this->view($venue, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Venue:view.html.twig', array(
+                    'venue' => $venue
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Venue",
-     *   description="Returns a collection of Venues",
-     *   output="array<GS\ApiBundle\Entity\Venue>",
-     *   statusCodes={
-     *     200="Returns all the Venues",
-     *   }
-     * )
+     * @Route("/venue", name="index_venue")
      * @Security("has_role('ROLE_ORGANIZER')")
      */
-    public function cgetAction()
+    public function indexAction()
     {
         $listVenues = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Venue')
             ->findAll()
             ;
 
-        $view = $this->view($listVenues, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Venue:index.html.twig', array(
+                    'listVenues' => $listVenues
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Venue",
-     *   description="Returns a form to edit an existing Venue",
-     *   requirements={
-     *     {
-     *       "name"="venue",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Venue id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\VenueType",
-     *   statusCodes={
-     *     200="You have permission to create a Venue, the form is returned",
-     *   }
-     * )
+     * @Route("/venue/{id}/edit", name="edit_venue", requirements={"id": "\d+"})
      * @Security("is_granted('edit', venue)")
      */
-    public function editAction(Venue $venue)
+    public function editAction(Venue $venue, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getVenueForm($venue, 'put_venue', 'PUT');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
+        $form = $this->createForm(VenueType::class, $venue);
 
-    /**
-     * @ApiDoc(
-     *   section="Venue",
-     *   description="Update an existing Venue",
-     *   input="GS\ApiBundle\Form\Type\VenueType",
-     *   requirements={
-     *     {
-     *       "name"="venue",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Venue id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The Venue has been updated",
-     *   }
-     * )
-     * @Security("is_granted('edit', venue)")
-     */
-    public function putAction(Venue $venue, Request $request)
-    {
-        $form = $this->get('gsapi.form_generator')->getVenueForm($venue, 'put_venue', 'PUT');
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $view = $this->view(null, 204);
+            $request->getSession()->getFlashBag()->add('success', 'Salle bien modifiée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_venue', array('id' => $venue->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Venue:edit.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
 }

@@ -3,7 +3,7 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Hateoas\Configuration\Annotation as Hateoas;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -11,78 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Registration
- *
- * @Hateoas\Relation(
- *     "self",
- *     href = @Hateoas\Route(
- *         "get_registration",
- *         parameters = { "registration" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('view', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "validate",
- *     href = @Hateoas\Route(
- *         "validate_registration",
- *         parameters = { "id" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('validate', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "wait",
- *     href = @Hateoas\Route(
- *         "wait_registration",
- *         parameters = { "id" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('wait', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "cancel",
- *     href = @Hateoas\Route(
- *         "cancel_registration",
- *         parameters = { "id" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('cancel', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "pay",
- *     href = @Hateoas\Route(
- *         "pay_registration",
- *         parameters = { "id" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('pay', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "edit",
- *     href = @Hateoas\Route(
- *         "edit_registration",
- *         parameters = { "registration" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "remove",
- *     href = @Hateoas\Route(
- *         "remove_registration",
- *         parameters = { "registration" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('delete', object))"
- *     )
- * )
- *
  * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\RegistrationRepository")
  * @UniqueEntity(
  *     fields = {"topic", "account"},
@@ -98,6 +26,14 @@ class Registration
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     *
+     * @var \DateTime
+     */
+    private $createdAt;
 
     /**
      * @ORM\Column(type="string", length=16, nullable=true)
@@ -324,8 +260,9 @@ class Registration
      */
     public function getDisplayName()
     {
-        return $this->getAccount()->getDisplayName() . ' - ' .
-                $this->getTopic()->getTitle();
+        return $this->getTopic()->getActivity()->getTitle() . ' - ' .
+                $this->getTopic()->getTitle() . ' - ' .
+                $this->getAccount()->getDisplayName();
     }
 
     public function wait()
@@ -482,5 +419,29 @@ class Registration
     public function getPartnerRegistration()
     {
         return $this->partnerRegistration;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return Registration
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

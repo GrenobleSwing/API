@@ -3,41 +3,9 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Venue
- *
- * @Hateoas\Relation(
- *     "self",
- *     href = @Hateoas\Route(
- *         "get_venue",
- *         parameters = { "venue" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('view', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "edit",
- *     href = @Hateoas\Route(
- *         "edit_venue",
- *         parameters = { "venue" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "remove",
- *     href = @Hateoas\Route(
- *         "remove_venue",
- *         parameters = { "venue" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('delete', object))"
- *     )
- * )
  * @ORM\Entity
  */
 class Venue

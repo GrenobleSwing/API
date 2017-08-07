@@ -21,11 +21,6 @@ class CategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('activity', EntityType::class, array(
-                    'class' => 'GSApiBundle:Activity',
-                    'choice_label' => 'title',
-                    'position' => 'first',
-                ))
                 ->add('name', TextType::class, array(
                     'label' => 'Nom de la categorie',
                 ))
@@ -36,13 +31,12 @@ class CategoryType extends AbstractType
                 ->add('discounts')
                 ->add('submit', SubmitType::class)
         ;
-        
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $category = $event->getData();
             $form = $event->getForm();
 
             if (null !== $category && null !== $category->getActivity()) {
-                $this->disableField($form->get('activity'));
                 $form->remove('discounts');
                 $form->add('discounts', EntityType::class, array(
                     'label' => 'Reductions applicables',
@@ -51,19 +45,10 @@ class CategoryType extends AbstractType
                     'multiple' => true,
                     'position' => array('after' => 'price'),
                     'choices' => $category->getActivity()->getDiscounts(),
+                    'required' => false,
                 ));
             }
         });
-    }
-
-    private function disableField(FormInterface $field)
-    {
-        $parent = $field->getParent();
-        $options = $field->getConfig()->getOptions();
-        $name = $field->getName();
-        $type = get_class($field->getConfig()->getType()->getInnerType());
-        $parent->remove($name);
-        $parent->add($name, $type, array_merge($options, ['disabled' => true]));
     }
 
     public function configureOptions(OptionsResolver $resolver)

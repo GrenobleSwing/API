@@ -2,214 +2,104 @@
 
 namespace GS\ApiBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
+use GS\ApiBundle\Entity\Activity;
 use GS\ApiBundle\Entity\Discount;
+use GS\ApiBundle\Form\Type\DiscountType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @RouteResource("Discount", pluralize=false)
- */
-class DiscountController extends FOSRestController
+class DiscountController extends Controller
 {
 
     /**
-     * @ApiDoc(
-     *   section="Discount",
-     *   description="Create a new Discount",
-     *   input="GS\ApiBundle\Form\Type\DiscountType",
-     *   statusCodes={
-     *     201="The Discount has been created",
-     *   }
-     * )
+     * @Route("/discount/add/{id}", name="add_discount", requirements={"id": "\d+"})
      * @Security("has_role('ROLE_ORGANIZER')")
      */
-    public function postAction(Request $request)
+    public function postAction(Activity $activity, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getDiscountForm(null, 'post_discount');
-        $this->denyAccessUnlessGranted('create', $form->getData());
-        $form->handleRequest($request);
+        $discount = new Discount();
+        $discount->setActivity($activity);
+        $form = $this->createForm(DiscountType::class, $discount);
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $discount = $form->getData();
-            $activity = $discount->getActivity();
             $activity->addDiscount($discount);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($discount);
             $em->flush();
 
-            $view = $this->view(array('id' => $discount->getId()), 201);
+            $request->getSession()->getFlashBag()->add('success', 'Réduction bien enregistrée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_discount', array('id' => $discount->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Discount:add.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Discount",
-     *   description="Returns an existing Discount",
-     *   requirements={
-     *     {
-     *       "name"="discount",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Discount id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Entity\Discount",
-     *   statusCodes={
-     *     200="Returns the Discount",
-     *   }
-     * )
+     * @Route("/discount/{id}", name="view_discount", requirements={"id": "\d+"})
      * @Security("is_granted('view', discount)")
      */
-    public function getAction(Discount $discount)
+    public function viewAction(Discount $discount)
     {
-        $view = $this->view($discount, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Discount:view.html.twig', array(
+                    'discount' => $discount
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Discount",
-     *   description="Returns a collection of Discounts",
-     *   output="array<GS\ApiBundle\Entity\Discount>",
-     *   statusCodes={
-     *     200="Returns all the Discounts",
-     *   }
-     * )
+     * @Route("/discount", name="index_discount")
      * @Security("has_role('ROLE_ORGANIZER')")
      */
-    public function cgetAction()
+    public function indexAction()
     {
-        $listCategories = $this->getDoctrine()->getManager()
+        $listDiscounts = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Discount')
             ->findAll()
             ;
 
-        $view = $this->view($listCategories, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Discount:index.html.twig', array(
+                    'listDiscounts' => $listDiscounts
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Discount",
-     *   description="Returns a form to edit an existing Discount",
-     *   requirements={
-     *     {
-     *       "name"="discount",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Discount id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\DiscountType",
-     *   statusCodes={
-     *     200="You have permission to create a Discount, the form is returned",
-     *   }
-     * )
+     * @Route("/discount/{id}/edit", name="edit_discount", requirements={"id": "\d+"})
      * @Security("is_granted('edit', discount)")
      */
-    public function editAction(Discount $discount)
+    public function editAction(Discount $discount, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'put_discount', 'PUT');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
+        $form = $this->createForm(DiscountType::class, $discount);
 
-    /**
-     * @ApiDoc(
-     *   section="Discount",
-     *   description="Update an existing Discount",
-     *   input="GS\ApiBundle\Form\Type\DiscountType",
-     *   requirements={
-     *     {
-     *       "name"="discount",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Discount id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The Discount has been updated",
-     *   }
-     * )
-     * @Security("is_granted('edit', discount)")
-     */
-    public function putAction(Discount $discount, Request $request)
-    {
-        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'put_discount', 'PUT');
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $view = $this->view(null, 204);
+            $request->getSession()->getFlashBag()->add('success', 'Réduction bien modifiée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_discount', array('id' => $discount->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Discount:edit.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Discount",
-     *   description="Returns a form to confirm deletion of a given Discount",
-     *   requirements={
-     *     {
-     *       "name"="discount",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Discount id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     200="You have permission to delete a Discount, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('delete', discount)")
-     */
-    public function removeAction(Discount $discount)
-    {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($discount, 'discount');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Discount",
-     *   description="Delete a given Discount",
-     *   requirements={
-     *     {
-     *       "name"="discount",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Discount id"
-     *     }
-     *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     204="The Discount has been deleted",
-     *   }
-     * )
+     * @Route("/discount/{id}/delete", name="delete_discount", requirements={"id": "\d+"})
      * @Security("is_granted('delete', discount)")
      */
     public function deleteAction(Discount $discount, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($discount, 'discount');
-        $form->handleRequest($request);
+        $form = $this->createFormBuilder()->getForm();
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $activity = $discount->getActivity();
             $activity->removeDiscount($discount);
@@ -218,11 +108,16 @@ class DiscountController extends FOSRestController
             $em->remove($discount);
             $em->flush();
 
-            $view = $this->view(null, 204);
-        } else {
-            $view = $this->getFormView($form, 412);
+            $request->getSession()->getFlashBag()->add('success', "La réduction a bien été supprimée.");
+
+            return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
         }
-        return $this->handleView($view);
+
+        // Si la requête est en GET, on affiche une page de confirmation avant de supprimer
+        return $this->render('GSApiBundle:Discount:delete.html.twig', array(
+                    'discount' => $discount,
+                    'form' => $form->createView()
+        ));
     }
 
 }

@@ -13,7 +13,7 @@ use GS\ApiBundle\Entity\Registration;
 class AccountBalanceService
 {
     private $entityManager;
-    
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -28,28 +28,28 @@ class AccountBalanceService
     {
         return $this->getDetails($account, $activity);
     }
-    
+
     private function getDetails(Account $account, Activity $activity = null, $paypal = false)
     {
         $registrations = $this->getRegistrations($account, $activity);
-        
+
         $details = array();
         $totalBalance = 0.0;
         $i = 0;
         $currentActivity = null;
         $currentCategory = null;
-        
+
         // Registrations are sorted by Category and Price.
         // All Discounts are linked to Category and they apply from the most
         // expensive Category to the less expensive one.
         foreach ($registrations as $registration) {
             $activity = $registration->getTopic()->getActivity();
             $category = $registration->getTopic()->getCategory();
-            
+
             // For a better display, we group registrations by activity.
             if ($currentActivity !== $activity) {
                 $currentActivity = $activity;
-                
+
                 if (! $paypal) {
                     // We append the name of the year for better display
                     $displayName = $currentActivity->getTitle() . ' - ' .
@@ -58,7 +58,7 @@ class AccountBalanceService
                 }
                 $i = 0;
             }
-            
+
             // When we change Category, we reset the index of the Registration
             // since some discount are based on the number of Topics having the
             // same Category.
@@ -67,7 +67,7 @@ class AccountBalanceService
                 $details[$displayName][$currentCategory->getName()] = array();
                 $i = 0;
             }
-            
+
             $discounts = $category->getDiscounts();
             $discount = $this->chooseDiscount($i, $account, $discounts);
 
@@ -100,7 +100,7 @@ class AccountBalanceService
         } else {
             $registrations = $this->entityManager
                 ->getRepository('GSApiBundle:Registration')
-                ->getRegistrationsForAccountAndActivity($account, $activity);
+                ->getRegistrationsPaidOrValidatedForAccountAndActivity($account, $activity);
         }
         return $registrations;
     }
@@ -110,7 +110,7 @@ class AccountBalanceService
         $topic = $registration->getTopic();
         $price = $category->getPrice();
         $alreadyPaid = $registration->getAmountPaid();
-        
+
         $line = array(
             'registrationId' => $registration->getId(),
             'name' => $topic->getTitle(),
@@ -119,7 +119,7 @@ class AccountBalanceService
             'alreadyPaid' => $alreadyPaid,
         );
         $due = $price;
-        
+
         if (null !== $discount) {
             $line['discount'] = array(
                 'type' => $discount->getType(),
@@ -131,11 +131,11 @@ class AccountBalanceService
                 $due -= $discount->getValue();
             }
         }
-        
+
         $line['balance'] = $due - $alreadyPaid;
         return $line;
     }
-    
+
     private function chooseDiscount($i, Account $account, $discounts)
     {
         foreach($discounts as $discount) {

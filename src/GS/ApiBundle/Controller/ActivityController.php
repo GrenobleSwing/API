@@ -2,129 +2,114 @@
 
 namespace GS\ApiBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
 use GS\ApiBundle\Entity\Activity;
-use GS\ApiBundle\Entity\Topic;
-use GS\ApiBundle\Entity\Category;
-use GS\ApiBundle\Entity\Discount;
-use GS\ApiBundle\Entity\Schedule;
+use GS\ApiBundle\Entity\Year;
+use GS\ApiBundle\Form\Type\ActivityType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @RouteResource("Activity", pluralize=false)
- */
-class ActivityController extends FOSRestController
+class ActivityController extends Controller
 {
-
     /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Returns a form to create a new Activity",
-     *   output="GS\ApiBundle\Form\Type\ActivityType",
-     *   statusCodes={
-     *     200="You have permission to create a Activity, the form is returned",
-     *   }
-     * )
-     * @Security("has_role('ROLE_ORGANIZER')")
+     * @Route("/activity/{id}/open", name="open_activity", requirements={"id": "\d+"})
+     * @Security("is_granted('edit', activity)")
      */
-    public function newAction()
+    public function openAction(Activity $activity, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getActivityForm(null, 'post_activity');
-        $this->denyAccessUnlessGranted('create', $form->getData());
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
+        if ('DRAFT' != $activity->getState()) {
+            $request->getSession()->getFlashBag()->add('danger', "Impossible to open activity");
+            return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
+        }
+
+        $form = $this->createFormBuilder()->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $activity->setState('OPEN');
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('success', "L'activité a bien été ouverte.");
+
+            return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
+        }
+
+        return $this->render('GSApiBundle:Activity:open.html.twig', array(
+            'activity' => $activity,
+            'form' => $form->createView()
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Create a new Activity",
-     *   input="GS\ApiBundle\Form\Type\ActivityType",
-     *   statusCodes={
-     *     201="The Activity has been created",
-     *   }
-     * )
+     * @Route("/activity/{id}/close", name="close_activity", requirements={"id": "\d+"})
+     * @Security("is_granted('edit', activity)")
+     */
+    public function closeAction(Activity $activity, Request $request)
+    {
+        if ('OPEN' != $activity->getState()) {
+            $request->getSession()->getFlashBag()->add('danger', "Impossible to close activity");
+            return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
+        }
+
+        $form = $this->createFormBuilder()->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $activity->setState('CLOSE');
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('success', "L'activité a bien été fermée.");
+
+            return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
+        }
+
+        return $this->render('GSApiBundle:Activity:close.html.twig', array(
+            'activity' => $activity,
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/activity/add/{id}", name="add_activity", requirements={"id": "\d+"})
      * @Security("has_role('ROLE_ORGANIZER')")
      */
-    public function postAction(Request $request)
+    public function addAction(Year $year, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getActivityForm(null, 'post_activity');
-        $this->denyAccessUnlessGranted('create', $form->getData());
-        $form->handleRequest($request);
+        $activity = new Activity();
+        $activity->setYear($year);
+        $form = $this->createForm(ActivityType::class, $activity);
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $activity = $form->getData();
             $activity->addOwner($this->getUser());
-            $year = $activity->getYear();
-            $year->addActivity($activity);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($activity);
             $em->flush();
 
-            $view = $this->view(array('id' => $activity->getId()), 201);
+            $request->getSession()->getFlashBag()->add('success', 'Activité bien enregistrée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Activity:add.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Returns a form to confirm deletion of a given Activity",
-     *   requirements={
-     *     {
-     *       "name"="activity",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Activity id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     200="You have permission to delete a Activity, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('delete', activity)")
-     */
-    public function removeAction(Activity $activity)
-    {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($activity, 'activity');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Delete a given Activity",
-     *   requirements={
-     *     {
-     *       "name"="activity",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Activity id"
-     *     }
-     *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     204="The Activity has been deleted",
-     *   }
-     * )
+     * @Route("/activity/{id}/delete", name="delete_activity", requirements={"id": "\d+"})
      * @Security("is_granted('delete', activity)")
      */
     public function deleteAction(Activity $activity, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($activity, 'activity');
-        $form->handleRequest($request);
+        $form = $this->createFormBuilder()->getForm();
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $year = $activity->getYear();
             $year->removeActivity($activity);
@@ -133,186 +118,81 @@ class ActivityController extends FOSRestController
             $em->remove($activity);
             $em->flush();
 
-            $view = $this->view(null, 204);
-        } else {
-            $view = $this->getFormView($form, 412);
+            $request->getSession()->getFlashBag()->add('success', "L'activité a bien été supprimée.");
+
+            return $this->redirectToRoute('view_year', array('id' => $year->getId()));
         }
-        return $this->handleView($view);
+
+        // Si la requête est en GET, on affiche une page de confirmation avant de supprimer
+        return $this->render('GSApiBundle:Activity:delete.html.twig', array(
+                    'activity' => $activity,
+                    'form' => $form->createView()
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Returns an existing Activity",
-     *   requirements={
-     *     {
-     *       "name"="activity",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Activity id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Entity\Activity",
-     *   statusCodes={
-     *     200="Returns the Activity",
-     *   }
-     * )
+     * @Route("/activity/{id}", name="view_activity", requirements={"id": "\d+"})
      * @Security("is_granted('view', activity)")
      */
-    public function getAction(Activity $activity)
+    public function viewAction(Activity $activity)
     {
-        $view = $this->view($activity, 200);
-        return $this->handleView($view);
+        $em = $this->getDoctrine()->getManager();
+        $account = $em
+            ->getRepository('GSApiBundle:Account')
+            ->findOneByUser($this->getUser())
+            ;
+
+        $registrations = $em
+            ->getRepository('GSApiBundle:Registration')
+            ->getRegistrationsNotCancelledForAccountAndActivity($account, $activity);
+
+        $topics = [];
+        foreach ($registrations as $registration) {
+            $topics[] = $registration->getTopic();
+        }
+        return $this->render('GSApiBundle:Activity:view.html.twig', array(
+            'activity' => $activity,
+            'user_topics' => $topics,
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Returns a collection of Activitys",
-     *   output="array<GS\ApiBundle\Entity\Activity>",
-     *   statusCodes={
-     *     200="Returns all the Activitys",
-     *   }
-     * )
+     * @Route("/activity", name="index_activity")
      * @Security("has_role('ROLE_USER')")
      */
-    public function cgetAction()
+    public function indexAction()
     {
         $listActivities = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Activity')
             ->findAll()
             ;
 
-        $view = $this->view($listActivities, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Activity:index.html.twig', array(
+                    'listActivities' => $listActivities
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Returns a form to edit an existing Activity",
-     *   requirements={
-     *     {
-     *       "name"="activity",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Activity id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\ActivityType",
-     *   statusCodes={
-     *     200="You have permission to create a Activity, the form is returned",
-     *   }
-     * )
+     * @Route("/activity/{id}/edit", name="edit_activity", requirements={"id": "\d+"})
      * @Security("is_granted('edit', activity)")
      */
-    public function editAction(Activity $activity)
+    public function editAction(Activity $activity, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'put_activity', 'PUT');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
+        $form = $this->createForm(ActivityType::class, $activity);
 
-    /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Update an existing Activity",
-     *   input="GS\ApiBundle\Form\Type\ActivityType",
-     *   requirements={
-     *     {
-     *       "name"="activity",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Activity id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The Activity has been updated",
-     *   }
-     * )
-     * @Security("is_granted('edit', activity)")
-     */
-    public function putAction(Activity $activity, Request $request)
-    {
-        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'put_activity', 'PUT');
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $view = $this->view(null, 204);
+            $request->getSession()->getFlashBag()->add('success', 'Activité bien modifiée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
         }
-        return $this->handleView($view);
-    }
 
-    /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Returns a form to create a new Category for the given Activity",
-     *   output="GS\ApiBundle\Form\Type\CategoryType",
-     *   statusCodes={
-     *     200="You have permission to create a Category, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('edit', activity)")
-     */
-    public function newCategoryAction(Activity $activity)
-    {
-        $category = new Category();
-        $category->setActivity($activity);
-        $this->denyAccessUnlessGranted('create', $category);
-        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'post_category');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Returns a form to create a new Discount for the given Activity",
-     *   output="GS\ApiBundle\Form\Type\DiscountType",
-     *   statusCodes={
-     *     200="You have permission to create a Discount, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('edit', activity)")
-     */
-    public function newDiscountAction(Activity $activity)
-    {
-        $discount = new Discount();
-        $discount->setActivity($activity);
-        $this->denyAccessUnlessGranted('create', $discount);
-        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'post_discount');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Activity",
-     *   description="Returns a form to create a new Topic for the given Activity",
-     *   output="GS\ApiBundle\Form\Type\TopicType",
-     *   statusCodes={
-     *     200="You have permission to create a Topic, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('edit', activity)")
-     */
-    public function newTopicAction(Activity $activity)
-    {
-        $topic = new Topic();
-        $topic->setActivity($activity);
-        // Add one schedule since it is mandatory to have one.
-        $schedule = new Schedule();
-        $topic->addSchedule($schedule);
-        $this->denyAccessUnlessGranted('create', $topic);
-        $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'post_topic');
-        $view = $this->get('gsapi.form_generator')->getTopicFormView($form);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Activity:edit.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
 }

@@ -1,0 +1,119 @@
+{% extends "GSApiBundle::layout.html.twig" %}
+
+{% block gs_body %}
+    {{ parent() }}
+
+    <h2>{{ topic.title }}</h2>
+
+    <p>
+        <a href="{{ path('view_activity', {'id': topic.activity.id}) }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Retour à l'activité
+        </a>
+        {% if topic.state == 'DRAFT' and is_granted("edit", topic) %}
+            <a href="{{ path('open_topic', {'id': topic.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-ok"></i>
+                Ouvrir le topic
+            </a>
+        {% elseif topic.state == 'OPEN' and is_granted("edit", topic) %}
+            <a href="{{ path('close_topic', {'id': topic.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-remove"></i>
+                Clore le topic
+            </a>
+        {% endif %}
+        {% if topic.state != 'CLOSE' and (topic.state == 'DRAFT' or is_granted("edit", topic)) %}
+            <a href="{{ path('edit_topic', {'id': topic.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-edit"></i>
+                Modifier le topic
+            </a>
+        {% endif %}
+        {% if (topic.state == 'DRAFT' and is_granted("edit", topic)) or is_granted("ROLE_SUPER_ADMIN") %}
+            <a href="{{ path('delete_topic', {'id': topic.id}) }}" class="btn btn-danger">
+                <i class="glyphicon glyphicon-trash"></i>
+                Supprimer le topic
+            </a>
+        {% endif %}
+        {% if topic.state == 'OPEN' %}
+            <a href="{{ path('add_registration', {'id': topic.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-plus"></i>
+                S'inscrire
+            </a>
+        {% endif %}
+    </p>
+
+    <h3>Description</h3>
+    <div class="well">
+        {{ topic.description }}
+    </div>
+
+    {% import "GSApiBundle:Schedule:macros.html.twig" as macro %}
+    <h3>Planning :</h3>
+    {% if topic.schedules|length > 2 %}
+        <ul>
+            {% for schedule in topic.schedules %}
+                <li>
+                    {{ macro.print(schedule) }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% elseif topic.schedules|length > 0 %}
+        {{ macro.print(topic.schedules[0]) }}
+    {% else %}
+        Pas (encore !) de planning
+    {% endif %}
+
+    <h3>Mon inscription :</h3>
+        <ul>
+            {% for registration in user_registrations %}
+                <li>
+                    {{ registration.account.displayName }}
+                    - {{ registration.state }}
+                    <a href="{{ path('view_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
+                    </a>
+                </li>
+            {% else %}
+                <li>
+                    Pas (encore) inscrit !
+                    <a href="{{ path('add_registration', {'id': topic.id}) }}" class="btn btn-default btn-xs">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        S'inscrire
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+    {% if is_granted("edit", topic) %}
+        <h3>Liste des inscriptions :</h3>
+        <ul>
+            {% for registration in topic.registrations %}
+                <li>
+                    {{ registration.account.displayName }}
+                    - {{ registration.state }}
+                    <a href="{{ path('view_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
+                    </a>
+                    {% if is_granted("edit", registration) %}
+                        {% if registration.state == 'SUBMITTED' or registration.state == 'WAITING' %}
+                            <a href="{{ path('validate_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Valider
+                            </a>
+                        {% elseif registration.state == 'SUBMITTED' %}
+                            <a href="{{ path('wait_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Mettre en list d'attente
+                            </a>
+                        {% endif %}
+                        {% if registration.state != 'CANCELLED' %}
+                            <a href="{{ path('cancel_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annuler
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </li>
+            {% else %}
+                <li>Pas (encore !) d'inscriptions</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

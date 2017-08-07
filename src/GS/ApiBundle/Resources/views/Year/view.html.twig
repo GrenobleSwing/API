@@ -1,0 +1,65 @@
+{% extends "GSApiBundle::layout.html.twig" %}
+
+{% block gs_body %}
+    {{ parent() }}
+
+    <h2>{{ year.title }}</h2>
+
+    <p>
+        <a href="{{ path('homepage') }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Retour à l'accueil
+        </a>
+        {% if year.state != 'CLOSE' and is_granted("edit", year) %}
+            <a href="{{ path('add_activity', {'id': year.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-plus"></i>
+                Ajouter une activité
+            </a>
+        {% endif %}
+        {% if year.state == 'DRAFT' and is_granted("edit", year) %}
+            <a href="{{ path('open_year', {'id': year.id}) }}" class="btn btn-default">
+                Ouvrir l'année
+            </a>
+        {% elseif year.state == 'OPEN' and is_granted("edit", year) %}
+            <a href="{{ path('close_year', {'id': year.id}) }}" class="btn btn-default">
+                Clore l'année
+            </a>
+        {% endif %}
+        {% if year.state != 'CLOSE' and ((year.state == 'DRAFT' and is_granted("edit", year)) or is_granted("ROLE_ADMIN")) %}
+            <a href="{{ path('edit_year', {'id': year.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-edit"></i>
+                Modifier l'année
+            </a>
+        {% endif %}
+        {% if (year.state == 'DRAFT' and is_granted("edit", year)) or is_granted("ROLE_SUPER_ADMIN") %}
+            <a href="{{ path('delete_year', {'id': year.id}) }}" class="btn btn-danger">
+                <i class="glyphicon glyphicon-trash"></i>
+                Supprimer l'année
+            </a>
+        {% endif %}
+    </p>
+
+    <h3>Description</h3>
+    <div class="well">
+        {{ year.description }}
+    </div>
+
+    <h3>Date</h3>
+    Du {{ year.startDate|date('d/m/Y', timezone="Europe/Paris") }}
+    au {{ year.endDate|date('d/m/Y', timezone="Europe/Paris") }}
+
+    <h3>Liste des activités :</h3>
+    <ul>
+        {% for activity in year.activities %}
+            <li>
+                {{ activity.title }}
+                <a href="{{ path('view_activity', {'id': activity.id}) }}" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
+                </a>
+            </li>
+        {% else %}
+            <li>Pas (encore !) d'activités</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

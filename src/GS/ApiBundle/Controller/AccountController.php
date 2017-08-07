@@ -2,169 +2,56 @@
 
 namespace GS\ApiBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use FOS\RestBundle\Controller\Annotations\RequestParam;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
 use GS\ApiBundle\Entity\Account;
+use GS\ApiBundle\Form\Type\AccountType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @RouteResource("Account", pluralize=false)
- */
-class AccountController extends FOSRestController
+class AccountController extends Controller
 {
 
     /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Returns a form to create a new Account",
-     *   output="GS\ApiBundle\Form\Type\AccountType",
-     *   statusCodes={
-     *     200="You have permission to create a Account, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
-     */
-    public function newAction()
-    {
-        $form = $this->get('gsapi.form_generator')->getAccountForm(null, 'post_account');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Create a new Account",
-     *   input="GS\ApiBundle\Form\Type\AccountType",
-     *   statusCodes={
-     *     201="The Account has been created",
-     *   }
-     * )
+     * @Route("/my_account", name="my_account")
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction(Request $request)
+    public function myAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getAccountForm(null, 'post_account');
-        $form->handleRequest($request);
+        $account = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Account')
+            ->findOneByUser($this->getUser())
+            ;
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $account = $form->getData();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($account);
-            $em->flush();
-
-            $view = $this->view(array('id' => $account->getId()), 201);
-
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+        if ( null === $account ) {
+            $request->getSession()->getFlashBag()->add('danger', "Le profil demandé n'existe pas.");
+            return $this->redirectToRoute('homepage');
         }
 
-        return $this->handleView($view);
+        $listRegistrations = $this->getRegistrations($account, $request);
+
+        return $this->render('GSApiBundle:Account:view.html.twig', array(
+            'account' => $account,
+            'listRegistrations' => $listRegistrations,
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Returns a form to confirm deletion of a given Account",
-     *   requirements={
-     *     {
-     *       "name"="account",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Account id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     200="You have permission to delete a Account, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('delete', account)")
-     */
-    public function removeAction(Account $account)
-    {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($account, 'account');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Delete a given Account",
-     *   requirements={
-     *     {
-     *       "name"="account",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Account id"
-     *     }
-     *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     204="The Account has been deleted",
-     *   }
-     * )
-     * @Security("is_granted('delete', account)")
-     */
-    public function deleteAction(Account $account, Request $request)
-    {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($account, 'account');
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($account);
-            $em->flush();
-
-            $view = $this->view(null, 204);
-        } else {
-            $view = $this->getFormView($form, 412);
-        }
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Returns an existing Account",
-     *   requirements={
-     *     {
-     *       "name"="account",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Account id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Entity\Account",
-     *   statusCodes={
-     *     200="Returns the Account",
-     *   }
-     * )
+     * @Route("/account/{id}", name="view_account", requirements={"id": "\d+"})
      * @Security("is_granted('view', account)")
      */
-    public function getAction(Account $account)
+    public function getAction(Account $account, Request $request)
     {
-        $view = $this->view($account, 200);
-        return $this->handleView($view);
+        $listRegistrations = $this->getRegistrations($account, $request);
+        return $this->render('GSApiBundle:Account:view.html.twig', array(
+            'account' => $account,
+            'listRegistrations' => $listRegistrations,
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Returns a collection of Accounts",
-     *   output="array<GS\ApiBundle\Entity\Account>",
-     *   statusCodes={
-     *     200="Returns all the Accounts",
-     *   }
-     * )
+     * @Route("/account", name="index_account")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function cgetAction()
@@ -174,90 +61,37 @@ class AccountController extends FOSRestController
             ->findAll()
             ;
 
-        $view = $this->view($listAccounts, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Account:index.html.twig', array(
+                    'listAccounts' => $listAccounts
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Returns a form to edit an existing Account",
-     *   requirements={
-     *     {
-     *       "name"="account",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Account id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\AccountType",
-     *   statusCodes={
-     *     200="You have permission to create a Account, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('edit', account)")
-     */
-    public function editAction(Account $account)
-    {
-        $form = $this->get('gsapi.form_generator')->getAccountForm($account, 'put_account', 'PUT');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Update an existing Account",
-     *   input="GS\ApiBundle\Form\Type\AccountType",
-     *   requirements={
-     *     {
-     *       "name"="account",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Account id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The Account has been updated",
-     *   }
-     * )
+     * @Route("/account/{id}/edit", name="edit_account", requirements={"id": "\d+"})
      * @Security("is_granted('edit', account)")
      */
     public function putAction(Account $account, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getAccountForm($account, 'put_account', 'PUT');
+        $form = $this->createForm(AccountType::class, $account);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $view = $this->view(null, 204);
+            $request->getSession()->getFlashBag()->add('success', 'Profil bien modifié.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_account', array('id' => $account->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Account:edit.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Returns the balance of an existing Account",
-     *   requirements={
-     *     {
-     *       "name"="account",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Account id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     200="Return the Account's balance",
-     *   }
-     * )
+     * @Route("/account/{id}/balance", name="balance_account", requirements={"id": "\d+"})
      * @Security("is_granted('view', account)")
-     * @Get("/account/{id}/balance")
      */
     public function getBalanceAction(Account $account, Request $request)
     {
@@ -269,37 +103,10 @@ class AccountController extends FOSRestController
             $activity = null;
         }
         $balance = $this->get('gsapi.account_balance')->getBalance($account, $activity);
-        $view = $this->view($balance, 200);
-        return $this->handleView($view);
+        return new Response(json_encode($balance));
     }
 
-    /**
-     * @ApiDoc(
-     *   section="Account",
-     *   description="Returns all the registrations of a specified Account",
-     *   requirements={
-     *     {
-     *       "name"="account",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Account id"
-     *     }
-     *   },
-     *   output="array<GS\ApiBundle\Entity\Registration>",
-     *   statusCodes={
-     *     200="Returns the Registrations of the specified Account",
-     *   }
-     * )
-     * @RequestParam(
-     *   name="yearId",
-     *   requirements="",
-     *   default=null,
-     *   description="",
-     *   nullable=true
-     * )
-     * @Security("is_granted('view', account)")
-     */
-    public function getRegistrationsAction(Account $account, Request $request)
+    private function getRegistrations(Account $account, Request $request)
     {
         if ( $request->query->has('yearId') ) {
             $year = $this->getDoctrine()->getManager()
@@ -308,24 +115,13 @@ class AccountController extends FOSRestController
             $registrations = $this->getDoctrine()->getManager()
                     ->getRepository('GSApiBundle:Registration')
                     ->getRegistrationsForAccountAndYear($account, $year);
-        }
-        else {
+        } else {
             $registrations = $this->getDoctrine()->getManager()
                     ->getRepository('GSApiBundle:Registration')
                     ->findBy(array('account' => $account));
         }
 
-        $context = new Context();
-        $context->setGroups(array(
-            'Default',
-            'topic' => array(
-                'registration_group'
-            ),
-        ));
-
-        $view = $this->view($registrations, 200);
-        $view->setContext($context);
-        return $this->handleView($view);
+        return $registrations;
     }
 
 }

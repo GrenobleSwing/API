@@ -54,7 +54,7 @@ class RegistrationRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getRegistrationsForAccountAndActivity(Account $account, Activity $activity)
+    public function getRegistrationsPaidOrValidatedForAccountAndActivity(Account $account, Activity $activity)
     {
         $qb = $this->createQueryBuilder('reg');
         $qb
@@ -74,6 +74,22 @@ class RegistrationRepository extends \Doctrine\ORM\EntityRepository
                 ->setParameter('act', $activity)
                 ->setParameter('statev', 'VALIDATED')
                 ->setParameter('statep', 'PAID');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getRegistrationsNotCancelledForAccountAndActivity(Account $account, Activity $activity)
+    {
+        $qb = $this->createQueryBuilder('reg');
+        $qb
+                ->leftJoin('reg.topic', 'top')
+                ->addSelect('top')
+                ->where('reg.account = :acc')
+                ->andWhere('top.activity = :act')
+                ->andWhere($qb->expr()->neq('reg.state', ':state'))
+                ->setParameter('acc', $account)
+                ->setParameter('state', 'CANCELLED')
+                ->setParameter('act', $activity);
 
         return $qb->getQuery()->getResult();
     }
@@ -152,13 +168,14 @@ class RegistrationRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder('reg');
         $qb
-                ->select('count(reg.id)')
+//                ->select('count(reg.id)')
                 ->where('reg.account = :acc')
                 ->andWhere('reg.topic = :topic')
-                ->andWhere($qb->expr()->notLike('reg.state', ':cancel'))
+//                ->andWhere($qb->expr()->notLike('reg.state', ':cancel'))
                 ->setParameter('acc', $account)
                 ->setParameter('topic', $topic)
-                ->setParameter('cancel', '%CANCELLED');
+//                ->setParameter('cancel', '%CANCELLED')
+                ;
 
         return $qb->getQuery()->getResult();
     }

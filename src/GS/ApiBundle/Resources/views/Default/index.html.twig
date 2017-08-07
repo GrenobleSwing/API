@@ -1,0 +1,21 @@
+{% extends "GSApiBundle::layout.html.twig" %}
+
+{% block gs_body %}
+    {{ parent() }}
+
+    <h2>Liste des topics ouverts</h2>
+
+    <ul>
+        {% for topic in listTopics %}
+            <li>
+                {{ topic.title }}
+                <a href="{{ path('add_registration', {'id': topic.id}) }}" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> S'inscrire
+                </a>
+            </li>
+        {% else %}
+            <li>Pas (encore !) de topics</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "GSApiBundle::layout.html.twig" %}
+
+{% block gs_body %}
+    {{ parent() }}
+
+    <h2>Liste des topics</h2>
+
+    <ul>
+        {% for topic in listTopics %}
+            <li>
+                <a href="{{ path('view_topic', {'id': topic.id}) }}">
+                    {{ topic.title }}
+                </a>
+            </li>
+        {% else %}
+            <li>Pas (encore !) de topics</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -4,7 +4,6 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
@@ -12,57 +11,6 @@ use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Topic
- *
- * @Hateoas\Relation(
- *     "self",
- *     href = @Hateoas\Route(
- *         "get_topic",
- *         parameters = { "topic" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('view', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "edit",
- *     href = @Hateoas\Route(
- *         "edit_topic",
- *         parameters = { "topic" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "remove",
- *     href = @Hateoas\Route(
- *         "remove_topic",
- *         parameters = { "topic" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('delete', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "new_registration",
- *     href = @Hateoas\Route(
- *         "new_topic_registration",
- *         parameters = { "topic" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted(['ROLE_USER']))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "registrations",
- *     href = @Hateoas\Route(
- *         "get_topic_registrations",
- *         parameters = { "topic" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('view', object))"
- *     )
- * )
  * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\TopicRepository")
  */
 class Topic

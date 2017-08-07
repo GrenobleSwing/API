@@ -1,0 +1,36 @@
+{% extends "::base.html.twig" %}
+
+{% block menu %}
+    {{ parent() }}
+
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        {{ knp_menu_render('GSApiBundle:Builder:mainMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
+        {% if is_granted("ROLE_ORGANIZER") %}
+            {{ knp_menu_render('GSApiBundle:Builder:organizerMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
+        {% endif %}
+
+        <a href="{{ path('fos_user_security_logout') }}" class="btn btn-default navbar-btn navbar-right">Déconnexion</a>
+        <p class="navbar-text navbar-right" style="margin-right:10px;">
+            {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
+        </p>
+    {% else %}
+        <a href="{{ path('fos_user_security_login') }}" class="btn btn-default navbar-btn navbar-right">Connexion</a>
+        <a href="{{ path('fos_user_registration_register') }}" class="btn btn-default navbar-btn navbar-right">Inscription</a>
+    {% endif %}
+
+{% endblock %}
+
+{% block body %}
+
+    {% for type in ['info', 'success', 'danger', 'warning'] %}
+        {% for message in app.session.flashbag.get(type) %}
+            <div class="alert alert-{{ type }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {% block gs_body %}
+    {% endblock %}
+
+{% endblock %}

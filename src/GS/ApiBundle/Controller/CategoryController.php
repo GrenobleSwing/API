@@ -2,214 +2,104 @@
 
 namespace GS\ApiBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
+use GS\ApiBundle\Entity\Activity;
 use GS\ApiBundle\Entity\Category;
+use GS\ApiBundle\Form\Type\CategoryType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @RouteResource("Category", pluralize=false)
- */
-class CategoryController extends FOSRestController
+class CategoryController extends Controller
 {
 
     /**
-     * @ApiDoc(
-     *   section="Category",
-     *   description="Create a new Category",
-     *   input="GS\ApiBundle\Form\Type\CategoryType",
-     *   statusCodes={
-     *     201="The Category has been created",
-     *   }
-     * )
+     * @Route("/category/add/{id}", name="add_category", requirements={"id": "\d+"})
      * @Security("has_role('ROLE_ORGANIZER')")
      */
-    public function postAction(Request $request)
+    public function postAction(Activity $activity, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getCategoryForm(null, 'post_category');
-        $this->denyAccessUnlessGranted('create', $form->getData());
-        $form->handleRequest($request);
+        $category = new Category();
+        $category->setActivity($activity);
+        $form = $this->createForm(CategoryType::class, $category);
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $category = $form->getData();
-            $activity = $category->getActivity();
             $activity->addCategory($category);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($category);
             $em->flush();
 
-            $view = $this->view(array('id' => $category->getId()), 201);
+            $request->getSession()->getFlashBag()->add('success', 'Catégorie bien enregistrée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_category', array('id' => $category->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Category:add.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Category",
-     *   description="Returns an existing Category",
-     *   requirements={
-     *     {
-     *       "name"="category",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Category id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Entity\Category",
-     *   statusCodes={
-     *     200="Returns the Category",
-     *   }
-     * )
+     * @Route("/category/{id}", name="view_category", requirements={"id": "\d+"})
      * @Security("is_granted('view', category)")
      */
-    public function getAction(Category $category)
+    public function viewAction(Category $category)
     {
-        $view = $this->view($category, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Category:view.html.twig', array(
+                    'category' => $category
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Category",
-     *   description="Returns a collection of Categorys",
-     *   output="array<GS\ApiBundle\Entity\Category>",
-     *   statusCodes={
-     *     200="Returns all the Categorys",
-     *   }
-     * )
+     * @Route("/category", name="index_category")
      * @Security("has_role('ROLE_ORGANIZER')")
      */
-    public function cgetAction()
+    public function indexAction()
     {
         $listCategories = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Category')
             ->findAll()
             ;
 
-        $view = $this->view($listCategories, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Category:index.html.twig', array(
+                    'listCategories' => $listCategories
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Category",
-     *   description="Returns a form to edit an existing Category",
-     *   requirements={
-     *     {
-     *       "name"="category",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Category id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\CategoryType",
-     *   statusCodes={
-     *     200="You have permission to create a Category, the form is returned",
-     *   }
-     * )
+     * @Route("/category/{id}/edit", name="edit_category", requirements={"id": "\d+"})
      * @Security("is_granted('edit', category)")
      */
-    public function editAction(Category $category)
+    public function editAction(Category $category, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'put_category', 'PUT');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
+        $form = $this->createForm(CategoryType::class, $category);
 
-    /**
-     * @ApiDoc(
-     *   section="Category",
-     *   description="Update an existing Category",
-     *   input="GS\ApiBundle\Form\Type\CategoryType",
-     *   requirements={
-     *     {
-     *       "name"="category",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Category id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The Category has been updated",
-     *   }
-     * )
-     * @Security("is_granted('edit', category)")
-     */
-    public function putAction(Category $category, Request $request)
-    {
-        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'put_category', 'PUT');
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $view = $this->view(null, 204);
+            $request->getSession()->getFlashBag()->add('success', 'Catégorie bien modifiée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_category', array('id' => $category->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Category:edit.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Category",
-     *   description="Returns a form to confirm deletion of a given Category",
-     *   requirements={
-     *     {
-     *       "name"="category",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Category id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     200="You have permission to delete a Category, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('delete', category)")
-     */
-    public function removeAction(Category $category)
-    {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($category, 'category');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Category",
-     *   description="Delete a given Category",
-     *   requirements={
-     *     {
-     *       "name"="category",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Category id"
-     *     }
-     *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     204="The Category has been deleted",
-     *   }
-     * )
+     * @Route("/category/{id}/delete", name="delete_category", requirements={"id": "\d+"})
      * @Security("is_granted('delete', category)")
      */
     public function deleteAction(Category $category, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($category, 'category');
-        $form->handleRequest($request);
+        $form = $this->createFormBuilder()->getForm();
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $activity = $category->getActivity();
             $activity->removeCategory($category);
@@ -218,11 +108,16 @@ class CategoryController extends FOSRestController
             $em->remove($category);
             $em->flush();
 
-            $view = $this->view(null, 204);
-        } else {
-            $view = $this->getFormView($form, 412);
+            $request->getSession()->getFlashBag()->add('success', "La catégorie a bien été supprimée.");
+
+            return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
         }
-        return $this->handleView($view);
+
+        // Si la requête est en GET, on affiche une page de confirmation avant de supprimer
+        return $this->render('GSApiBundle:Category:delete.html.twig', array(
+                    'category' => $category,
+                    'form' => $form->createView()
+        ));
     }
 
 }

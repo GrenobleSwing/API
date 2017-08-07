@@ -1,55 +1,48 @@
 
-api_login_check:
-    path: /auth
+default:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\DefaultController
 
 account:
-    type:     rest
+    type:     annotation
     resource: GS\ApiBundle\Controller\AccountController
 
-venue:
-    type:     rest
-    resource: GS\ApiBundle\Controller\VenueController
-
-year:
-    type:     rest
-    resource: GS\ApiBundle\Controller\YearController
-
 activity:
-    type:     rest
+    type:     annotation
     resource: GS\ApiBundle\Controller\ActivityController
 
 category:
-    type:     rest
+    type:     annotation
     resource: GS\ApiBundle\Controller\CategoryController
 
 discount:
-    type:     rest
+    type:     annotation
     resource: GS\ApiBundle\Controller\DiscountController
 
-topic:
-    type:     rest
-    resource: GS\ApiBundle\Controller\TopicController
-
 registration:
-    type:     rest
+    type:     annotation
     resource: GS\ApiBundle\Controller\RegistrationController
 
-payment:
-    type:     rest
-    resource: GS\ApiBundle\Controller\PaymentController
-
-paypal:
-    resource: GS\ApiBundle\Controller\PaypalController
+topic:
     type:     annotation
+    resource: GS\ApiBundle\Controller\TopicController
 
-user:
-    type:     rest
-    resource: GS\ApiBundle\Controller\UserController
+venue:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\VenueController
 
-invoice:
-    type:     rest
-    resource: GS\ApiBundle\Controller\InvoiceController
+year:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\YearController
 
-NelmioApiDocBundle:
-    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
-    prefix:   /doc
+#payment:
+#    type:     rest
+#    resource: GS\ApiBundle\Controller\PaymentController
+#
+#paypal:
+#    resource: GS\ApiBundle\Controller\PaypalController
+#    type:     annotation
+#
+#invoice:
+#    type:     rest
+#    resource: GS\ApiBundle\Controller\InvoiceController

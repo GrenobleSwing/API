@@ -4,74 +4,12 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use JMS\Serializer\Annotation\Type;
 
 /**
  * Activity
- *
- * @Hateoas\Relation(
- *     "self",
- *     href = @Hateoas\Route(
- *         "get_activity",
- *         parameters = { "activity" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('view', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "edit",
- *     href = @Hateoas\Route(
- *         "edit_activity",
- *         parameters = { "activity" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "remove",
- *     href = @Hateoas\Route(
- *         "remove_activity",
- *         parameters = { "activity" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('delete', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "new_topic",
- *     href = @Hateoas\Route(
- *         "new_activity_topic",
- *         parameters = { "activity" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "new_category",
- *     href = @Hateoas\Route(
- *         "new_activity_category",
- *         parameters = { "activity" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "new_discount",
- *     href = @Hateoas\Route(
- *         "new_activity_discount",
- *         parameters = { "activity" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
  * @ORM\Entity
  */
 class Activity
@@ -111,7 +49,8 @@ class Activity
     private $membersOnly = false;
 
     /**
-     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Topic")
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Topic")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      * @Type("Relation")
      */
     private $membershipTopic = null;

@@ -42,9 +42,8 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form_themes:
-        - 'GSApiBundle::jquery.collection.html.twig'
         - 'bootstrap_3_layout.html.twig'
-        - 'GSApiBundle::custom_form.html.twig'
+        - 'GSApiBundle::jquery.collection.html.twig'
         - 'VichUploaderBundle:Form:fields.html.twig'
         # - 'bootstrap_3_horizontal_layout.html.twig'
 
@@ -93,6 +92,20 @@ fos_rest:
         include_format: false
     serializer:
         serialize_null:  true
+
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: GS\ApiBundle\Entity\User
+    from_email:
+        address: "%mailer_user%"
+        sender_name: "%mailer_user%"
+    registration:
+        form:
+            type: GS\ApiBundle\Form\Type\UserRegistrationType
+    profile:
+        form:
+            type: GS\ApiBundle\Form\Type\UserProfileType
 
 kmj_pay_pal_bridge:
     environment: sandbox

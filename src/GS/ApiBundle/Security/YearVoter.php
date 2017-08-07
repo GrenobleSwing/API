@@ -23,7 +23,7 @@ class YearVoter extends Voter
     {
         $this->decisionManager = $decisionManager;
     }
-    
+
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false

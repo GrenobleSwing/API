@@ -23,7 +23,7 @@ class TopicVoter extends Voter
     {
         $this->decisionManager = $decisionManager;
     }
-    
+
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
@@ -80,13 +80,8 @@ class TopicVoter extends Voter
 
     private function canView(Topic $topic, User $user, TokenInterface $token)
     {
-        if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
+        if ($this->decisionManager->decide($token, array('ROLE_USER'))) {
             return true;
-        }
-        foreach ($topic->getOwners() as $owner) {
-            if ($user === $owner) {
-                return true;
-            }
         }
         return false;
     }

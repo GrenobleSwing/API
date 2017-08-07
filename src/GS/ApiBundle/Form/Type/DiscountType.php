@@ -2,19 +2,14 @@
 
 namespace GS\ApiBundle\Form\Type;
 
+use GS\ApiBundle\Entity\Discount;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
-use GS\ApiBundle\Entity\Discount;
 
 class DiscountType extends AbstractType
 {
@@ -22,11 +17,6 @@ class DiscountType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('activity', EntityType::class, array(
-                    'class' => 'GSApiBundle:Activity',
-                    'choice_label' => 'title',
-                    'position' => 'first',
-                ))
                 ->add('name', TextType::class, array(
                     'label' => 'Nom de la reduction',
                 ))
@@ -54,25 +44,6 @@ class DiscountType extends AbstractType
                 ))
                 ->add('submit', SubmitType::class)
         ;
-        
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $discount = $event->getData();
-            $form = $event->getForm();
-
-            if (null !== $discount && null !== $discount->getActivity()) {
-                $this->disableField($form->get('activity'));
-            }
-        });
-    }
-
-    private function disableField(FormInterface $field)
-    {
-        $parent = $field->getParent();
-        $options = $field->getConfig()->getOptions();
-        $name = $field->getName();
-        $type = get_class($field->getConfig()->getType()->getInnerType());
-        $parent->remove($name);
-        $parent->add($name, $type, array_merge($options, ['disabled' => true]));
     }
 
     public function configureOptions(OptionsResolver $resolver)

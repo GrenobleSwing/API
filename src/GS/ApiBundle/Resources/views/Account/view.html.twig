@@ -1,0 +1,42 @@
+{% extends "GSApiBundle::layout.html.twig" %}
+
+{% block gs_body %}
+    {{ parent() }}
+
+    <h2>{{ account.displayName }}</h2>
+
+    <p>
+        <a href="{{ path('homepage') }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Retour à l'accueil
+        </a>
+        <a href="{{ path('edit_account', {'id': account.id}) }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-edit"></i>
+            Modifier le profil
+        </a>
+    </p>
+
+    <h2>Email</h2>
+    {{ account.email }}
+
+    <h2>Téléphone</h2>
+    {{ phone_number_format(account.phoneNumber) }}
+
+    {% import "GSApiBundle:Address:macros.html.twig" as macro %}
+    {{ macro.print_long(account.address) }}
+
+    <h3>Liste des inscriptions :</h3>
+    <ul>
+        {% for registration in listRegistrations %}
+            <li>
+                {{ registration.topic.title }}
+                <a href="{{ path('view_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
+                </a>
+            </li>
+        {% else %}
+            <li>Pas (encore !) d'inscriptions</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

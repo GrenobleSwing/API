@@ -1,0 +1,20 @@
+{% extends "GSApiBundle::layout.html.twig" %}
+
+{% block gs_body %}
+    {{ parent() }}
+
+    <h2>Liste des activités</h2>
+
+    <ul>
+        {% for activity in listActivities %}
+            <li>
+                <a href="{{ path('view_activity', {'id': activity.id}) }}">
+                    {{ activity.title }}
+                </a>
+            </li>
+        {% else %}
+            <li>Pas (encore !) d'activités</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

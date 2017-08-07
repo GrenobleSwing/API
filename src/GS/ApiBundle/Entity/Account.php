@@ -5,7 +5,6 @@ namespace GS\ApiBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
@@ -16,37 +15,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Account
- *
- * @Hateoas\Relation(
- *     "self",
- *     href = @Hateoas\Route(
- *         "get_account",
- *         parameters = { "account" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('view', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "edit",
- *     href = @Hateoas\Route(
- *         "edit_account",
- *         parameters = { "account" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "remove",
- *     href = @Hateoas\Route(
- *         "remove_account",
- *         parameters = { "account" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('delete', object))"
- *     )
- * )
  * @ORM\Entity
  * @Vich\Uploadable
  * @UniqueEntity("email")
@@ -108,7 +76,6 @@ class Account
      * @Vich\UploadableField(mapping="account_image", fileNameProperty="imageName")
      * @Assert\File(
      *     maxSize = "3M",
-     *     mimeTypes = {"image/jpeg", "image/png", "image/bmp"},
      * )
      * @var File
      */
@@ -150,7 +117,8 @@ class Account
     {
         $this->payments = new ArrayCollection();
         $this->birthDate = new \DateTime();
-        $this->phoneNumber = new \libphonenumber\PhoneNumber();
+        $phoneNumberUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+        $this->phoneNumber = $phoneNumberUtil->parse('0123456789', 'FR');
     }
 
     /**

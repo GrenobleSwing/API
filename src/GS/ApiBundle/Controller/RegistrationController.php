@@ -3,62 +3,53 @@
 namespace GS\ApiBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use FOS\RestBundle\Controller\Annotations\Get;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
 use GS\ApiBundle\Entity\Registration;
+use GS\ApiBundle\Entity\Topic;
+use GS\ApiBundle\Form\Type\RegistrationType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @RouteResource("Registration", pluralize=false)
- */
-class RegistrationController extends FOSRestController
+class RegistrationController extends Controller
 {
 
     /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Changes a given Registration state to VALIDATED",
-     *   requirements={
-     *     {
-     *       "name"="registration",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Registration id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The given Registration has been validated",
-     *   }
-     * )
+     * @Route("/registration/{id}/validate", name="validate_registration", requirements={"id": "\d+"})
      * @Security("is_granted('validate', registration)")
-     * @Get("/registration/{id}/validate")
      */
-    public function validateAction(Registration $registration)
+    public function validateAction(Registration $registration, Request $request)
     {
         if (!in_array($registration->getState(), array('SUBMITTED', 'WAITING'))) {
-            throw new MethodNotAllowedHttpException('Impossible to validate Registration');
+            $request->getSession()->getFlashBag()->add('danger', "Impossible to validate registration");
+            return $this->redirectToRoute('view_topic', array('id' => $registration->getTopic()->getId()));
         }
-        $registration->validate();
-        $em = $this->getDoctrine()->getManager();
 
-        $this->fulfillMembershipRegistration($registration, $em);
+        $form = $this->createFormBuilder()->getForm();
 
-        # In case of a registration with a partner, validate also the partner
-        if (null !== $registration->getPartnerRegistration()) {
-            $registration->getPartnerRegistration()->validate();
-            $this->fulfillMembershipRegistration($registration->getPartnerRegistration(), $em);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $registration->validate();
+            $em = $this->getDoctrine()->getManager();
+
+            $this->fulfillMembershipRegistration($registration, $em);
+
+            # In case of a registration with a partner, validate also the partner
+            if (null !== $registration->getPartnerRegistration()) {
+                $registration->getPartnerRegistration()->validate();
+                $this->fulfillMembershipRegistration($registration->getPartnerRegistration(), $em);
+            }
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('success', "L'inscription a bien été validée.");
+
+            return $this->redirectToRoute('view_topic', array('id' => $registration->getTopic()->getId()));
         }
-        $em->flush();
 
-        $view = $this->view(null, 204);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Registration:validate.html.twig', array(
+            'registration' => $registration,
+            'form' => $form->createView()
+        ));
     }
 
     # Check if the membership is mandatory for the Registration
@@ -82,133 +73,105 @@ class RegistrationController extends FOSRestController
     }
 
     /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Changes a given Registration state to WAITING",
-     *   requirements={
-     *     {
-     *       "name"="registration",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Registration id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The given Registration has been put in waiting list",
-     *   }
-     * )
+     * @Route("/registration/{id}/wait", name="wait_registration", requirements={"id": "\d+"})
      * @Security("is_granted('wait', registration)")
-     * @Get("/registration/{id}/wait")
      */
-    public function waitAction(Registration $registration)
+    public function waitAction(Registration $registration, Request $request)
     {
         if ('SUBMITTED' != $registration->getState()) {
-            throw new MethodNotAllowedHttpException('Impossible to put Registration in waiting list');
+            $request->getSession()->getFlashBag()->add('danger', "Impossible to put registration in waiting list");
+            return $this->redirectToRoute('view_topic', array('id' => $registration->getTopic()->getId()));
         }
-        $registration->wait();
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
 
-        $view = $this->view(null, 204);
-        return $this->handleView($view);
+        $form = $this->createFormBuilder()->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $registration->wait();
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('success', "L'inscription a bien été mise en liste d'attente.");
+
+            return $this->redirectToRoute('view_topic', array('id' => $registration->getTopic()->getId()));
+        }
+
+        return $this->render('GSApiBundle:Registration:wait.html.twig', array(
+            'registration' => $registration,
+            'form' => $form->createView()
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Changes a given Registration state to CANCELLED",
-     *   requirements={
-     *     {
-     *       "name"="registration",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Registration id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The given Registration has been cancelled",
-     *   }
-     * )
+     * @Route("/registration/{id}/cancel", name="cancel_registration", requirements={"id": "\d+"})
      * @Security("is_granted('cancel', registration)")
-     * @Get("/registration/{id}/cancel")
      */
-    public function cancelAction(Registration $registration)
+    public function cancelAction(Registration $registration, Request $request)
     {
         if (in_array($registration->getState(), array('CANCELLED', 'PARTIALLY_CANCELLED'))) {
-            throw new MethodNotAllowedHttpException('Impossible to cancel Registration');
-        }
-        $registration->cancel();
-
-        if (null !== $registration->getPartnerRegistration()) {
-            $registration->getPartnerRegistration()->setPartnerRegistration(null);
-            $registration->setPartnerRegistration(null);
+            $request->getSession()->getFlashBag()->add('danger', "Impossible to cancel registration");
+            return $this->redirectToRoute('view_topic', array('id' => $registration->getTopic()->getId()));
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
+        $form = $this->createFormBuilder()->getForm();
 
-        $view = $this->view(null, 204);
-        return $this->handleView($view);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $registration->cancel();
+
+            if (null !== $registration->getPartnerRegistration()) {
+                $registration->getPartnerRegistration()->setPartnerRegistration(null);
+                $registration->setPartnerRegistration(null);
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('success', "L'inscription a bien été annulée.");
+
+            return $this->redirectToRoute('view_topic', array('id' => $registration->getTopic()->getId()));
+        }
+
+        return $this->render('GSApiBundle:Registration:cancel.html.twig', array(
+            'registration' => $registration,
+            'form' => $form->createView()
+        ));
     }
 
-    /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Changes a given Registration state to PAID",
-     *   requirements={
-     *     {
-     *       "name"="registration",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Registration id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The given Registration has been paid",
-     *   }
-     * )
-     * @Security("is_granted('pay', registration)")
-     * @Get("/registration/{id}/pay")
-     */
-    public function payAction(Registration $registration)
-    {
-        if ('VALIDATED' != $registration->getState()) {
-            throw new MethodNotAllowedHttpException('Impossible to mark Registration as paid');
-        }
-        $registration->pay();
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
-
-        $view = $this->view(null, 204);
-        return $this->handleView($view);
-    }
+//    /**
+//     * @Route("/registration/{id}/pay", name="pay_registration", requirements={"id": "\d+"})
+//     * @Security("is_granted('pay', registration)")
+//     */
+//    public function payAction(Registration $registration, Request $request)
+//    {
+//        if ('VALIDATED' != $registration->getState()) {
+//            throw new MethodNotAllowedHttpException('Impossible to mark Registration as paid');
+//        }
+//        $registration->pay();
+//        $em = $this->getDoctrine()->getManager();
+//        $em->flush();
+//
+//        $view = $this->view(null, 204);
+//        return $this->handleView($view);
+//    }
 
     /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Create a new Registration",
-     *   input="GS\ApiBundle\Form\Type\RegistrationType",
-     *   statusCodes={
-     *     201="The Registration has been created",
-     *   }
-     * )
+     * @Route("/registration/add/{id}", name="add_registration", requirements={"id": "\d+"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function postAction(Request $request)
+    public function addAction(Topic $topic, Request $request)
     {
         $registration = new Registration();
         $account = $this->getDoctrine()
                 ->getRepository('GSApiBundle:Account')
                 ->findOneByUser($this->getUser());
         $registration->setAccount($account);
+        $registration->setTopic($topic);
 
-        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'post_registration');
-        $this->denyAccessUnlessGranted('create', $form->getData());
+        $form = $this->createForm(RegistrationType::class, $registration);
+
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $registration = $form->getData();
-
             if ($registration->getWithPartner() &&
                     null === $registration->getPartnerRegistration()) {
                 $partner = $this->findPartner($registration);
@@ -219,7 +182,6 @@ class RegistrationController extends FOSRestController
                 }
             }
 
-            $topic = $registration->getTopic();
             $topic->addRegistration($registration);
 
             if ($topic->getAutoValidation()) {
@@ -230,12 +192,14 @@ class RegistrationController extends FOSRestController
             $em->persist($registration);
             $em->flush();
 
-            $view = $this->view(array('id' => $registration->getId()), 201);
+            $request->getSession()->getFlashBag()->add('success', 'Inscription bien enregistrée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_registration', array('id' => $registration->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Registration:add.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
     private function findPartner (Registration $registration)
@@ -287,192 +251,79 @@ class RegistrationController extends FOSRestController
     }
 
     /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Returns a form to confirm deletion of a given Registration",
-     *   requirements={
-     *     {
-     *       "name"="registration",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Registration id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     200="You have permission to delete a Registration, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('delete', registration)")
-     */
-    public function removeAction(Registration $registration)
-    {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($registration, 'registration');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Delete a given Registration",
-     *   requirements={
-     *     {
-     *       "name"="registration",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Registration id"
-     *     }
-     *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     204="The Registration has been deleted",
-     *   }
-     * )
+     * @Route("/category/{id}/delete", name="delete_registration", requirements={"id": "\d+"})
      * @Security("is_granted('delete', registration)")
      */
     public function deleteAction(Registration $registration, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($registration, 'registration');
-        $form->handleRequest($request);
+        $form = $this->createFormBuilder()->getForm();
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($registration);
             $em->flush();
 
-            $view = $this->view(null, 204);
-        } else {
-            $view = $this->getFormView($form, 412);
+            $request->getSession()->getFlashBag()->add('success', "L'inscription a bien été supprimée.");
+
+            return $this->redirectToRoute('view_registration', array('id' => $registration->getId()));
         }
-        return $this->handleView($view);
+
+        // Si la requête est en GET, on affiche une page de confirmation avant de supprimer
+        return $this->render('GSApiBundle:Registration:delete.html.twig', array(
+            'registration' => $registration,
+            'form' => $form->createView()
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Returns an existing Registration",
-     *   requirements={
-     *     {
-     *       "name"="registration",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Registration id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Entity\Registration",
-     *   statusCodes={
-     *     200="Returns the Registration",
-     *   }
-     * )
+     * @Route("/registration/{id}", name="view_registration", requirements={"id": "\d+"})
      * @Security("is_granted('view', registration)")
      */
     public function getAction(Registration $registration)
     {
-        $context = new Context();
-        $context->setGroups(array(
-            'Default',
-            'topic' => array(
-                'registration_group'
-            ),
+        return $this->render('GSApiBundle:Registration:view.html.twig', array(
+            'registration' => $registration
         ));
-
-        $view = $this->view($registration, 200);
-        $view->setContext($context);
-        return $this->handleView($view);
     }
 
     /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Returns a collection of Registrations",
-     *   output="array<GS\ApiBundle\Entity\Registration>",
-     *   statusCodes={
-     *     200="Returns all the Registrations",
-     *   }
-     * )
+     * @Route("/registration", name="index_registration")
      * @Security("has_role('ROLE_ORGANIZER')")
      */
-    public function cgetAction()
+    public function indexAction()
     {
         $listRegistrations = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Registration')
-            ->findAll()
-            ;
+                ->getRepository('GSApiBundle:Registration')
+                ->findAll()
+                ;
 
-        $context = new Context();
-        $context->setGroups(array(
-            'Default',
-            'topic' => array(
-                'registration_group'
-            ),
+        return $this->render('GSApiBundle:Registration:index.html.twig', array(
+            'listRegistrations' => $listRegistrations
         ));
-
-        $view = $this->view($listRegistrations, 200);
-        $view->setContext($context);
-        return $this->handleView($view);
     }
 
     /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Returns a form to edit an existing Registration",
-     *   requirements={
-     *     {
-     *       "name"="registration",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Registration id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\RegistrationType",
-     *   statusCodes={
-     *     200="You have permission to create a Registration, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('edit', registration)")
-     */
-    public function editAction(Registration $registration)
-    {
-        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'put_registration', 'PUT');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Registration",
-     *   description="Update an existing Registration",
-     *   input="GS\ApiBundle\Form\Type\RegistrationType",
-     *   requirements={
-     *     {
-     *       "name"="registration",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Registration id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The Registration has been updated",
-     *   }
-     * )
+     * @Route("/registration/{id}/edit", name="edit_registration", requirements={"id": "\d+"})
      * @Security("is_granted('edit', registration)")
      */
     public function putAction(Registration $registration, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'put_registration', 'PUT');
-        $form->handleRequest($request);
+        $form = $this->createForm(RegistrationType::class, $registration);
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $view = $this->view(null, 204);
+            $request->getSession()->getFlashBag()->add('success', 'Inscription bien modifiée.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_registration', array('id' => $registration->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Registration:edit.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
 }

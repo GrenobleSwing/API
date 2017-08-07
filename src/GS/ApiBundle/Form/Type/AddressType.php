@@ -26,9 +26,11 @@ class AddressType extends AbstractType
                 ))
                 ->add('county', TextType::class, array(
                     'label' => 'Departement',
+                    'required' => false,
                 ))
                 ->add('state', TextType::class, array(
                     'label' => 'Region',
+                    'required' => false,
                 ))
                 ->add('country', CountryType::class, array(
                     'label' => 'Pays',

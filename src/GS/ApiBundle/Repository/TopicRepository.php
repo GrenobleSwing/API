@@ -48,4 +48,14 @@ class TopicRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getOpenTopics()
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb
+                ->where('t.state = :open')
+                ->setParameter('open', 'OPEN');
+
+        return $qb->getQuery()->getResult();
+    }
+
 }
