@@ -42,6 +42,7 @@ class TopicType extends AbstractType
                     'class' => 'GSApiBundle:Topic',
                     'choice_label' => 'title',
                     'multiple' => true,
+                    'required' => false,
                 ))
                 ->add('title', TextType::class, array(
                     'label' => 'Titre',

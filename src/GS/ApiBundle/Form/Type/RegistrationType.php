@@ -40,12 +40,15 @@ class RegistrationType extends AbstractType
                 ))
                 ->add('partnerFirstName', TextType::class, array(
                     'label' => 'Prenom du partenaire',
+                    'required' => false,
                 ))
                 ->add('partnerLastName', TextType::class, array(
                     'label' => 'Nom du partenaire',
+                    'required' => false,
                 ))
                 ->add('partnerEmail', EmailType::class, array(
                     'label' => 'Adresse email du partenaire',
+                    'required' => false,
                 ))
 //                ->add('partnerRegistration', EntityType::class, array(
 //                    'class' => 'GSApiBundle:Registration',

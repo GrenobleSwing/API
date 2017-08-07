@@ -27,6 +27,7 @@ class AccountType extends AbstractType
         $builder
                 ->add('email', EmailType::class, array(
                     'label' => 'Adresse email',
+                    'position' => 'first',
                 ))
                 ->add('firstName', TextType::class, array(
                     'label' => 'Prenom',

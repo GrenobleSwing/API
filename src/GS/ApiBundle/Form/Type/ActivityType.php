@@ -34,20 +34,22 @@ class ActivityType extends AbstractType
                     'label' => 'Description',
                 ))
                 ->add('membersOnly', ChoiceType::class, array(
-                    'label' => 'Reserve aux membres de l\'association',
+                    'label' => "Reservé aux membres de l'association",
                     'choices' => array(
                         "Oui" => true,
                         "Non" => false
                     )
                 ))
                 ->add('membershipTopic', EntityType::class, array(
+                    'label' => "Adhésion (obligatoire) associée a l'activité",
                     'class' => 'GSApiBundle:Topic',
                     'choice_label' => 'title',
                     'choices' => $options['membership_topics'],
-                    'placeholder' => 'Choissisez l\'adhesion obligatoire',
+                    'placeholder' => "Choissisez l'adhésion obligatoire",
+                    'required' => false,
                 ))
                 ->add('membership', ChoiceType::class, array(
-                    'label' => 'Ensemble des adhesions possibles',
+                    'label' => 'Ensemble des adhésions possibles',
                     'choices' => array(
                         "Oui" => true,
                         "Non" => false

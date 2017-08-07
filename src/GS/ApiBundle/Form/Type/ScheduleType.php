@@ -20,19 +20,23 @@ class ScheduleType extends AbstractType
         $builder
                 ->add('startDate', DateType::class, array(
                     'label' => 'Date debut',
+                    'widget' => 'single_text',
                 ))
                 ->add('startTime', TimeType::class, array(
                     'input' => 'datetime',
                     'widget' => 'choice',
                     'minutes' => range(0, 55, 5),
+                    'widget' => 'single_text',
                 ))
                 ->add('endTime', TimeType::class, array(
                     'input' => 'datetime',
                     'widget' => 'choice',
                     'minutes' => range(0, 55, 5),
+                    'widget' => 'single_text',
                 ))
                 ->add('endDate', DateType::class, array(
                     'label' => 'Date fin',
+                    'widget' => 'single_text',
                 ))
                 ->add('frequency', ChoiceType::class, array(
                     'label' => 'Frequence',
@@ -48,6 +52,7 @@ class ScheduleType extends AbstractType
                 ))
                 ->add('teachers', TextType::class, array(
                     'label' => 'Profs',
+                    'required' => false,
                 ))
         ;
     }

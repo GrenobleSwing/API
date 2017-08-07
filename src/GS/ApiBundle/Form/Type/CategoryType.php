@@ -36,7 +36,7 @@ class CategoryType extends AbstractType
                 ->add('discounts')
                 ->add('submit', SubmitType::class)
         ;
-        
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $category = $event->getData();
             $form = $event->getForm();
@@ -51,6 +51,7 @@ class CategoryType extends AbstractType
                     'multiple' => true,
                     'position' => array('after' => 'price'),
                     'choices' => $category->getActivity()->getDiscounts(),
+                    'required' => false,
                 ));
             }
         });

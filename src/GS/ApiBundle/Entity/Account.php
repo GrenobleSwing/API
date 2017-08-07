@@ -150,7 +150,8 @@ class Account
     {
         $this->payments = new ArrayCollection();
         $this->birthDate = new \DateTime();
-        $this->phoneNumber = new \libphonenumber\PhoneNumber();
+        $phoneNumberUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+        $this->phoneNumber = $phoneNumberUtil->parse('0123456789', 'FR');
     }
 
     /**
