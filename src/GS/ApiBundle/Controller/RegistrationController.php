@@ -145,6 +145,11 @@ class RegistrationController extends FOSRestController
         }
 
         $em = $this->getDoctrine()->getManager();
+
+        // If the registration is not paid, there is no need to keep it.
+        if ($registration->getState() != 'PAID') {
+            $em->remove($registration);
+        }
         $em->flush();
 
         $view = $this->view(null, 204);

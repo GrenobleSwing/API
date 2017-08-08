@@ -1,5 +1,7 @@
+{% use "bootstrap_3_layout.html.twig" %}
 
 {%- block form_start -%}
+    {%- do form.setMethodRendered() -%}
     {% set method = method|upper %}
     {%- if method in ["GET", "POST"] -%}
         {% set form_method = method %}
@@ -11,3 +13,8 @@
         <input type="hidden" name="_method" value="{{ method }}" />
     {%- endif -%}
 {%- endblock form_start -%}
+
+{%- block submit_widget -%}
+    {{ parent() }}
+    <a class="btn btn-default" role="button" ng-click="cancelForm()">Annuler</a>
+{%- endblock submit_widget -%}

@@ -111,7 +111,8 @@ class Activity
     private $membersOnly = false;
 
     /**
-     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Topic")
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Topic")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      * @Type("Relation")
      */
     private $membershipTopic = null;
