@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "self",
  *     href = @Hateoas\Route(
- *         "get_discount",
+ *         "gs_api_get_discount",
  *         parameters = { "discount" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -23,7 +23,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
- *         "edit_discount",
+ *         "gs_api_edit_discount",
  *         parameters = { "discount" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -33,7 +33,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "remove",
  *     href = @Hateoas\Route(
- *         "remove_discount",
+ *         "gs_api_remove_discount",
  *         parameters = { "discount" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(

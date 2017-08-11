@@ -30,7 +30,7 @@ class VenueController extends FOSRestController
      */
     public function newAction()
     {
-        $form = $this->get('gsapi.form_generator')->getVenueForm(null, 'post_venue');
+        $form = $this->get('gsapi.form_generator')->getVenueForm(null, 'gs_api_post_venue');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
@@ -49,7 +49,7 @@ class VenueController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getVenueForm(null, 'post_venue');
+        $form = $this->get('gsapi.form_generator')->getVenueForm(null, 'gs_api_post_venue');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
@@ -198,7 +198,7 @@ class VenueController extends FOSRestController
      */
     public function editAction(Venue $venue)
     {
-        $form = $this->get('gsapi.form_generator')->getVenueForm($venue, 'put_venue', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getVenueForm($venue, 'gs_api_put_venue', 'PUT');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -224,7 +224,7 @@ class VenueController extends FOSRestController
      */
     public function putAction(Venue $venue, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getVenueForm($venue, 'put_venue', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getVenueForm($venue, 'gs_api_put_venue', 'PUT');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

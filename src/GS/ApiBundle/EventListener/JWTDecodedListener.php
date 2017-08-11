@@ -35,7 +35,7 @@ class JWTDecodedListener
             return;
         }
         $hash = $user->getHash();
-        
+
         if (!isset($payload['hash']) || $payload['hash'] != $hash) {
             $event->markAsInvalid();
         }

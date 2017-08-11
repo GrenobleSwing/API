@@ -37,6 +37,7 @@ class AccountType extends AbstractType
                 ))
                 ->add('birthDate', BirthdayType::class, array(
                     'label' => 'Description',
+                    'widget' => 'single_text',
                 ))
                 ->add('phoneNumber', PhoneNumberType::class, array(
                     'label' => 'Numero de telephone',

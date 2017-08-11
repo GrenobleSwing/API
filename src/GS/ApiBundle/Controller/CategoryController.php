@@ -30,7 +30,7 @@ class CategoryController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getCategoryForm(null, 'post_category');
+        $form = $this->get('gsapi.form_generator')->getCategoryForm(null, 'gs_api_post_category');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
@@ -119,7 +119,7 @@ class CategoryController extends FOSRestController
      */
     public function editAction(Category $category)
     {
-        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'put_category', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'gs_api_put_category', 'PUT');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -145,7 +145,7 @@ class CategoryController extends FOSRestController
      */
     public function putAction(Category $category, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'put_category', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'gs_api_put_category', 'PUT');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

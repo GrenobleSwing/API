@@ -128,18 +128,8 @@
                                     "type": "text"
                                 },
                                 {
-                                    "key": "account[birthDate][day]",
-                                    "value": "26",
-                                    "type": "text"
-                                },
-                                {
-                                    "key": "account[birthDate][month]",
-                                    "value": "4",
-                                    "type": "text"
-                                },
-                                {
-                                    "key": "account[birthDate][year]",
-                                    "value": "1986",
+                                    "key": "account[birthDate]",
+                                    "value": "1986-04-26",
                                     "type": "text"
                                 },
                                 {
@@ -330,20 +320,8 @@
                                     "enabled": true
                                 },
                                 {
-                                    "key": "account[birthDate][day]",
-                                    "value": "26",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "account[birthDate][month]",
-                                    "value": "4",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "account[birthDate][year]",
-                                    "value": "1986",
+                                    "key": "account[birthDate]",
+                                    "value": "1986-04-26",
                                     "type": "text",
                                     "enabled": true
                                 },

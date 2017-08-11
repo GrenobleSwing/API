@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "self",
  *     href = @Hateoas\Route(
- *         "get_year",
+ *         "gs_api_get_year",
  *         parameters = { "year" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -24,7 +24,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
- *         "edit_year",
+ *         "gs_api_edit_year",
  *         parameters = { "year" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -34,7 +34,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "remove",
  *     href = @Hateoas\Route(
- *         "remove_year",
+ *         "gs_api_remove_year",
  *         parameters = { "year" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -44,7 +44,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "new_activity",
  *     href = @Hateoas\Route(
- *         "new_year_activity",
+ *         "gs_api_new_year_activity",
  *         parameters = { "year" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -54,7 +54,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "members",
  *     href = @Hateoas\Route(
- *         "get_year_members",
+ *         "gs_api_get_year_members",
  *         parameters = { "year" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(

@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "self",
  *     href = @Hateoas\Route(
- *         "get_activity",
+ *         "gs_api_get_activity",
  *         parameters = { "activity" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -25,7 +25,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
- *         "edit_activity",
+ *         "gs_api_edit_activity",
  *         parameters = { "activity" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -35,7 +35,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "remove",
  *     href = @Hateoas\Route(
- *         "remove_activity",
+ *         "gs_api_remove_activity",
  *         parameters = { "activity" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -45,7 +45,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "new_topic",
  *     href = @Hateoas\Route(
- *         "new_activity_topic",
+ *         "gs_api_new_activity_topic",
  *         parameters = { "activity" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -55,7 +55,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "new_category",
  *     href = @Hateoas\Route(
- *         "new_activity_category",
+ *         "gs_api_new_activity_category",
  *         parameters = { "activity" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -65,7 +65,7 @@ use JMS\Serializer\Annotation\Type;
  * @Hateoas\Relation(
  *     "new_discount",
  *     href = @Hateoas\Route(
- *         "new_activity_discount",
+ *         "gs_api_new_activity_discount",
  *         parameters = { "activity" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(

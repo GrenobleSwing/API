@@ -13,6 +13,13 @@ services:
             - { name: jms_serializer.handler, type: Relation<?>, direction: serialization, format: json, method: serializeRelation}
             - { name: jms_serializer.handler, type: Relation<?>, direction: deserialization, format: json, method: deserializeRelation}
 
+    gsapi.user.listener:
+        class: GS\ApiBundle\EventListener\UserListener
+        arguments:
+            - "@router"
+        tags:
+            - { name: kernel.event_subscriber }
+
     gsapi.form_generator:
         class: GS\ApiBundle\Services\FormGeneratorService
         arguments: [ '@router', '@form.factory', '@doctrine.orm.entity_manager' ]

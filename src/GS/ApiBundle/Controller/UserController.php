@@ -46,7 +46,6 @@ class UserController extends FOSRestController
         $result = array(
             'id' => $user->getId(),
             'email' => $user->getEmail(),
-            'active' => $user->isActive(),
             'roles' => array_values(array_unique($all_roles)),
         );
         $view = $this->view($result, 200);
@@ -61,10 +60,10 @@ class UserController extends FOSRestController
      *     200="The User has been logged out",
      *   }
      * )
-     * @Get("/logout")
+     * @Get("/disconnect")
      * @Security("has_role('ROLE_USER')")
      */
-    public function LogoutAction()
+    public function DisconnectAction()
     {
         // Generate a new hash to invalidate the JWT
         // https://github.com/lexik/LexikJWTAuthenticationBundle/issues/58#issuecomment-89641970
@@ -119,7 +118,7 @@ class UserController extends FOSRestController
      */
     public function newAction()
     {
-        $form = $this->get('gsapi.form_generator')->getUserForm(null, 'post_user');
+        $form = $this->get('gsapi.form_generator')->getUserForm(null, 'gs_api_post_user');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -138,13 +137,12 @@ class UserController extends FOSRestController
     public function postAction(Request $request)
     {
         $user = new User();
-        $form = $this->get('gsapi.form_generator')->getUserForm($user, 'post_user');
+        $form = $this->get('gsapi.form_generator')->getUserForm($user, 'gs_api_post_user');
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->get('security.password_encoder')
-                ->encodePassword($user, $user->getPlainPassword());
-            $user->setPassword($password);
+            $userManager = $this->get('fos_user.user_manager');
+            $userManager->updateUser($user);
 
             $address = new Address();
             $account = new Account();

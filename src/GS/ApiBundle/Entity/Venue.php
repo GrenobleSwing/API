@@ -11,7 +11,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  * @Hateoas\Relation(
  *     "self",
  *     href = @Hateoas\Route(
- *         "get_venue",
+ *         "gs_api_get_venue",
  *         parameters = { "venue" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -21,7 +21,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
- *         "edit_venue",
+ *         "gs_api_edit_venue",
  *         parameters = { "venue" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -31,7 +31,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  * @Hateoas\Relation(
  *     "remove",
  *     href = @Hateoas\Route(
- *         "remove_venue",
+ *         "gs_api_remove_venue",
  *         parameters = { "venue" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(

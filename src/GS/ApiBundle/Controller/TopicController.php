@@ -31,7 +31,7 @@ class TopicController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getTopicForm(null, 'post_topic');
+        $form = $this->get('gsapi.form_generator')->getTopicForm(null, 'gs_api_post_topic');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
@@ -183,7 +183,7 @@ class TopicController extends FOSRestController
      */
     public function editAction(Topic $topic)
     {
-        $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'put_topic', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'gs_api_put_topic', 'PUT');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -209,7 +209,7 @@ class TopicController extends FOSRestController
      */
     public function putAction(Topic $topic, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'put_topic', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'gs_api_put_topic', 'PUT');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -285,7 +285,7 @@ class TopicController extends FOSRestController
         }
         else
         {
-            $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'post_registration');
+            $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'gs_api_post_registration');
             $view = $this->get('gsapi.form_generator')->getFormView($form);
         }
         return $this->handleView($view);

@@ -31,5 +31,3 @@ services:
       - 8082:80
     volumes:
       - .:/var/www/html
-      - .docker/elk/logstash/logstash.conf:/etc/logstash/conf.d/logstash.conf
-      - .docker/elk/logstash/patterns:/opt/logstash/patterns

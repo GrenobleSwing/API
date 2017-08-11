@@ -32,7 +32,7 @@ class YearController extends FOSRestController
      */
     public function newAction()
     {
-        $form = $this->get('gsapi.form_generator')->getYearForm(null, 'post_year');
+        $form = $this->get('gsapi.form_generator')->getYearForm(null, 'gs_api_post_year');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
@@ -51,7 +51,7 @@ class YearController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getYearForm(null, 'post_year');
+        $form = $this->get('gsapi.form_generator')->getYearForm(null, 'gs_api_post_year');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
@@ -266,7 +266,7 @@ class YearController extends FOSRestController
      */
     public function editAction(Year $year)
     {
-        $form = $this->get('gsapi.form_generator')->getYearForm($year, 'put_year', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getYearForm($year, 'gs_api_put_year', 'PUT');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -292,7 +292,7 @@ class YearController extends FOSRestController
      */
     public function putAction(Year $year, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getYearForm($year, 'put_year', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getYearForm($year, 'gs_api_put_year', 'PUT');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -356,7 +356,7 @@ class YearController extends FOSRestController
     {
         $activity = new Activity();
         $activity->setYear($year);
-        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'post_activity');
+        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'gs_api_post_activity');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);

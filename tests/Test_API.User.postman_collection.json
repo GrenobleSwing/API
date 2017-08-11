@@ -80,7 +80,7 @@
                     "response": []
                 },
                 {
-                    "name": "api/logout",
+                    "name": "api/disconnect",
                     "event": [
                         {
                             "listen": "test",
@@ -93,7 +93,7 @@
                         }
                     ],
                     "request": {
-                        "url": "{{protocol}}://{{domain}}{{folder}}/logout",
+                        "url": "{{protocol}}://{{domain}}{{folder}}/disconnect",
                         "method": "GET",
                         "header": [
                             {

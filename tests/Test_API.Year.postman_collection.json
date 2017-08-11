@@ -125,38 +125,14 @@
                                     "enabled": true
                                 },
                                 {
-                                    "key": "year[startDate][day]",
-                                    "value": "1",
+                                    "key": "year[startDate]",
+                                    "value": "2018-09-01",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
-                                    "key": "year[startDate][month]",
-                                    "value": "9",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[startDate][year]",
-                                    "value": "2018",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[endDate][day]",
-                                    "value": "31",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[endDate][month]",
-                                    "value": "8",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[endDate][year]",
-                                    "value": "2019",
+                                    "key": "year[endDate]",
+                                    "value": "2019-06-30",
                                     "type": "text",
                                     "enabled": true
                                 },
@@ -320,38 +296,14 @@
                                     "enabled": true
                                 },
                                 {
-                                    "key": "year[startDate][day]",
-                                    "value": "1",
+                                    "key": "year[startDate]",
+                                    "value": "2018-09-01",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
-                                    "key": "year[startDate][month]",
-                                    "value": "9",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[startDate][year]",
-                                    "value": "2018",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[endDate][day]",
-                                    "value": "31",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[endDate][month]",
-                                    "value": "8",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[endDate][year]",
-                                    "value": "2019",
+                                    "key": "year[endDate]",
+                                    "value": "2019-06-30",
                                     "type": "text",
                                     "enabled": true
                                 },

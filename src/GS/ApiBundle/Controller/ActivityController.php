@@ -34,7 +34,7 @@ class ActivityController extends FOSRestController
      */
     public function newAction()
     {
-        $form = $this->get('gsapi.form_generator')->getActivityForm(null, 'post_activity');
+        $form = $this->get('gsapi.form_generator')->getActivityForm(null, 'gs_api_post_activity');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
@@ -53,7 +53,7 @@ class ActivityController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getActivityForm(null, 'post_activity');
+        $form = $this->get('gsapi.form_generator')->getActivityForm(null, 'gs_api_post_activity');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
@@ -208,7 +208,7 @@ class ActivityController extends FOSRestController
      */
     public function editAction(Activity $activity)
     {
-        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'put_activity', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'gs_api_put_activity', 'PUT');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -234,7 +234,7 @@ class ActivityController extends FOSRestController
      */
     public function putAction(Activity $activity, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'put_activity', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getActivityForm($activity, 'gs_api_put_activity', 'PUT');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -265,7 +265,7 @@ class ActivityController extends FOSRestController
         $category = new Category();
         $category->setActivity($activity);
         $this->denyAccessUnlessGranted('create', $category);
-        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'post_category');
+        $form = $this->get('gsapi.form_generator')->getCategoryForm($category, 'gs_api_post_category');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -286,7 +286,7 @@ class ActivityController extends FOSRestController
         $discount = new Discount();
         $discount->setActivity($activity);
         $this->denyAccessUnlessGranted('create', $discount);
-        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'post_discount');
+        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'gs_api_post_discount');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -310,7 +310,7 @@ class ActivityController extends FOSRestController
         $schedule = new Schedule();
         $topic->addSchedule($schedule);
         $this->denyAccessUnlessGranted('create', $topic);
-        $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'post_topic');
+        $form = $this->get('gsapi.form_generator')->getTopicForm($topic, 'gs_api_post_topic');
         $view = $this->get('gsapi.form_generator')->getTopicFormView($form);
         return $this->handleView($view);
     }

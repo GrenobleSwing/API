@@ -207,7 +207,7 @@ class RegistrationController extends FOSRestController
                 ->findOneByUser($this->getUser());
         $registration->setAccount($account);
 
-        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'post_registration');
+        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'gs_api_post_registration');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
@@ -439,7 +439,7 @@ class RegistrationController extends FOSRestController
      */
     public function editAction(Registration $registration)
     {
-        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'put_registration', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'gs_api_put_registration', 'PUT');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -465,7 +465,7 @@ class RegistrationController extends FOSRestController
      */
     public function putAction(Registration $registration, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'put_registration', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'gs_api_put_registration', 'PUT');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

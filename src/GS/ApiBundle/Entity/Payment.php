@@ -14,7 +14,7 @@ use PayPal\Api\ItemList;
  * @Hateoas\Relation(
  *     "self",
  *     href = @Hateoas\Route(
- *         "get_payment",
+ *         "gs_api_get_payment",
  *         parameters = { "payment" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -24,7 +24,7 @@ use PayPal\Api\ItemList;
  * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
- *         "edit_payment",
+ *         "gs_api_edit_payment",
  *         parameters = { "payment" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -34,7 +34,7 @@ use PayPal\Api\ItemList;
  * @Hateoas\Relation(
  *     "remove",
  *     href = @Hateoas\Route(
- *         "remove_payment",
+ *         "gs_api_remove_payment",
  *         parameters = { "payment" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(

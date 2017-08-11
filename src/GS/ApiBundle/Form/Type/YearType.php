@@ -25,9 +25,11 @@ class YearType extends AbstractType
                 ))
                 ->add('startDate', DateType::class, array(
                     'label' => 'Date debut',
+                    'widget' => 'single_text',
                 ))
                 ->add('endDate', DateType::class, array(
                     'label' => 'Date fin',
+                    'widget' => 'single_text',
                 ))
                 ->add('submit', SubmitType::class)
         ;

@@ -4,9 +4,15 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
 
-    app.token_authenticator:
-        class: GS\ApiBundle\Security\TokenAuthenticator
+    # makes classes in src/AppBundle available to be used as services
+    GS\ApiBundle\Twig\:
+        resource: '../../src/GS/ApiBundle/Twig'
+        # you can exclude directories or files
+        # but if a service is unused, it's removed anyway
+        #exclude: '../../src/GS/ApiBundle/{Entity,Repository}'

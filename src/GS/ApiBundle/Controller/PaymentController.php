@@ -31,7 +31,7 @@ class PaymentController extends FOSRestController
      */
     public function newAction()
     {
-        $form = $this->get('gsapi.form_generator')->getPaymentForm(null, 'post_payment');
+        $form = $this->get('gsapi.form_generator')->getPaymentForm(null, 'gs_api_post_payment');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
@@ -50,7 +50,7 @@ class PaymentController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getPaymentForm(null, 'post_payment');
+        $form = $this->get('gsapi.form_generator')->getPaymentForm(null, 'gs_api_post_payment');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
@@ -109,7 +109,7 @@ class PaymentController extends FOSRestController
             $view = $this->view(null, 403);
             return $this->handleView($view);
         }
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($payment, 'payment');
+        $form = $this->get('gsapi.form_generator')->getDeleteForm($payment, 'gs_api_payment');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -140,7 +140,7 @@ class PaymentController extends FOSRestController
             return $this->handleView($view);
         }
 
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($payment, 'payment');
+        $form = $this->get('gsapi.form_generator')->getDeleteForm($payment, 'gs_api_payment');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -224,7 +224,7 @@ class PaymentController extends FOSRestController
      */
     public function editAction(Payment $payment)
     {
-        $form = $this->get('gsapi.form_generator')->getPaymentForm($payment, 'put_payment', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getPaymentForm($payment, 'gs_api_put_payment', 'PUT');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -250,7 +250,7 @@ class PaymentController extends FOSRestController
      */
     public function putAction(Payment $payment, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getPaymentForm($payment, 'put_payment', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getPaymentForm($payment, 'gs_api_put_payment', 'PUT');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

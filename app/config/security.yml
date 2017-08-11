@@ -3,8 +3,8 @@
 security:
     encoders:
         #Symfony\Component\Security\Core\User\User: plaintext
-        
-        GS\ApiBundle\Entity\User:
+
+        FOS\UserBundle\Model\UserInterface:
             algorithm: bcrypt
             cost: 12
 
@@ -16,20 +16,16 @@ security:
         ROLE_ORGANIZER:     ROLE_TOPIC_MANAGER
         ROLE_ADMIN:         [ROLE_TREASURER, ROLE_SECRETARY, ROLE_ORGANIZER]
         ROLE_SUPER_ADMIN:   ROLE_ADMIN
-    
+
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-        our_db_provider:
-            entity:
-                class: GSApiBundle:User
-                property: email
-                # if you're using multiple entity managers
-                # manager_name: customer
+        fos_userbundle:
+            id: fos_user.user_provider.username
 
     firewalls:
         login:
             pattern:  ^/api/auth
-            provider: our_db_provider
+            provider: fos_userbundle
             stateless: true
             anonymous: true
             form_login:
@@ -40,21 +36,12 @@ security:
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
                 require_previous_session: false
 
-        api:
-            pattern:   ^/api/(?!(paypal/|doc)).*$
-            provider: our_db_provider
-            stateless: true
-            anonymous: true
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-
         main:
             pattern: ^/
-            anonymous: ~
-
+            provider: fos_userbundle
+            stateless: true
+            anonymous: true
+            lexik_jwt: ~
 
     access_control:
         - { path: ^/api/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/user/new, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/user, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [POST] }

@@ -1,3 +1,4 @@
 gsapi:
+    type: rest
     resource: "@GSApiBundle/Resources/config/routing.yml"
     prefix:   /api

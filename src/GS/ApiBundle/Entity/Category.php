@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "self",
  *     href = @Hateoas\Route(
- *         "get_category",
+ *         "gs_api_get_category",
  *         parameters = { "category" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -24,7 +24,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
- *         "edit_category",
+ *         "gs_api_edit_category",
  *         parameters = { "category" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -34,7 +34,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "remove",
  *     href = @Hateoas\Route(
- *         "remove_category",
+ *         "gs_api_remove_category",
  *         parameters = { "category" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(

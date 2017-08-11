@@ -20,7 +20,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Hateoas\Relation(
  *     "self",
  *     href = @Hateoas\Route(
- *         "get_account",
+ *         "gs_api_get_account",
  *         parameters = { "account" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -30,7 +30,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
- *         "edit_account",
+ *         "gs_api_edit_account",
  *         parameters = { "account" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -40,7 +40,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Hateoas\Relation(
  *     "remove",
  *     href = @Hateoas\Route(
- *         "remove_account",
+ *         "gs_api_remove_account",
  *         parameters = { "account" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -108,7 +108,6 @@ class Account
      * @Vich\UploadableField(mapping="account_image", fileNameProperty="imageName")
      * @Assert\File(
      *     maxSize = "3M",
-     *     mimeTypes = {"image/jpeg", "image/png", "image/bmp"},
      * )
      * @var File
      */

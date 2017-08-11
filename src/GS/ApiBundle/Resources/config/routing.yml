@@ -1,54 +1,85 @@
 
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+#fos_user_profile:
+#    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+#    prefix: /profile
+
+#fos_user_register:
+#    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+#    prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /user
+
 api_login_check:
     path: /auth
 
 account:
     type:     rest
     resource: GS\ApiBundle\Controller\AccountController
+    name_prefix: gs_api_
 
 venue:
     type:     rest
     resource: GS\ApiBundle\Controller\VenueController
+    name_prefix: gs_api_
 
 year:
     type:     rest
     resource: GS\ApiBundle\Controller\YearController
+    name_prefix: gs_api_
 
 activity:
     type:     rest
     resource: GS\ApiBundle\Controller\ActivityController
+    name_prefix: gs_api_
 
 category:
     type:     rest
     resource: GS\ApiBundle\Controller\CategoryController
+    name_prefix: gs_api_
 
 discount:
     type:     rest
     resource: GS\ApiBundle\Controller\DiscountController
+    name_prefix: gs_api_
 
 topic:
     type:     rest
     resource: GS\ApiBundle\Controller\TopicController
+    name_prefix: gs_api_
 
 registration:
     type:     rest
     resource: GS\ApiBundle\Controller\RegistrationController
+    name_prefix: gs_api_
 
 payment:
     type:     rest
     resource: GS\ApiBundle\Controller\PaymentController
+    name_prefix: gs_api_
 
 paypal:
     resource: GS\ApiBundle\Controller\PaypalController
     type:     annotation
+    name_prefix: gs_api_
 
 user:
     type:     rest
     resource: GS\ApiBundle\Controller\UserController
+    name_prefix: gs_api_
 
 invoice:
     type:     rest
     resource: GS\ApiBundle\Controller\InvoiceController
+    name_prefix: gs_api_
 
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"

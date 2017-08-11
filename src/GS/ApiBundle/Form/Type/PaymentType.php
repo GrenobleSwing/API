@@ -39,6 +39,7 @@ class PaymentType extends AbstractType
                 ))
                 ->add('date', DateType::class, array(
                     'label' => 'Date du paiement',
+                    'widget' => 'single_text',
                 ))
                 ->add('comment', TextareaType::class, array(
                     'label' => 'Commentaire',

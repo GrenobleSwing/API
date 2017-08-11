@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "self",
  *     href = @Hateoas\Route(
- *         "get_topic",
+ *         "gs_api_get_topic",
  *         parameters = { "topic" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -26,7 +26,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
- *         "edit_topic",
+ *         "gs_api_edit_topic",
  *         parameters = { "topic" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -36,7 +36,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "remove",
  *     href = @Hateoas\Route(
- *         "remove_topic",
+ *         "gs_api_remove_topic",
  *         parameters = { "topic" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -46,7 +46,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "new_registration",
  *     href = @Hateoas\Route(
- *         "new_topic_registration",
+ *         "gs_api_new_topic_registration",
  *         parameters = { "topic" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -56,7 +56,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @Hateoas\Relation(
  *     "registrations",
  *     href = @Hateoas\Route(
- *         "get_topic_registrations",
+ *         "gs_api_get_topic_registrations",
  *         parameters = { "topic" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(

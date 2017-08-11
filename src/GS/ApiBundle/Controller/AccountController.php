@@ -33,7 +33,7 @@ class AccountController extends FOSRestController
      */
     public function newAction()
     {
-        $form = $this->get('gsapi.form_generator')->getAccountForm(null, 'post_account');
+        $form = $this->get('gsapi.form_generator')->getAccountForm(null, 'gs_api_post_account');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -51,7 +51,7 @@ class AccountController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getAccountForm(null, 'post_account');
+        $form = $this->get('gsapi.form_generator')->getAccountForm(null, 'gs_api_post_account');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -199,7 +199,7 @@ class AccountController extends FOSRestController
      */
     public function editAction(Account $account)
     {
-        $form = $this->get('gsapi.form_generator')->getAccountForm($account, 'put_account', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getAccountForm($account, 'gs_api_put_account', 'PUT');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -225,7 +225,7 @@ class AccountController extends FOSRestController
      */
     public function putAction(Account $account, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getAccountForm($account, 'put_account', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getAccountForm($account, 'gs_api_put_account', 'PUT');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

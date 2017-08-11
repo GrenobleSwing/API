@@ -3,6 +3,7 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
@@ -15,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Hateoas\Relation(
  *     "self",
  *     href = @Hateoas\Route(
- *         "get_registration",
+ *         "gs_api_get_registration",
  *         parameters = { "registration" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -25,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Hateoas\Relation(
  *     "validate",
  *     href = @Hateoas\Route(
- *         "validate_registration",
+ *         "gs_api_validate_registration",
  *         parameters = { "id" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -35,7 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Hateoas\Relation(
  *     "wait",
  *     href = @Hateoas\Route(
- *         "wait_registration",
+ *         "gs_api_wait_registration",
  *         parameters = { "id" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -45,7 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Hateoas\Relation(
  *     "cancel",
  *     href = @Hateoas\Route(
- *         "cancel_registration",
+ *         "gs_api_cancel_registration",
  *         parameters = { "id" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -55,7 +56,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Hateoas\Relation(
  *     "pay",
  *     href = @Hateoas\Route(
- *         "pay_registration",
+ *         "gs_api_pay_registration",
  *         parameters = { "id" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -65,7 +66,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
- *         "edit_registration",
+ *         "gs_api_edit_registration",
  *         parameters = { "registration" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -75,7 +76,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Hateoas\Relation(
  *     "remove",
  *     href = @Hateoas\Route(
- *         "remove_registration",
+ *         "gs_api_remove_registration",
  *         parameters = { "registration" = "expr(object.getId())" }
  *     ),
  *     exclusion = @Hateoas\Exclusion(
@@ -98,6 +99,14 @@ class Registration
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     *
+     * @var \DateTime
+     */
+    private $createdAt;
 
     /**
      * @ORM\Column(type="string", length=16, nullable=true)
@@ -482,5 +491,29 @@ class Registration
     public function getPartnerRegistration()
     {
         return $this->partnerRegistration;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return Registration
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

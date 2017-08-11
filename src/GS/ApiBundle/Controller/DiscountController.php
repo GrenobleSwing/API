@@ -30,7 +30,7 @@ class DiscountController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getDiscountForm(null, 'post_discount');
+        $form = $this->get('gsapi.form_generator')->getDiscountForm(null, 'gs_api_post_discount');
         $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
 
@@ -119,7 +119,7 @@ class DiscountController extends FOSRestController
      */
     public function editAction(Discount $discount)
     {
-        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'put_discount', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'gs_api_put_discount', 'PUT');
         $view = $this->get('gsapi.form_generator')->getFormView($form);
         return $this->handleView($view);
     }
@@ -145,7 +145,7 @@ class DiscountController extends FOSRestController
      */
     public function putAction(Discount $discount, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'put_discount', 'PUT');
+        $form = $this->get('gsapi.form_generator')->getDiscountForm($discount, 'gs_api_put_discount', 'PUT');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -24,14 +24,10 @@ class ScheduleType extends AbstractType
                 ))
                 ->add('startTime', TimeType::class, array(
                     'input' => 'datetime',
-                    'widget' => 'choice',
-                    'minutes' => range(0, 55, 5),
                     'widget' => 'single_text',
                 ))
                 ->add('endTime', TimeType::class, array(
                     'input' => 'datetime',
-                    'widget' => 'choice',
-                    'minutes' => range(0, 55, 5),
                     'widget' => 'single_text',
                 ))
                 ->add('endDate', DateType::class, array(

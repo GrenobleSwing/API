@@ -232,38 +232,14 @@
                                     "enabled": true
                                 },
                                 {
-                                    "key": "year[startDate][day]",
-                                    "value": "1",
+                                    "key": "year[startDate]",
+                                    "value": "2018-09-01",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
-                                    "key": "year[startDate][month]",
-                                    "value": "9",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[startDate][year]",
-                                    "value": "2018",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[endDate][day]",
-                                    "value": "31",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[endDate][month]",
-                                    "value": "8",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "year[endDate][year]",
-                                    "value": "2019",
+                                    "key": "year[endDate]",
+                                    "value": "2019-06-30",
                                     "type": "text",
                                     "enabled": true
                                 },
@@ -803,62 +779,26 @@
                                     "enabled": true
                                 },
                                 {
-                                    "key": "topic[schedules][0][startDate][day]",
-                                    "value": "26",
+                                    "key": "topic[schedules][0][startDate]",
+                                    "value": "2017-04-26",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
-                                    "key": "topic[schedules][0][startDate][month]",
-                                    "value": "4",
+                                    "key": "topic[schedules][0][endDate]",
+                                    "value": "2017-04-26",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
-                                    "key": "topic[schedules][0][startDate][year]",
-                                    "value": "2017",
+                                    "key": "topic[schedules][0][startTime]",
+                                    "value": "20:30",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
-                                    "key": "topic[schedules][0][endDate][day]",
-                                    "value": "26",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][endDate][month]",
-                                    "value": "4",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][endDate][year]",
-                                    "value": "2017",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][startTime][hour]",
-                                    "value": "20",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][startTime][minute]",
-                                    "value": "30",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][endTime][hour]",
-                                    "value": "21",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][endTime][minute]",
-                                    "value": "30",
+                                    "key": "topic[schedules][0][endTime]",
+                                    "value": "21:30",
                                     "type": "text",
                                     "enabled": true
                                 },
@@ -1056,62 +996,26 @@
                                     "enabled": true
                                 },
                                 {
-                                    "key": "topic[schedules][0][startDate][day]",
-                                    "value": "26",
+                                    "key": "topic[schedules][0][startDate]",
+                                    "value": "2017-04-26",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
-                                    "key": "topic[schedules][0][startDate][month]",
-                                    "value": "4",
+                                    "key": "topic[schedules][0][endDate]",
+                                    "value": "2017-04-26",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
-                                    "key": "topic[schedules][0][startDate][year]",
-                                    "value": "2017",
+                                    "key": "topic[schedules][0][startTime]",
+                                    "value": "20:30",
                                     "type": "text",
                                     "enabled": true
                                 },
                                 {
-                                    "key": "topic[schedules][0][endDate][day]",
-                                    "value": "26",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][endDate][month]",
-                                    "value": "4",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][endDate][year]",
-                                    "value": "2017",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][startTime][hour]",
-                                    "value": "20",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][startTime][minute]",
-                                    "value": "30",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][endTime][hour]",
-                                    "value": "21",
-                                    "type": "text",
-                                    "enabled": true
-                                },
-                                {
-                                    "key": "topic[schedules][0][endTime][minute]",
-                                    "value": "30",
+                                    "key": "topic[schedules][0][endTime]",
+                                    "value": "21:30",
                                     "type": "text",
                                     "enabled": true
                                 },
