@@ -13,6 +13,7 @@ use JMS\Serializer\Annotation\Exclude;
  * User
  *
  * @ORM\Entity
+ * @UniqueEntity("email")
  */
 class User extends BaseUser
 {
@@ -23,9 +24,18 @@ class User extends BaseUser
      */
     protected $id;
 
+    /**
+     * Create a variable to easily invalidate JWT
+     * https://github.com/lexik/LexikJWTAuthenticationBundle/issues/58#issuecomment-89641970
+     * @ORM\Column(type="string", length=64)
+     * @Exclude
+     */
+    private $hash;
+
     public function __construct()
     {
         parent::__construct();
+        $this->hash = uniqid('', true);
     }
 
     public function setEmail($email)
@@ -35,5 +45,29 @@ class User extends BaseUser
         $this->setUsername($email);
 
         return $this;
+    }
+
+    /**
+     * Set hash
+     *
+     * @param string $hash
+     *
+     * @return User
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
+    /**
+     * Get hash
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        return $this->hash;
     }
 }

@@ -1,14 +1,9 @@
 {% extends "GSApiBundle::layout.html.twig" %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css">
-{% endblock %}
-
 {% block gs_body %}
     {{ parent() }}
 
-    <h2>Editer une topic</h2>
+    <h2>Editer un topic</h2>
 
     {{ include("GSApiBundle:Topic:form.html.twig") }}
 
@@ -16,21 +11,22 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-
-    {% javascripts filter='?jsqueeze'
-        '@GSApiBundle/Resources/public/js/*'
-    %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    <script type="text/javascript">
-        $('.my-selector').collection();
-    </script>
 
     <script>
         jQuery(document).ready(function() {
-            $('.js-datepicker').datepicker();
+            $('.js-collection').collection();
+
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+
+            $('.js-timepicker').timepicker({
+                timeFormat: 'HH:mm',
+                interval: 15,
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true
+            });
         });
     </script>
 {% endblock %}

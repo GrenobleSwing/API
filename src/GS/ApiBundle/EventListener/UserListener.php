@@ -3,19 +3,22 @@
 namespace GS\ApiBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
+use FOS\UserBundle\FOSUserEvents;
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Address;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class UserRegistrationListener implements EventSubscriberInterface
+class UserListener implements EventSubscriberInterface
 {
-    private $entityManager;
+    private $router;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, UrlGeneratorInterface $router)
     {
         $this->entityManager = $entityManager;
+        $this->router = $router;
     }
 
     /**
@@ -25,6 +28,7 @@ class UserRegistrationListener implements EventSubscriberInterface
     {
         return array(
             FOSUserEvents::REGISTRATION_SUCCESS => 'onRegistrationSuccess',
+            FOSUserEvents::CHANGE_PASSWORD_SUCCESS => 'onChangePasswordSuccess',
         );
     }
 
@@ -38,5 +42,11 @@ class UserRegistrationListener implements EventSubscriberInterface
         $account->setAddress($address);
         $this->entityManager->persist($account);
         $this->entityManager->flush();
+    }
+
+    public function onChangePasswordSuccess(FormEvent $event)
+    {
+        $url = $this->router->generate('homepage');
+        $event->setResponse(new RedirectResponse($url));
     }
 }

@@ -125,7 +125,12 @@ class RegistrationController extends Controller
             }
 
             $em = $this->getDoctrine()->getManager();
-            $em->flush();
+
+        // If the registration is not paid, there is no need to keep it.
+        if ($registration->getState() != 'PAID') {
+            $em->remove($registration);
+        }
+        $em->flush();
 
             $request->getSession()->getFlashBag()->add('success', "L'inscription a bien été annulée.");
 

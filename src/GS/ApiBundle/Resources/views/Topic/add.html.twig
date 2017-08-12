@@ -1,10 +1,5 @@
 {% extends "GSApiBundle::layout.html.twig" %}
 
-{#{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-{% endblock %}#}
-
 {% block gs_body %}
     {{ parent() }}
 
@@ -17,32 +12,22 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% javascripts filter='?jsqueeze'
-        '@GSApiBundle/Resources/public/js/*'
-    %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    <script type="text/javascript">
-        $('.my-selector').collection();
-    </script>
-
-{#    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
-
     <script>
         jQuery(document).ready(function() {
-            $('.js-datepicker').datepicker();
+            $('.js-collection').collection();
+
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+
             $('.js-timepicker').timepicker({
-                timeFormat: 'h:mm p',
-                interval: 30,
-                minTime: '6pm',
-                maxTime: '11:00pm',
-                defaultTime: '7pm',
-                startTime: '6pm',
+                timeFormat: 'HH:mm',
+                interval: 15,
                 dynamic: false,
                 dropdown: true,
                 scrollbar: true
             });
         });
-    </script>#}
+    </script>
+
 {% endblock %}

@@ -72,9 +72,9 @@ class Registration
      *     |        wait             validate      v          pay
      * submitted ----------> waiting ----------> validated ----------> paid
      *     |                   |                   |                   |
-     *     |                   | cancel            | cancel            | cancel
-     *     |    cancel         v                   |                   v
-     *     |--------------> cancelled <------------|           partially_cancelled
+     *     | cancel            | cancel            | cancel            | cancel
+     *     |                   v                   |                   v
+     *     |-----> "delete the registration" <-----|               cancelled
      *
      * @ORM\Column(type="string", length=20)
      */
@@ -260,9 +260,8 @@ class Registration
      */
     public function getDisplayName()
     {
-        return $this->getTopic()->getActivity()->getTitle() . ' - ' .
-                $this->getTopic()->getTitle() . ' - ' .
-                $this->getAccount()->getDisplayName();
+        return $this->getAccount()->getDisplayName() . ' - ' .
+                $this->getTopic()->getTitle();
     }
 
     public function wait()

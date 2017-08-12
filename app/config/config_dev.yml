@@ -12,7 +12,7 @@ web_profiler:
     intercept_redirects: false
 
 gs_api:
-    doctrine_table_prefix: "test_standalone_"
+    doctrine_table_prefix: "test_api_"
 
 monolog:
     handlers:

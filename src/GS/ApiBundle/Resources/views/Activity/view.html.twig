@@ -6,10 +6,6 @@
     <h2>{{ activity.title }}</h2>
 
     <p>
-        <a href="{{ path('homepage') }}" class="btn btn-default">
-            <i class="glyphicon glyphicon-chevron-left"></i>
-            Retour à l'accueil
-        </a>
         <a href="{{ path('view_year', {'id': activity.year.id}) }}" class="btn btn-default">
             <i class="glyphicon glyphicon-chevron-left"></i>
             Retour à l'année

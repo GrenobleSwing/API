@@ -23,10 +23,11 @@ services:
             - { name: jms_serializer.handler, type: Relation<?>, direction: serialization, format: json, method: serializeRelation}
             - { name: jms_serializer.handler, type: Relation<?>, direction: deserialization, format: json, method: deserializeRelation}
 
-    gsapi.user.registration:
-        class: GS\ApiBundle\EventListener\UserRegistrationListener
+    gsapi.user.listener:
+        class: GS\ApiBundle\EventListener\UserListener
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@router"
         tags:
             - { name: kernel.event_subscriber }
 
