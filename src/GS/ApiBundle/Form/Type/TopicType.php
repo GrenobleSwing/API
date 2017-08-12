@@ -73,7 +73,7 @@ class TopicType extends AbstractType
                     'allow_delete' => true,
                     'prototype' => true,
                     'attr' => array(
-                        'class' => 'my-selector',
+                        'class' => 'js-collection',
                     ),
                 ))
                 ->add('submit', SubmitType::class)

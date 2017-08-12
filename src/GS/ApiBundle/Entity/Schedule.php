@@ -50,12 +50,13 @@ class Schedule
     private $frequency;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
-    private $teachers = '';
+    private $teachers = null;
 
    /**
-     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Venue", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Venue")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $venue = null;
 

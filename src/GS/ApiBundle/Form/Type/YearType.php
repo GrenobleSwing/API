@@ -26,10 +26,14 @@ class YearType extends AbstractType
                 ->add('startDate', DateType::class, array(
                     'label' => 'Date debut',
                     'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker'],
                 ))
                 ->add('endDate', DateType::class, array(
                     'label' => 'Date fin',
                     'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker'],
                 ))
                 ->add('submit', SubmitType::class)
         ;

@@ -38,6 +38,8 @@ class AccountType extends AbstractType
                 ->add('birthDate', BirthdayType::class, array(
                     'label' => 'Description',
                     'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker'],
                 ))
                 ->add('phoneNumber', PhoneNumberType::class, array(
                     'label' => 'Numero de telephone',

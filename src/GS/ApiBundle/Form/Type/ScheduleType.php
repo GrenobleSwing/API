@@ -21,18 +21,26 @@ class ScheduleType extends AbstractType
                 ->add('startDate', DateType::class, array(
                     'label' => 'Date debut',
                     'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker'],
                 ))
                 ->add('startTime', TimeType::class, array(
                     'input' => 'datetime',
                     'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-timepicker'],
                 ))
                 ->add('endTime', TimeType::class, array(
                     'input' => 'datetime',
                     'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-timepicker'],
                 ))
                 ->add('endDate', DateType::class, array(
                     'label' => 'Date fin',
                     'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker'],
                 ))
                 ->add('frequency', ChoiceType::class, array(
                     'label' => 'Frequence',
