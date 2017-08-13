@@ -10,9 +10,10 @@ security:
 
     role_hierarchy:
         ROLE_MEMBER:        ROLE_USER
-        ROLE_SECRETARY:     ROLE_USER
-        ROLE_TREASURER:     ROLE_USER
-        ROLE_TOPIC_MANAGER: ROLE_USER
+        ROLE_PRIVILEGED:    ROLE_USER
+        ROLE_SECRETARY:     ROLE_PRIVILEGED
+        ROLE_TREASURER:     ROLE_PRIVILEGED
+        ROLE_TOPIC_MANAGER: ROLE_PRIVILEGED
         ROLE_ORGANIZER:     ROLE_TOPIC_MANAGER
         ROLE_ADMIN:         [ROLE_TREASURER, ROLE_SECRETARY, ROLE_ORGANIZER]
         ROLE_SUPER_ADMIN:   ROLE_ADMIN
@@ -35,6 +36,10 @@ security:
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
                 require_previous_session: false
+
+        reset_password:
+            pattern:   ^/api/resetting
+            anonymous: true
 
         main:
             pattern: ^/

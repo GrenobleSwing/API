@@ -80,6 +80,105 @@
                     "response": []
                 },
                 {
+                    "name": "api/user/change-password",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';",
+                                    "var html = cheerio(responseBody);",
+                                    "result = html.find('#fos_user_change_password_form__token');",
+                                    "postman.setGlobalVariable('form_token', result.attr('value'));"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/user/change-password",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/user/change-password",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 204;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/user/change-password",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": ""
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "fos_user_change_password_form[current_password]",
+                                    "value": "test",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "fos_user_change_password_form[plainPassword][first]",
+                                    "value": "test",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "fos_user_change_password_form[plainPassword][second]",
+                                    "value": "test",
+                                    "type": "text",
+                                    "enabled": true
+                                },
+                                {
+                                    "key": "fos_user_change_password_form[_token]",
+                                    "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
                     "name": "api/disconnect",
                     "event": [
                         {
@@ -224,6 +323,73 @@
                                 {
                                     "key": "user[_token]",
                                     "value": "{{form_token}}",
+                                    "type": "text",
+                                    "enabled": true
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/resetting/request",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/resetting/request",
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "api/resetting/send-email",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                                    "tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+                                    "tests[\"Content-Type is correct\"] = postman.getResponseHeader(\"Content-Type\") === 'text/html; charset=UTF-8';"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "url": "{{protocol}}://{{domain}}{{folder}}/resetting/send-email",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "description": ""
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "username",
+                                    "value": "admin@test.com",
                                     "type": "text",
                                     "enabled": true
                                 }
