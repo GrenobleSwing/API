@@ -3,19 +3,21 @@
 {% block menu %}
     {{ parent() }}
 
-    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+    {% if is_granted("ROLE_PRIVILEGED") %}
         {{ knp_menu_render('GSApiBundle:Builder:mainMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
         {% if is_granted("ROLE_ORGANIZER") %}
             {{ knp_menu_render('GSApiBundle:Builder:organizerMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
         {% endif %}
+    {% endif %}
 
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
         <a href="{{ path('fos_user_security_logout') }}" class="btn btn-default navbar-btn navbar-right">Déconnexion</a>
         <p class="navbar-text navbar-right" style="margin-right:10px;">
             {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
         </p>
     {% else %}
         <a href="{{ path('fos_user_security_login') }}" class="btn btn-default navbar-btn navbar-right">Connexion</a>
-        <a href="{{ path('fos_user_registration_register') }}" class="btn btn-default navbar-btn navbar-right">Inscription</a>
+{#        <a href="{{ path('fos_user_registration_register') }}" class="btn btn-default navbar-btn navbar-right">Inscription</a>#}
     {% endif %}
 
 {% endblock %}

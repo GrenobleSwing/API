@@ -11,9 +11,14 @@ class DefaultController extends Controller
 
     /**
      * @Route("/", name="homepage")
+     * @Security("has_role('ROLE_USER')")
      */
     public function indexAnonymous()
     {
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_PRIVILEGED')) {
+            return $this->render('GSApiBundle:Default:rejected.html.twig');
+        }
+
         $listTopics = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Topic')
             ->getOpenTopics()
