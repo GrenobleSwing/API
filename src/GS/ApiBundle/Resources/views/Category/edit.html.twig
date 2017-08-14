@@ -8,3 +8,11 @@
     {{ include("GSApiBundle:Category:form.html.twig") }}
 
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $('.js-select-multiple').select2();
+    </script>
+{% endblock %}

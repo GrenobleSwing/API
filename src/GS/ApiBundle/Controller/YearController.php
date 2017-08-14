@@ -82,7 +82,9 @@ class YearController extends Controller
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $year->addOwner($this->getUser());
+            if (!$year->getOwners()->contains($this->getUser())) {
+                $year->addOwner($this->getUser());
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($year);
             $em->flush();
@@ -142,7 +144,7 @@ class YearController extends Controller
     {
         $listYears = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Year')
-            ->findAll()
+            ->findBy(array(), array('startDate' => 'ASC'))
             ;
 
         return $this->render('GSApiBundle:Year:index.html.twig', array(

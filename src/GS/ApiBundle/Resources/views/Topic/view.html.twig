@@ -116,4 +116,11 @@
         </ul>
     {% endif %}
 
+    {% if is_granted("edit", topic) %}
+        <h3>Liste des admins :</h3>
+        {{ topic.owners|join(', ') }}
+
+        <h3>Liste des moderateurs :</h3>
+        {{ topic.moderators|join(', ') }}
+    {% endif %}
 {% endblock %}

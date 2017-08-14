@@ -105,4 +105,8 @@
         </ul>
     {% endif %}
 
+    {% if is_granted("edit", activity) %}
+        <h3>Liste des admins :</h3>
+        {{ activity.owners|join(', ') }}
+    {% endif %}
 {% endblock %}

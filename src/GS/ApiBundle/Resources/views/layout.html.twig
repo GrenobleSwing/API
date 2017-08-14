@@ -12,6 +12,11 @@
 
     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
         <a href="{{ path('fos_user_security_logout') }}" class="btn btn-default navbar-btn navbar-right">Déconnexion</a>
+
+        {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+            <a href="{{ path('homepage', {'_switch_user': '_exit'}) }}" class="btn btn-default navbar-btn navbar-right">Exit impersonation</a>
+        {% endif %}
+
         <p class="navbar-text navbar-right" style="margin-right:10px;">
             {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
         </p>
@@ -41,6 +46,12 @@
     {{ parent() }}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+
+    {% stylesheets filter='cssrewrite'
+        '@GSApiBundle/Resources/public/css/*'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
@@ -54,4 +65,7 @@
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
+    <script>
+        $.fn.select2.defaults.set( "theme", "bootstrap" );
+    </script>
 {% endblock %}

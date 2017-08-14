@@ -62,4 +62,8 @@
         {% endfor %}
     </ul>
 
+    {% if is_granted("edit", year) %}
+        <h3>Liste des admins :</h3>
+        {{ year.owners|join(', ') }}
+    {% endif %}
 {% endblock %}

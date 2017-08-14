@@ -3,15 +3,20 @@ services:
 #        class: GS\ApiBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
 
+    gsapi.profiler.admin.matcher:
+        class: GS\ApiBundle\Profiler\AdminMatcher
+        arguments: ['@security.authorization_checker']
+        public: false
+
     gsapi.form.user.registration:
-            class: GS\ApiBundle\Form\Type\UserRegistrationType
-            tags:
-                - { name: form.type, alias: gsapi_user_registration }
+        class: GS\ApiBundle\Form\Type\UserRegistrationType
+        tags:
+            - { name: form.type, alias: gsapi_user_registration }
 
     gsapi.form.user.profile:
-            class: GS\ApiBundle\Form\Type\UserProfileType
-            tags:
-                - { name: form.type, alias: gsapi_user_profile }
+        class: GS\ApiBundle\Form\Type\UserProfileType
+        tags:
+            - { name: form.type, alias: gsapi_user_profile }
 
     jms_serializer.handler.relation:
         class: GS\ApiBundle\Serializer\RelationsHandler

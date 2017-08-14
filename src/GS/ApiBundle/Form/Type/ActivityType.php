@@ -38,6 +38,9 @@ class ActivityType extends AbstractType
                     'choice_label' => 'title',
                     'placeholder' => "Choissisez l'adhésion obligatoire",
                     'required' => false,
+                    'attr' => array(
+                        'class' => 'js-select-single',
+                    ),
                 ))
                 ->add('membership', ChoiceType::class, array(
                     'label' => 'Ensemble des adhésions possibles',
@@ -45,6 +48,15 @@ class ActivityType extends AbstractType
                         "Oui" => true,
                         "Non" => false
                     )
+                ))
+                ->add('owners', EntityType::class, array(
+                    'label' => 'Admins',
+                    'class' => 'GSApiBundle:User',
+                    'choice_label' => 'email',
+                    'multiple' => true,
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
+                    ),
                 ))
                 ->add('submit', SubmitType::class)
         ;

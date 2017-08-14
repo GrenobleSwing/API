@@ -85,7 +85,9 @@ class ActivityController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $activity = $form->getData();
-            $activity->addOwner($this->getUser());
+            if (!$activity->getOwners()->contains($this->getUser())) {
+                $activity->addOwner($this->getUser());
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($activity);

@@ -31,6 +31,9 @@ class TopicType extends AbstractType
                     'choice_label' => 'title',
                     'multiple' => true,
                     'required' => false,
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
+                    ),
                 ))
                 ->add('title', TextType::class, array(
                     'label' => 'Titre',
@@ -62,6 +65,24 @@ class TopicType extends AbstractType
                     'prototype' => true,
                     'attr' => array(
                         'class' => 'js-collection',
+                    ),
+                ))
+                ->add('owners', EntityType::class, array(
+                    'label' => 'Admins',
+                    'class' => 'GSApiBundle:User',
+                    'choice_label' => 'email',
+                    'multiple' => true,
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
+                    ),
+                ))
+                ->add('moderators', EntityType::class, array(
+                    'label' => 'Moderateurs',
+                    'class' => 'GSApiBundle:User',
+                    'choice_label' => 'email',
+                    'multiple' => true,
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
                     ),
                 ))
                 ->add('submit', SubmitType::class)

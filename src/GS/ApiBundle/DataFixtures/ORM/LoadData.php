@@ -64,25 +64,6 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
 
         $manager->persist($society);
 
-        $year1 = new Year();
-        $year1->setTitle('Annee 2015-2016');
-        $year1->setDescription('description pour annee 2015-2016');
-        $year1->setStartDate(new \DateTime('2015-09-01'));
-        $year1->setEndDate(new \DateTime('2016-08-31'));
-        $year1->setState('OPEN');
-        $year1->addOwner($adminUser);
-
-        $year2 = new Year();
-        $year2->setTitle('Annee 2017-2018');
-        $year2->setDescription('description pour annee 2017-2018');
-        $year2->setStartDate(new \DateTime('2017-09-01'));
-        $year2->setEndDate(new \DateTime('2018-08-31'));
-        $year2->setState('OPEN');
-        $year2->addOwner($adminUser);
-
-        $manager->persist($year1);
-        $manager->persist($year2);
-
         $year = new Year();
         $year->setTitle('Annee 2016-2017');
         $year->setDescription('description pour annee 2016-2017');
@@ -118,6 +99,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic1->setCategory($category1);
         $topic1->setState('OPEN');
         $topic1->setAutoValidation(true);
+        $topic1->addOwner($organizerUser);
 
         $activity1->addTopic($topic1);
 
@@ -165,6 +147,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic2->setCategory($category2);
         $topic2->addRequiredTopic($topic1);
         $topic2->addSchedule($schedule);
+        $topic2->addOwner($organizerUser);
 
         $topic3 = new Topic();
         $topic3->setTitle('Lindy intermediaire');
@@ -174,6 +157,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic3->setCategory($category2);
         $topic3->addRequiredTopic($topic1);
         $topic3->addSchedule(clone $schedule);
+        $topic3->addOwner($organizerUser);
 
         $topic4 = new Topic();
         $topic4->setTitle('Lindy avance');
@@ -183,6 +167,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic4->setCategory($category2);
         $topic4->addRequiredTopic($topic1);
         $topic4->addSchedule(clone $schedule);
+        $topic4->addOwner($organizerUser);
 
         $topic5 = new Topic();
         $topic5->setTitle('Troupe avancee');
@@ -192,6 +177,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic5->setCategory($category3);
         $topic5->addRequiredTopic($topic1);
         $topic5->addSchedule(clone $schedule);
+        $topic5->addOwner($organizerUser);
 
         $topic6 = new Topic();
         $topic6->setTitle('Troupe charleston');
@@ -201,6 +187,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $topic6->setCategory($category3);
         $topic6->addRequiredTopic($topic1);
         $topic6->addSchedule(clone $schedule);
+        $topic6->addOwner($organizerUser);
 
         $activity2->addTopic($topic2);
         $activity2->addTopic($topic3);
@@ -210,12 +197,6 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
 
         $year->addActivity($activity1);
         $year->addActivity($activity2);
-
-        $this->addReference('topic1', $topic1);
-        $this->addReference('topic2', $topic2);
-        $this->addReference('topic3', $topic3);
-        $this->addReference('topic4', $topic4);
-        $this->addReference('topic5', $topic5);
 
         $manager->persist($year);
         $manager->flush();

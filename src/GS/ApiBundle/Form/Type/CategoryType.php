@@ -4,7 +4,6 @@ namespace GS\ApiBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -46,6 +45,9 @@ class CategoryType extends AbstractType
                     'position' => array('after' => 'price'),
                     'choices' => $category->getActivity()->getDiscounts(),
                     'required' => false,
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
+                    ),
                 ));
             }
         });

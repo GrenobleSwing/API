@@ -84,7 +84,9 @@ class TopicController extends Controller
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $topic->addOwner($this->getUser());
+            if (!$topic->getOwners()->contains($this->getUser())) {
+                $topic->addOwner($this->getUser());
+            }
             $activity->addTopic($topic);
 
             $em = $this->getDoctrine()->getManager();

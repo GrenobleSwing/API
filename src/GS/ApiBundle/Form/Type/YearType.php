@@ -2,6 +2,7 @@
 
 namespace GS\ApiBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -34,6 +35,15 @@ class YearType extends AbstractType
                     'widget' => 'single_text',
                     'html5' => false,
                     'attr' => ['class' => 'js-datepicker'],
+                ))
+                ->add('owners', EntityType::class, array(
+                    'label' => 'Admins',
+                    'class' => 'GSApiBundle:User',
+                    'choice_label' => 'email',
+                    'multiple' => true,
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
+                    ),
                 ))
                 ->add('submit', SubmitType::class)
         ;

@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use GS\ApiBundle\Entity\User;
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Address;
-//use GS\ApiBundle\Entity\Role;
 
 class LoadUser extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -72,62 +71,74 @@ class LoadUser extends AbstractFixture implements ContainerAwareInterface, Order
 
         $manager->persist($organizer_account);
 
-//        $user1 = new User();
-//        $user1->setEmail('john.doe@test.com');
-//        $user1_password = $this->container->get('security.password_encoder')
-//            ->encodePassword($user1, 'test');
-//        $user1->setPassword($user1_password);
-//
-//        $user1_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
-//        $user1_account = new Account();
-//        $user1_account->setFirstName('John');
-//        $user1_account->setLastName('Doe');
-//        $user1_account->setAddress(new Address());
-//        $user1_account->setBirthDate(new \DateTime('1986-04-26'));
-//        $user1_account->setUser($user1);
-//        $user1_account->setEmail($user1->getEmail());
-//        $user1_account->setPhoneNumber($user1_phoneNumber);
-//
-//        $user2 = new User();
-//        $user2->setEmail('jane.doe@test.com');
-//        $user2_password = $this->container->get('security.password_encoder')
-//            ->encodePassword($user2, 'test');
-//        $user2->setPassword($user2_password);
-//
-//        $user2_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
-//        $user2_account = new Account();
-//        $user2_account->setFirstName('Jane');
-//        $user2_account->setLastName('Doe');
-//        $user2_account->setAddress(new Address());
-//        $user2_account->setBirthDate(new \DateTime('1986-04-26'));
-//        $user2_account->setUser($user2);
-//        $user2_account->setEmail($user2->getEmail());
-//        $user2_account->setPhoneNumber($user2_phoneNumber);
-//
-//        $manager->persist($user1_account);
-//        $manager->persist($user2_account);
-//
-//        for ($i = 0; $i < 10; $i++) {
-//            $user = new User();
-//            $user->setEmail('bibi'.$i.'@test.com');
-//            $password = $this->container->get('security.password_encoder')
-//                ->encodePassword($user, 'test');
-//            $user->setPassword($password);
-//
-//            $phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
-//            $account = new Account();
-//            $account->setFirstName('Toto'.$i);
-//            $account->setLastName('Titi'.$i);
-//            $account->setAddress(new Address());
-//            $account->setBirthDate(new \DateTime('1986-04-26'));
-//            $account->setUser($user);
-//            $account->setEmail($user->getEmail());
-//            $account->setPhoneNumber($phoneNumber);
-//
-//            $this->addReference('account'.$i, $account);
-//
-//            $manager->persist($account);
-//        }
+        $teacher1_user = $userManager->createUser();
+        $teacher1_user->setEmail('teacher1@test.com');
+        $teacher1_user->setPlainPassword('test');
+        $teacher1_user->setEnabled(true);
+        $teacher1_user->addRole('ROLE_TOPIC_MANAGER');
+
+        $teacher1_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
+        $teacher1_account = new Account();
+        $teacher1_account->setFirstName('Teacher 1');
+        $teacher1_account->setLastName('Test');
+        $teacher1_account->setAddress(new Address());
+        $teacher1_account->setBirthDate(new \DateTime('1986-04-26'));
+        $teacher1_account->setUser($teacher1_user);
+        $teacher1_account->setEmail($teacher1_user->getEmail());
+        $teacher1_account->setPhoneNumber($teacher1_phoneNumber);
+
+        $manager->persist($teacher1_account);
+
+        $teacher2_user = $userManager->createUser();
+        $teacher2_user->setEmail('teacher2@test.com');
+        $teacher2_user->setPlainPassword('test');
+        $teacher2_user->setEnabled(true);
+        $teacher2_user->addRole('ROLE_TOPIC_MANAGER');
+
+        $teacher2_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
+        $teacher2_account = new Account();
+        $teacher2_account->setFirstName('Teacher 2');
+        $teacher2_account->setLastName('Test');
+        $teacher2_account->setAddress(new Address());
+        $teacher2_account->setBirthDate(new \DateTime('1986-04-26'));
+        $teacher2_account->setUser($teacher2_user);
+        $teacher2_account->setEmail($teacher2_user->getEmail());
+        $teacher2_account->setPhoneNumber($teacher2_phoneNumber);
+
+        $manager->persist($teacher2_account);
+
+        $user1 = $userManager->createUser();
+        $user1->setEmail('john.doe@test.com');
+        $user1->setPlainPassword('test');
+        $user1->setEnabled(true);
+
+        $user1_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
+        $user1_account = new Account();
+        $user1_account->setFirstName('John');
+        $user1_account->setLastName('Doe');
+        $user1_account->setAddress(new Address());
+        $user1_account->setBirthDate(new \DateTime('1986-04-26'));
+        $user1_account->setUser($user1);
+        $user1_account->setEmail($user1->getEmail());
+        $user1_account->setPhoneNumber($user1_phoneNumber);
+
+        $user2 = $userManager->createUser();
+        $user2->setEmail('jane.doe@test.com');
+        $user2->setPlainPassword('test');
+        $user2->setEnabled(true);
+
+        $user2_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
+        $user2_account = new Account();
+        $user2_account->setFirstName('Jane');
+        $user2_account->setLastName('Doe');
+        $user2_account->setAddress(new Address());
+        $user2_account->setBirthDate(new \DateTime('1986-04-26'));
+        $user2_account->setUser($user2);
+        $user2_account->setEmail($user2->getEmail());
+        $user2_account->setPhoneNumber($user2_phoneNumber);
+
+        $manager->persist($user1_account);
+        $manager->persist($user2_account);
 
         $manager->flush();
     }
