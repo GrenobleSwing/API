@@ -18,10 +18,12 @@
         {% endif %}
         {% if year.state == 'DRAFT' and is_granted("edit", year) %}
             <a href="{{ path('open_year', {'id': year.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-ok"></i>
                 Ouvrir l'année
             </a>
         {% elseif year.state == 'OPEN' and is_granted("edit", year) %}
             <a href="{{ path('close_year', {'id': year.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-remove"></i>
                 Clore l'année
             </a>
         {% endif %}
@@ -60,6 +62,15 @@
         {% else %}
             <li>Pas (encore !) d'activités</li>
         {% endfor %}
+
+        {% if year.state != 'CLOSE' and is_granted("edit", year) %}
+            <li>
+                <a href="{{ path('add_activity', {'id': year.id}) }}" class="btn btn-default btn-xs">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    Ajouter une activité
+                </a>
+            </li>
+        {% endif %}
     </ul>
 
     {% if is_granted("edit", year) %}

@@ -2,6 +2,7 @@
 
 namespace GS\ApiBundle\Form\Type;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,6 +42,10 @@ class YearType extends AbstractType
                     'class' => 'GSApiBundle:User',
                     'choice_label' => 'email',
                     'multiple' => true,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                                ->orderBy('u.username', 'ASC');
+                    },
                     'attr' => array(
                         'class' => 'js-select-multiple',
                     ),

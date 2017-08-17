@@ -72,6 +72,10 @@ class TopicType extends AbstractType
                     'class' => 'GSApiBundle:User',
                     'choice_label' => 'email',
                     'multiple' => true,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                                ->orderBy('u.username', 'ASC');
+                    },
                     'attr' => array(
                         'class' => 'js-select-multiple',
                     ),
@@ -81,6 +85,10 @@ class TopicType extends AbstractType
                     'class' => 'GSApiBundle:User',
                     'choice_label' => 'email',
                     'multiple' => true,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                                ->orderBy('u.username', 'ASC');
+                    },
                     'attr' => array(
                         'class' => 'js-select-multiple',
                     ),

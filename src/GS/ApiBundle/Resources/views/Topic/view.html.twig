@@ -95,17 +95,21 @@
                     </a>
                     {% if is_granted("edit", registration) %}
                         {% if registration.state == 'SUBMITTED' or registration.state == 'WAITING' %}
-                            <a href="{{ path('validate_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Valider
+                            <a href="{{ path('validate_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs"
+                               data-toggle="tooltip" data-placement="top" title="Valider">
+                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
                             </a>
-                        {% elseif registration.state == 'SUBMITTED' %}
-                            <a href="{{ path('wait_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Mettre en list d'attente
+                        {% endif %}
+                        {% if registration.state == 'SUBMITTED' %}
+                            <a href="{{ path('wait_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs"
+                               data-toggle="tooltip" data-placement="top" title="Mettre en list d'attente">
+                                <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                             </a>
                         {% endif %}
                         {% if registration.state != 'CANCELLED' %}
-                            <a href="{{ path('cancel_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annuler
+                            <a href="{{ path('cancel_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs"
+                               data-toggle="tooltip" data-placement="top" title="Annuler">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </a>
                         {% endif %}
                     {% endif %}
@@ -123,4 +127,14 @@
         <h3>Liste des moderateurs :</h3>
         {{ topic.moderators|join(', ') }}
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 {% endblock %}

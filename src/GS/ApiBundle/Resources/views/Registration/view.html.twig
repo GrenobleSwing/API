@@ -29,7 +29,8 @@
                     <i class="glyphicon glyphicon-check"></i>
                     Valider
                 </a>
-            {% elseif registration.state == 'SUBMITTED' %}
+            {% endif %}
+            {% if registration.state == 'SUBMITTED' %}
                 <a href="{{ path('wait_registration', {'id': registration.id}) }}" class="btn btn-default">
                     <i class="glyphicon glyphicon-list"></i>
                     Mettre en list d'attente

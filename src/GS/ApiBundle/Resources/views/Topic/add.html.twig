@@ -13,9 +13,7 @@
     {{ parent() }}
 
     <script>
-        jQuery(document).ready(function() {
-            $('.js-collection').collection();
-
+        function enableDateTimePickers() {
             $('.js-datepicker').datepicker({
                 format: 'yyyy-mm-dd'
             });
@@ -27,6 +25,17 @@
                 dropdown: true,
                 scrollbar: true
             });
+        }
+
+        jQuery(document).ready(function() {
+            $('.js-collection').collection({
+                after_add: function(collection, element) {
+                    enableDateTimePickers();
+                   return true;
+                }
+            });
+
+            enableDateTimePickers();
 
             $('.js-select-multiple').select2();
         });
