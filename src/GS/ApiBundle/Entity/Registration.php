@@ -180,6 +180,7 @@ class Registration
 
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Registration", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      * @SerializedName("partnerRegistrationId")
      * @Type("Relation")
      */
