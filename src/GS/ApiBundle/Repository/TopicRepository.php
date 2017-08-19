@@ -3,6 +3,7 @@
 namespace GS\ApiBundle\Repository;
 
 use GS\ApiBundle\Entity\Activity;
+use GS\ApiBundle\Entity\User;
 use GS\ApiBundle\Entity\Year;
 
 /**
@@ -54,6 +55,18 @@ class TopicRepository extends \Doctrine\ORM\EntityRepository
         $qb
                 ->where('t.state = :open')
                 ->setParameter('open', 'OPEN');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getTopicsForUsers(User $user)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb
+                ->leftJoin('t.owners', 'o')
+                ->where('o.id = :user')
+                ->setParameter('user', $user->getId())
+                ;
 
         return $qb->getQuery()->getResult();
     }

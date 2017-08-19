@@ -17,7 +17,28 @@ class AccountController extends Controller
      * @Route("/my_account", name="my_account")
      * @Security("has_role('ROLE_USER')")
      */
-    public function myAction(Request $request)
+    public function myAccountAction(Request $request)
+    {
+        $account = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Account')
+            ->findOneByUser($this->getUser())
+            ;
+
+        if ( null === $account ) {
+            $request->getSession()->getFlashBag()->add('danger', "Le profil demandé n'existe pas.");
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('GSApiBundle:Account:view.html.twig', array(
+            'account' => $account,
+        ));
+    }
+
+    /**
+     * @Route("/my_registrations", name="my_registrations")
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function myRegistrationsAction(Request $request)
     {
         $account = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Account')
@@ -31,9 +52,31 @@ class AccountController extends Controller
 
         $listRegistrations = $this->getRegistrations($account, $request);
 
-        return $this->render('GSApiBundle:Account:view.html.twig', array(
-            'account' => $account,
+        return $this->render('GSApiBundle:Account:registrations.html.twig', array(
             'listRegistrations' => $listRegistrations,
+        ));
+    }
+
+    /**
+     * @Route("/my_payments", name="my_payments")
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function myPaymentsAction(Request $request)
+    {
+        $account = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Account')
+            ->findOneByUser($this->getUser())
+            ;
+
+        if ( null === $account ) {
+            $request->getSession()->getFlashBag()->add('danger', "Le profil demandé n'existe pas.");
+            return $this->redirectToRoute('homepage');
+        }
+
+        $listPayments = $this->getPayments($account, $request);
+
+        return $this->render('GSApiBundle:Account:payments.html.twig', array(
+            'listPayments' => $listPayments,
         ));
     }
 
@@ -122,6 +165,15 @@ class AccountController extends Controller
         }
 
         return $registrations;
+    }
+
+    private function getPayments(Account $account, Request $request)
+    {
+        $payments = $this->getDoctrine()->getManager()
+                ->getRepository('GSApiBundle:Payment')
+                ->findBy(array('account' => $account));
+
+        return $payments;
     }
 
 }

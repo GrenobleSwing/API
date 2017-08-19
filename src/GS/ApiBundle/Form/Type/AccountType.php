@@ -49,10 +49,10 @@ class AccountType extends AbstractType
                 ->add('address', AddressType::class, array(
                     'label' => 'Adresse',
                 ))
-                ->add('imageFile', VichImageType::class, [
-                    'label' => 'Photo du compte',
-                    'required' => false,
-                ])
+//                ->add('imageFile', VichImageType::class, [
+//                    'label' => 'Photo du compte',
+//                    'required' => false,
+//                ])
                 ->add('submit', SubmitType::class)
         ;
 

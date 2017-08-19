@@ -19,13 +19,31 @@ class DefaultController extends Controller
             return $this->render('GSApiBundle:Default:rejected.html.twig');
         }
 
-        $listTopics = $this->getDoctrine()->getManager()
+        $listOpenTopics = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Topic')
             ->getOpenTopics()
             ;
 
+        $listYears = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Year')
+            ->getYearsForUsers($this->getUser())
+            ;
+
+        $listActivities = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Activity')
+            ->getActivitiesForUsers($this->getUser())
+            ;
+
+        $listTopics = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Topic')
+            ->getTopicsForUsers($this->getUser())
+            ;
+
         return $this->render('GSApiBundle:Default:index.html.twig', array(
-                    'listTopics' => $listTopics
+            'listOpenTopics' => $listOpenTopics,
+            'listYears' => $listYears,
+            'listActivities' => $listActivities,
+            'listTopics' => $listTopics
         ));
     }
 

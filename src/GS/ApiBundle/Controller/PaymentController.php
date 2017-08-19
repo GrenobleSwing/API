@@ -2,61 +2,28 @@
 
 namespace GS\ApiBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
 use GS\ApiBundle\Entity\Invoice;
 use GS\ApiBundle\Entity\Payment;
+use GS\ApiBundle\Form\Type\PaymentType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @RouteResource("Payment", pluralize=false)
- */
-class PaymentController extends FOSRestController
+class PaymentController extends Controller
 {
 
     /**
-     * @ApiDoc(
-     *   section="Payment",
-     *   description="Returns a form to create a new Payment",
-     *   output="GS\ApiBundle\Form\Type\PaymentType",
-     *   statusCodes={
-     *     200="You have permission to create a Payment, the form is returned",
-     *   }
-     * )
+     * @Route("/payment/add", name="add_payment")
      * @Security("has_role('ROLE_ORGANIZER')")
      */
-    public function newAction()
+    public function addAction(Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getPaymentForm(null, 'post_payment');
-        $this->denyAccessUnlessGranted('create', $form->getData());
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
+        $payment = new Payment();
+        $form = $this->createForm(PaymentType::class, $payment);
 
-    /**
-     * @ApiDoc(
-     *   section="Payment",
-     *   description="Create a new Payment",
-     *   input="GS\ApiBundle\Form\Type\PaymentType",
-     *   statusCodes={
-     *     201="The Payment has been created",
-     *   }
-     * )
-     * @Security("has_role('ROLE_ORGANIZER')")
-     */
-    public function postAction(Request $request)
-    {
-        $form = $this->get('gsapi.form_generator')->getPaymentForm(null, 'post_payment');
-        $this->denyAccessUnlessGranted('create', $form->getData());
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $payment = $form->getData();
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($payment);
 
@@ -76,61 +43,18 @@ class PaymentController extends FOSRestController
             }
             $em->flush();
 
-            $view = $this->view(array('id' => $payment->getId()), 201);
+            $request->getSession()->getFlashBag()->add('success', 'Paiement bien enregistré.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_payment', array('id' => $payment->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Payment:add.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Payment",
-     *   description="Returns a form to confirm deletion of a given Payment",
-     *   requirements={
-     *     {
-     *       "name"="payment",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Payment id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     200="You have permission to delete a Payment, the form is returned",
-     *   }
-     * )
-     * @Security("is_granted('delete', payment)")
-     */
-    public function removeAction(Payment $payment)
-    {
-        if ('PAID' == $payment->getState()) {
-            $view = $this->view(null, 403);
-            return $this->handleView($view);
-        }
-        $form = $this->get('gsapi.form_generator')->getDeleteForm($payment, 'payment');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="Payment",
-     *   description="Delete a given Payment",
-     *   requirements={
-     *     {
-     *       "name"="payment",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Payment id"
-     *     }
-     *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
-     *   statusCodes={
-     *     204="The Payment has been deleted",
-     *   }
-     * )
+     * @Route("/payment/{id}/delete", name="delete_payment", requirements={"id": "\d+"})
      * @Security("is_granted('delete', payment)")
      */
     public function deleteAction(Payment $payment, Request $request)
@@ -157,102 +81,41 @@ class PaymentController extends FOSRestController
     }
 
     /**
-     * @ApiDoc(
-     *   section="Payment",
-     *   description="Returns an existing Payment",
-     *   requirements={
-     *     {
-     *       "name"="payment",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Payment id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Entity\Payment",
-     *   statusCodes={
-     *     200="Returns the Payment",
-     *   }
-     * )
+     * @Route("/payment/{id}", name="view_payment", requirements={"id": "\d+"})
      * @Security("is_granted('view', payment)")
      */
-    public function getAction(Payment $payment)
+    public function viewAction(Payment $payment)
     {
-        $view = $this->view($payment, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Payment:view.html.twig', array(
+            'payment' => $payment,
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Payment",
-     *   description="Returns a collection of Payments",
-     *   output="array<GS\ApiBundle\Entity\Payment>",
-     *   statusCodes={
-     *     200="Returns all the Payments",
-     *   }
-     * )
+     * @Route("/payment", name="index_payment")
      * @Security("has_role('ROLE_TREASURER')")
      */
-    public function cgetAction()
+    public function indexAction()
     {
         $listPayments = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Payment')
             ->findAll()
             ;
 
-        $view = $this->view($listPayments, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Payment:index.html.twig', array(
+            'listPayments' => $listPayments
+        ));
     }
 
     /**
-     * @ApiDoc(
-     *   section="Payment",
-     *   description="Returns a form to edit an existing Payment",
-     *   requirements={
-     *     {
-     *       "name"="payment",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Payment id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Form\Type\PaymentType",
-     *   statusCodes={
-     *     200="You have permission to create a Payment, the form is returned",
-     *   }
-     * )
+     * @Route("/payment/{id}/edit", name="edit_payment", requirements={"id": "\d+"})
      * @Security("is_granted('edit', payment)")
      */
-    public function editAction(Payment $payment)
+    public function editAction(Payment $payment, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getPaymentForm($payment, 'put_payment', 'PUT');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
+        $form = $this->createForm(PaymentType::class, $payment);
 
-    /**
-     * @ApiDoc(
-     *   section="Payment",
-     *   description="Update an existing Payment",
-     *   input="GS\ApiBundle\Form\Type\PaymentType",
-     *   requirements={
-     *     {
-     *       "name"="payment",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Payment id"
-     *     }
-     *   },
-     *   statusCodes={
-     *     204="The Payment has been updated",
-     *   }
-     * )
-     * @Security("is_granted('edit', payment)")
-     */
-    public function putAction(Payment $payment, Request $request)
-    {
-        $form = $this->get('gsapi.form_generator')->getPaymentForm($payment, 'put_payment', 'PUT');
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
@@ -269,12 +132,14 @@ class PaymentController extends FOSRestController
             }
             $em->flush();
 
-            $view = $this->view(null, 204);
+            $request->getSession()->getFlashBag()->add('success', 'Paiement bien modifié.');
 
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            return $this->redirectToRoute('view_payment', array('id' => $payment->getId()));
         }
-        return $this->handleView($view);
+
+        return $this->render('GSApiBundle:Payment:edit.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
 
 }

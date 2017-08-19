@@ -4,7 +4,6 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Type;
 use PayPal\Api\ItemList;
 
@@ -64,11 +63,11 @@ class Payment
      */
     private $items;
 
-    public function __construct()
-    {
-        $this->items = new ArrayCollection();
-        $this->date = new \DateTime();
-    }
+    /**
+     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Invoice", inversedBy="payment")
+     * @Type("Relation")
+     */
+    private $invoice;
 
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Account", inversedBy="payments")
@@ -77,6 +76,12 @@ class Payment
      */
     private $account;
 
+
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+        $this->date = new \DateTime();
+    }
 
     /**
      * Get id
@@ -355,5 +360,29 @@ class Payment
     public function getAccount()
     {
         return $this->account;
+    }
+
+    /**
+     * Set invoice
+     *
+     * @param \GS\ApiBundle\Entity\Invoice $invoice
+     *
+     * @return Payment
+     */
+    public function setInvoice(\GS\ApiBundle\Entity\Invoice $invoice = null)
+    {
+        $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * Get invoice
+     *
+     * @return \GS\ApiBundle\Entity\Invoice
+     */
+    public function getInvoice()
+    {
+        return $this->invoice;
     }
 }

@@ -3,7 +3,49 @@
 {% block gs_body %}
     {{ parent() }}
 
-    <h2>Liste des topics ouverts</h2>
+    <h2>Liste de mes années</h2>
+
+    <ul>
+        {% for year in listYears %}
+            <li>
+                <a href="{{ path('view_year', {'id': year.id}) }}">
+                    {{ year.title }}
+                </a>
+            </li>
+        {% else %}
+            <li>Pas (encore !) d'année</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Liste de mes activités</h2>
+
+    <ul>
+        {% for activity in listActivities %}
+            <li>
+                <a href="{{ path('view_activity', {'id': activity.id}) }}">
+                    {{ activity.title }}
+                </a>
+            </li>
+        {% else %}
+            <li>Pas (encore !) d'activités</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Liste de mes topics</h2>
+
+    <ul>
+        {% for topic in listTopics %}
+            <li>
+                <a href="{{ path('view_topic', {'id': topic.id}) }}">
+                    {{ topic.title }}
+                </a>
+            </li>
+        {% else %}
+            <li>Pas (encore !) de topics</li>
+        {% endfor %}
+    </ul>
+
+    {#<h2>Liste des topics ouverts</h2>
 
     <ul>
         {% for topic in listTopics %}
@@ -16,6 +58,6 @@
         {% else %}
             <li>Pas (encore !) de topics</li>
         {% endfor %}
-    </ul>
+    </ul>#}
 
 {% endblock %}

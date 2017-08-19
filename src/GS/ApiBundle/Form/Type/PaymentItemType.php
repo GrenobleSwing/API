@@ -26,6 +26,9 @@ class PaymentItemType extends AbstractType
                                 ->orderBy('r.id', 'ASC')
                                 ->setParameter('state', 'VALIDATED');
                     },
+                    'attr' => array(
+                        'class' => 'js-select-single',
+                    ),
                 ))
                 ->add('discount', EntityType::class, array(
                     'label' => 'Reduction a appliquer (optionnel)',
@@ -36,6 +39,10 @@ class PaymentItemType extends AbstractType
                     'group_by' => function($discount, $key, $index) {
                         return $discount->getActivity()->getTitle();
                     },
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'js-select-single',
+                    ),
                 ))
         ;
 

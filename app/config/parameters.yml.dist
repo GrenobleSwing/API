@@ -31,4 +31,4 @@ parameters:
     paypal_prod_client_id: 1234567890     # Client Id provided from developer.paypal.com
     paypal_prod_secret: 1234567890        # Client Secret provided from developer.paypal.com
 
-    wkhtmltopdf.binary: ~/wkhtmltox/bin/wkhtmltopdf
+    wkhtmltopdf.binary: /var/local/wkhtmltox/bin/wkhtmltopdf

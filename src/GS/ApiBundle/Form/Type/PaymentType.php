@@ -30,7 +30,7 @@ class PaymentType extends AbstractType
                 ->add('type', ChoiceType::class, array(
                     'label' => 'Type de cours',
                     'choices' => array(
-                        'Virement' => 'TRANFER',
+                        'Virement' => 'TRANSFER',
                         'Liquide' => 'CASH',
                         'Cheque' => 'CHECK',
                         'Paypal' => 'PAYPAL',
@@ -39,9 +39,13 @@ class PaymentType extends AbstractType
                 ))
                 ->add('date', DateType::class, array(
                     'label' => 'Date du paiement',
+                    'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker'],
                 ))
                 ->add('comment', TextareaType::class, array(
                     'label' => 'Commentaire',
+                    'required' => false,
                 ))
                 ->add('items', CollectionType::class, array(
                     'label' => 'Liste des inscriptions',
@@ -50,8 +54,9 @@ class PaymentType extends AbstractType
                     'allow_add' => true,
                     'allow_delete' => true,
                     'prototype' => true,
+                    'position' => array('before' => 'submit'),
                     'attr' => array(
-                        'class' => 'my-selector',
+                        'class' => 'js-collection',
                     ),
                 ))
                 ->add('submit', SubmitType::class)

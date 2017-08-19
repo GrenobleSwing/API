@@ -42,4 +42,20 @@ class Builder implements ContainerAwareInterface
         return $menu;
     }
 
+    public function treasurerMenu(FactoryInterface $factory, array $options)
+    {
+        $menu = $factory->createItem('root');
+        $menu->setChildrenAttribute('class', 'nav navbar-nav');
+
+        $menu->addChild('Trésorier')->setAttribute('dropdown', true);
+        $menu['Trésorier']->addChild('Liste des paiements', array(
+            'route' => 'index_payment',
+        ));
+        $menu['Trésorier']->addChild('Ajouter un paiement', array(
+            'route' => 'add_payment',
+        ));
+
+        return $menu;
+    }
+
 }

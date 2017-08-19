@@ -29,9 +29,9 @@ class Invoice
     private $number;
 
     /**
-     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Payment")
+     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Payment", mappedBy="invoice")
      * @Type("Relation")
-     */ 
+     */
     private $payment;
 
     /**

@@ -35,14 +35,14 @@ year:
     type:     annotation
     resource: GS\ApiBundle\Controller\YearController
 
-#payment:
-#    type:     rest
-#    resource: GS\ApiBundle\Controller\PaymentController
-#
+payment:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\PaymentController
+
 #paypal:
 #    resource: GS\ApiBundle\Controller\PaypalController
 #    type:     annotation
-#
-#invoice:
-#    type:     rest
-#    resource: GS\ApiBundle\Controller\InvoiceController
+
+invoice:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\InvoiceController

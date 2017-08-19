@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation\Type;
 
 /**
  * Activity
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\ActivityRepository")
  */
 class Activity
 {

@@ -25,18 +25,4 @@
     {% import "GSApiBundle:Address:macros.html.twig" as macro %}
     {{ macro.print_long(account.address) }}
 
-    <h3>Liste des inscriptions :</h3>
-    <ul>
-        {% for registration in listRegistrations %}
-            <li>
-                {{ registration.topic.title }}
-                <a href="{{ path('view_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
-                </a>
-            </li>
-        {% else %}
-            <li>Pas (encore !) d'inscriptions</li>
-        {% endfor %}
-    </ul>
-
 {% endblock %}

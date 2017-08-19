@@ -2,39 +2,20 @@
 
 namespace GS\ApiBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use FOS\RestBundle\Controller\FOSRestController;
 use GS\ApiBundle\Entity\Invoice;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @RouteResource("Invoice", pluralize=false)
- */
-class InvoiceController extends FOSRestController
+class InvoiceController extends Controller
 {
 
     /**
-     * @ApiDoc(
-     *   section="Invoice",
-     *   description="Returns an existing Invoice",
-     *   requirements={
-     *     {
-     *       "name"="invoice",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="Invoice id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Entity\Invoice",
-     *   statusCodes={
-     *     200="Returns the Invoice in PDF",
-     *   }
-     * )
+     * @Route("/invoice/{id}", name="view_invoice", requirements={"id": "\d+"})
      * @Security("is_granted('view', invoice)")
      */
-    public function getAction(Invoice $invoice)
+    public function viewAction(Invoice $invoice)
     {
         $societies = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Society')
@@ -54,14 +35,7 @@ class InvoiceController extends FOSRestController
     }
 
     /**
-     * @ApiDoc(
-     *   section="Invoice",
-     *   description="Returns a collection of Invoices",
-     *   output="array<GS\ApiBundle\Entity\Invoice>",
-     *   statusCodes={
-     *     200="Returns all the Invoices",
-     *   }
-     * )
+     * @Route("/invoice", name="index_invoice")
      * @Security("has_role('ROLE_TREASURER')")
      */
     public function cgetAction()
@@ -71,8 +45,9 @@ class InvoiceController extends FOSRestController
             ->findAll()
             ;
 
-        $view = $this->view($listInvoices, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:Invoice:index.html.twig', array(
+                    'listInvoices' => $listInvoices
+        ));
     }
 
 }
