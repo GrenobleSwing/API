@@ -14,7 +14,7 @@ class GSExtension extends \Twig_Extension
     public function shortPathFilter($route)
     {
         $i = strrpos($route, '/api');
-        if ($i) {
+        if (false !== $i) {
             $route = substr($route, $i+4);
         }
         return $route;
