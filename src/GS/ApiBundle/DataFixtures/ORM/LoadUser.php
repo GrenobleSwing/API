@@ -9,7 +9,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use GS\ApiBundle\Entity\User;
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Address;
 //use GS\ApiBundle\Entity\Role;
