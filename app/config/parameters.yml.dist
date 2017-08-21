@@ -32,3 +32,6 @@ parameters:
     paypal_prod_secret: 1234567890        # Client Secret provided from developer.paypal.com
 
     wkhtmltopdf.binary: ~/wkhtmltox/bin/wkhtmltopdf
+
+    cors_regexp: false
+    cors_origin: *

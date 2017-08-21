@@ -17,7 +17,7 @@ framework:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
     form:            ~
-    csrf_protection: ~
+    csrf_protection: false
     validation:      { enable_annotations: true }
     #serializer:      { enable_annotations: true }
     serializer:
@@ -137,7 +137,8 @@ nelmio_cors:
     defaults: ~
     paths:
         '^/api/':
-            allow_origin: ['*']
+            origin_regex: %cors_regexp%
+            allow_origin: ['%cors_origin%']
             allow_headers: ['*']
             allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
             max_age: 3600
