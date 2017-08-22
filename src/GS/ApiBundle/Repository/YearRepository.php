@@ -54,6 +54,7 @@ class YearRepository extends \Doctrine\ORM\EntityRepository
         $qb
                 ->leftJoin('y.owners', 'o')
                 ->where('o.id = :user')
+                ->orderBy('y.startDate', 'ASC')
                 ->setParameter('user', $user->getId())
                 ;
 

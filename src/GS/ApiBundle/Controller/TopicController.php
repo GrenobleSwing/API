@@ -19,8 +19,13 @@ class TopicController extends Controller
     public function openAction(Topic $topic, Request $request)
     {
         if ('DRAFT' != $topic->getState()) {
-            $request->getSession()->getFlashBag()->add('danger', "Impossible to open topic");
+            $request->getSession()->getFlashBag()->add('danger', "Impossible to open topic: topic is not a draft.");
             return $this->redirectToRoute('view_topic', array('id' => $topic->getId()));
+        }
+
+        if ('OPEN' != $topic->getActivity()->getState()) {
+            $request->getSession()->getFlashBag()->add('danger', "Impossible to open topic: activity is not open.");
+            return $this->redirectToRoute('view_activity', array('id' => $topic->getActivity()->getId()));
         }
 
         $form = $this->createFormBuilder()->getForm();

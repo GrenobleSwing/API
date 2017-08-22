@@ -28,7 +28,7 @@ class RegistrationVoter extends Voter
     {
         $this->decisionManager = $decisionManager;
     }
-    
+
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
@@ -86,7 +86,7 @@ class RegistrationVoter extends Voter
         }
         return false;
     }
-    
+
     private function canView(Registration $registration, User $user, TokenInterface $token)
     {
         if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {

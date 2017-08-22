@@ -2,14 +2,15 @@
 
 {% block gs_body %}
     {{ parent() }}
-    
+
     <h2>Liste des années</h2>
 
+    {% import "GSApiBundle:Year:macros.html.twig" as macro %}
     <ul>
         {% for year in listYears %}
             <li>
                 <a href="{{ path('view_year', {'id': year.id}) }}">
-                    {{ year.title }}
+                    {{ macro.print_title(year) }}
                 </a>
             </li>
         {% else %}

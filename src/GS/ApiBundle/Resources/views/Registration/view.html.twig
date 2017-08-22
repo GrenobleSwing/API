@@ -3,7 +3,11 @@
 {% block gs_body %}
     {{ parent() }}
 
-    <h2>{{ registration.topic.activity.title }}</h2>
+    {% import "GSApiBundle:Registration:macros.html.twig" as macro %}
+    <h2>
+        {{ macro.print_state(registration) }}
+        {{ registration.topic.activity.title }}
+    </h2>
 
     <h3>{{ registration.topic.title }}<br>
         {{ registration.account.displayName }}</h3>
@@ -45,7 +49,7 @@
         {% endif %}
     </p>
 
-    <h4>Status : {{ registration.state }}</h4>
+    <h3>Status : {{ registration.state }}</h3>
 
     {% if registration.topic.type == 'couple' %}
         <h4>Role : {{ registration.role }}</h4>

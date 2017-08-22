@@ -19,8 +19,13 @@ class ActivityController extends Controller
     public function openAction(Activity $activity, Request $request)
     {
         if ('DRAFT' != $activity->getState()) {
-            $request->getSession()->getFlashBag()->add('danger', "Impossible to open activity");
+            $request->getSession()->getFlashBag()->add('danger', "Impossible to open activity: activity is not a draft.");
             return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
+        }
+
+        if ('OPEN' != $activity->getYear()->getState()) {
+            $request->getSession()->getFlashBag()->add('danger', "Impossible to open activity: year is not open.");
+            return $this->redirectToRoute('view_year', array('id' => $activity->getYear()->getId()));
         }
 
         $form = $this->createFormBuilder()->getForm();

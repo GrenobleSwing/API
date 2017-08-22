@@ -1,6 +1,8 @@
 FROM php:5.6-apache
 
 RUN apt-get update
+RUN apt-get install -y apt-utils
+RUN apt-get update
 
 RUN apt-get install libxml2 libxml2-dev xml-core
 

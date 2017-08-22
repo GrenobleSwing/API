@@ -3,7 +3,10 @@
 {% block gs_body %}
     {{ parent() }}
 
-    <h2>{{ topic.title }}</h2>
+    {% import "GSApiBundle:Topic:macros.html.twig" as macro %}
+    <h2>
+        {{ macro.print_title(topic) }}
+    </h2>
 
     <p>
         <a href="{{ path('view_activity', {'id': topic.activity.id}) }}" class="btn btn-default">
@@ -84,10 +87,12 @@
         </ul>
 
     {% if is_granted("edit", topic) %}
+        {% import "GSApiBundle:Registration:macros.html.twig" as macro_reg %}
         <h3>Liste des inscriptions :</h3>
         <ul>
             {% for registration in topic.registrations %}
                 <li>
+                    {{ macro_reg.print_state(registration) }}
                     {{ registration.account.displayName }}
                     - {{ registration.state }}
                     <a href="{{ path('view_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">

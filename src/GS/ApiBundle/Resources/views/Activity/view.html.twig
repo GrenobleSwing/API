@@ -3,7 +3,10 @@
 {% block gs_body %}
     {{ parent() }}
 
-    <h2>{{ activity.title }}</h2>
+    {% import "GSApiBundle:Activity:macros.html.twig" as macro %}
+    <h2>
+        {{ macro.print_title(activity) }}
+    </h2>
 
     <p>
         <a href="{{ path('view_year', {'id': activity.year.id}) }}" class="btn btn-default">
@@ -56,11 +59,12 @@
         {{ activity.description }}
     </div>
 
+    {% import "GSApiBundle:Topic:macros.html.twig" as macro_topic %}
     <h3>Liste des topics :</h3>
     <ul>
         {% for topic in activity.topics %}
             <li>
-                {{ topic.title }}
+                {{ macro_topic.print_title(topic) }}
                 {% if topic not in user_topics %}
                     <a href="{{ path('add_registration', {'id': topic.id}) }}" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> S'inscrire

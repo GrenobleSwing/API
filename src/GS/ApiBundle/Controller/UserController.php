@@ -2,165 +2,67 @@
 
 namespace GS\ApiBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Role\Role;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use GS\ApiBundle\Entity\Account;
-use GS\ApiBundle\Entity\Address;
 use GS\ApiBundle\Entity\User;
 use GS\ApiBundle\Form\Type\UserType;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @RouteResource("User", pluralize=false)
- */
-class UserController extends FOSRestController
+class UserController extends Controller
 {
     /**
-     * @ApiDoc(
-     *   section="User",
-     *   description="Returns the current User",
-     *   output="GS\ApiBundle\Entity\User",
-     *   statusCodes={
-     *     200="Returns the User",
-     *   }
-     * )
-     * @Get("/identity")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/user", name="index_user")
+     * @Security("has_role('ROLE_ADMIN')")
      */
-    public function IdentityAction()
+    public function indexAction()
     {
-        $user = $this->getUser();
-        $roles = array();
-        foreach ($user->getRoles() as $role) {
-            $roles[] = new Role($role);
-        }
-        $all_roles = array();
-        foreach ($this->get('security.role_hierarchy')->getReachableRoles($roles) as $role) {
-            $all_roles[] = $role->getRole();
-        }
-        $result = array(
-            'id' => $user->getId(),
-            'email' => $user->getEmail(),
-            'active' => $user->isActive(),
-            'roles' => array_values(array_unique($all_roles)),
-        );
-        $view = $this->view($result, 200);
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:User:index.html.twig');
     }
 
     /**
-     * @ApiDoc(
-     *   section="User",
-     *   description="Logout the current User",
-     *   statusCodes={
-     *     200="The User has been logged out",
-     *   }
-     * )
-     * @Get("/logout")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/user/all", name="all_user")
+     * @Security("has_role('ROLE_ADMIN')")
      */
-    public function LogoutAction()
+    public function allJsonAction()
     {
-        // Generate a new hash to invalidate the JWT
-        // https://github.com/lexik/LexikJWTAuthenticationBundle/issues/58#issuecomment-89641970
-        $user = $this->getUser();
-        $user->setHash(uniqid('', true));
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
-
-        $view = $this->view(null, 204);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="User",
-     *   description="Returns the account of an existing User",
-     *   requirements={
-     *     {
-     *       "name"="user",
-     *       "dataType"="integer",
-     *       "requirement"="\d+",
-     *       "description"="User id"
-     *     }
-     *   },
-     *   output="GS\ApiBundle\Entity\Account",
-     *   statusCodes={
-     *     200="Returns the Account",
-     *   }
-     * )
-     * @Security("has_role('ROLE_USER')")
-     */
-    public function getAccountAction(User $user)
-    {
-        $account = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Account')
-            ->findOneByUser($user)
+        $listUsers = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:User')
+            ->findAll()
             ;
-        $view = $this->view($account, 200);
-        return $this->handleView($view);
+
+        $serializedEntity = $this->get('jms_serializer')->serialize($listUsers, 'json');
+
+        return new Response($serializedEntity);
     }
 
     /**
-     * @ApiDoc(
-     *   section="User",
-     *   description="Returns a form to create a new User",
-     *   output="GS\ApiBundle\Form\Type\UserType",
-     *   statusCodes={
-     *     200="You have permission to create an User, the form is returned",
-     *   }
+     * @Route("/user/{id}/edit",
+     *     name="edit_user",
+     *     requirements={"id": "\d+"},
+     *     options = { "expose" = true }
      * )
-     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
-    public function newAction()
+    public function editAction(User $user, Request $request)
     {
-        $form = $this->get('gsapi.form_generator')->getUserForm(null, 'post_user');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *   section="User",
-     *   description="Create a new User",
-     *   input="GS\ApiBundle\Form\Type\UserType",
-     *   statusCodes={
-     *     201="The User has been created",
-     *   }
-     * )
-     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
-     */
-    public function postAction(Request $request)
-    {
-        $user = new User();
-        $form = $this->get('gsapi.form_generator')->getUserForm($user, 'post_user');
+        $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->get('security.password_encoder')
-                ->encodePassword($user, $user->getPlainPassword());
-            $user->setPassword($password);
-
-            $address = new Address();
-            $account = new Account();
-            $account->setUser($user);
-            $account->setEmail($user->getEmail());
-            $account->setAddress($address);
-
             $em = $this->getDoctrine()->getManager();
-            $em->persist($account);
             $em->flush();
 
-            $view = $this->view(array('id' => $user->getId()), 201);
-        } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            $request->getSession()->getFlashBag()->add('success', 'Utilisateur bien modifiée.');
+
+            return $this->redirectToRoute('index_user');
         }
 
-        return $this->handleView($view);
+        return $this->render('GSApiBundle:User:edit.html.twig', array(
+                    'form' => $form->createView(),
+        ));
     }
+
+
 }

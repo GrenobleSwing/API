@@ -5,10 +5,12 @@
 
     <h2>Liste des inscriptions</h2>
 
+    {% import "GSApiBundle:Registration:macros.html.twig" as macro %}
     <ul>
         {% for registration in listRegistrations %}
             <li>
                 <a href="{{ path('view_registration', {'id': registration.id}) }}">
+                    {{ macro.print_state(registration) }}
                     {{ registration.displayName }}
                 </a>
             </li>

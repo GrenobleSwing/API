@@ -138,17 +138,6 @@ doctrine_migrations:
     table_name: migration_versions
     name: Application Migrations
 
-nelmio_api_doc: ~
-
-nelmio_cors:
-    defaults: ~
-    paths:
-        '^/api/':
-            allow_origin: ['*']
-            allow_headers: ['*']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
-            max_age: 3600
-
 knp_snappy:
     temporary_folder: %kernel.cache_dir%/snappy
     pdf:

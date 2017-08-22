@@ -46,3 +46,7 @@ payment:
 invoice:
     type:     annotation
     resource: GS\ApiBundle\Controller\InvoiceController
+
+user:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\UserController

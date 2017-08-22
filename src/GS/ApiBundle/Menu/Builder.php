@@ -58,4 +58,17 @@ class Builder implements ContainerAwareInterface
         return $menu;
     }
 
+    public function adminMenu(FactoryInterface $factory, array $options)
+    {
+        $menu = $factory->createItem('root');
+        $menu->setChildrenAttribute('class', 'nav navbar-nav');
+
+        $menu->addChild('Admin')->setAttribute('dropdown', true);
+        $menu['Admin']->addChild('Liste des utilisateurs', array(
+            'route' => 'index_user',
+        ));
+
+        return $menu;
+    }
+
 }

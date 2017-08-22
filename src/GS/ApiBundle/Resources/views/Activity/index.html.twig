@@ -5,11 +5,12 @@
 
     <h2>Liste des activités</h2>
 
+    {% import "GSApiBundle:Activity:macros.html.twig" as macro %}
     <ul>
         {% for activity in listActivities %}
             <li>
                 <a href="{{ path('view_activity', {'id': activity.id}) }}">
-                    {{ activity.title }}
+                    {{ macro.print_title(activity) }}
                 </a>
             </li>
         {% else %}

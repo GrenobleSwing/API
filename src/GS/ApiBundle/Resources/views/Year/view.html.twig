@@ -3,7 +3,10 @@
 {% block gs_body %}
     {{ parent() }}
 
-    <h2>{{ year.title }}</h2>
+    {% import "GSApiBundle:Year:macros.html.twig" as macro %}
+    <h2>
+        {{ macro.print_title(year) }}
+    </h2>
 
     <p>
         <a href="{{ path('homepage') }}" class="btn btn-default">
@@ -50,11 +53,12 @@
     Du {{ year.startDate|date('d/m/Y', timezone="Europe/Paris") }}
     au {{ year.endDate|date('d/m/Y', timezone="Europe/Paris") }}
 
+    {% import "GSApiBundle:Activity:macros.html.twig" as macro_activity %}
     <h3>Liste des activités :</h3>
     <ul>
         {% for activity in year.activities %}
             <li>
-                {{ activity.title }}
+                {{ macro_activity.print_title(activity) }}
                 <a href="{{ path('view_activity', {'id': activity.id}) }}" class="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
                 </a>
