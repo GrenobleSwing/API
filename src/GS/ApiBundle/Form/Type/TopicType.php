@@ -43,6 +43,9 @@ class TopicType extends AbstractType
                     'choice_label' => 'title',
                     'multiple' => true,
                     'required' => false,
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
+                    ),
                 ))
                 ->add('title', TextType::class, array(
                     'label' => 'Titre',

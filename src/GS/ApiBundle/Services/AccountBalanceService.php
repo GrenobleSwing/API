@@ -13,7 +13,7 @@ use GS\ApiBundle\Entity\Registration;
 class AccountBalanceService
 {
     private $entityManager;
-    
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -28,67 +28,107 @@ class AccountBalanceService
     {
         return $this->getDetails($account, $activity);
     }
-    
+
     private function getDetails(Account $account, Activity $activity = null, $paypal = false)
     {
+        if ($paypal) {
+            return $this->getDetailsPaypal($account, $activity);
+        }
+
         $registrations = $this->getRegistrations($account, $activity);
-        
+
         $details = array();
         $totalBalance = 0.0;
         $i = 0;
         $currentActivity = null;
         $currentCategory = null;
-        
+
         // Registrations are sorted by Category and Price.
         // All Discounts are linked to Category and they apply from the most
         // expensive Category to the less expensive one.
         foreach ($registrations as $registration) {
             $activity = $registration->getTopic()->getActivity();
             $category = $registration->getTopic()->getCategory();
-            
-            // For a better display, we group registrations by activity.
-            if ($currentActivity !== $activity) {
-                $currentActivity = $activity;
-                
-                if (! $paypal) {
-                    // We append the name of the year for better display
-                    $displayName = $currentActivity->getTitle() . ' - ' .
-                            $activity->getYear()->getTitle();
-                    $details[$displayName] = array();
-                }
-                $i = 0;
-            }
-            
+
             // When we change Category, we reset the index of the Registration
             // since some discount are based on the number of Topics having the
             // same Category.
             if ($currentCategory !== $category && ! $paypal) {
                 $currentCategory = $category;
-                $details[$displayName][$currentCategory->getName()] = array();
                 $i = 0;
             }
-            
+
+            // For a better display, we group registrations by activity.
+            if ($currentActivity !== $activity) {
+                $currentActivity = $activity;
+                $i = 0;
+            }
+
+            // We append the name of the year for better display
+            if ($currentActivity->isMembership()) {
+                $displayName = $currentActivity->getTitle() . ' - ' .
+                        $activity->getYear()->getTitle();
+            } else {
+                $displayName = $currentCategory->getName() . ' - ' .
+                        $currentActivity->getTopic()->getTitle();
+            }
+
             $discounts = $category->getDiscounts();
             $discount = $this->chooseDiscount($i, $account, $discounts);
 
-            if (!$paypal) {
-                $line = $this->getPriceToPay($registration, $category, $discount);
-                $details[$displayName][$currentCategory->getName()][] = $line;
-                $totalBalance += $line['balance'];
-            } else {
-                $details[] = array($registration, $discount);
-            }
+            $line = $this->getPriceToPay($registration, $category, $discount);
+            $line['title'] = $displayName;
+            $details[] = $line;
+            $totalBalance += $line['balance'];
+
             $i++;
         }
 
-        if ($paypal) {
-            return $details;
-        }
         $balance = array(
             'details' => $details,
             'totalBalance' => $totalBalance,
         );
         return $balance;
+    }
+
+    private function getDetailsPaypal(Account $account, Activity $activity = null)
+    {
+        $registrations = $this->getRegistrations($account, $activity);
+
+        $details = array();
+        $i = 0;
+        $currentActivity = null;
+        $currentCategory = null;
+
+        // Registrations are sorted by Category and Price.
+        // All Discounts are linked to Category and they apply from the most
+        // expensive Category to the less expensive one.
+        foreach ($registrations as $registration) {
+            $activity = $registration->getTopic()->getActivity();
+            $category = $registration->getTopic()->getCategory();
+
+            // For a better display, we group registrations by activity.
+            if ($currentActivity !== $activity) {
+                $currentActivity = $activity;
+                $i = 0;
+            }
+
+            // When we change Category, we reset the index of the Registration
+            // since some discount are based on the number of Topics having the
+            // same Category.
+            if ($currentCategory !== $category) {
+                $currentCategory = $category;
+                $i = 0;
+            }
+
+            $discounts = $category->getDiscounts();
+            $discount = $this->chooseDiscount($i, $account, $discounts);
+
+            $details[] = array($registration, $discount);
+            $i++;
+        }
+
+        return $details;
     }
 
     private function getRegistrations(Account $account, Activity $activity = null)
@@ -107,35 +147,31 @@ class AccountBalanceService
 
     private function getPriceToPay(Registration $registration, Category $category, Discount $discount = null)
     {
-        $topic = $registration->getTopic();
         $price = $category->getPrice();
         $alreadyPaid = $registration->getAmountPaid();
-        
+
         $line = array(
-            'registrationId' => $registration->getId(),
-            'name' => $topic->getTitle(),
-            'description' => $topic->getDescription(),
             'price' => $price,
             'alreadyPaid' => $alreadyPaid,
         );
         $due = $price;
-        
+
         if (null !== $discount) {
-            $line['discount'] = array(
-                'type' => $discount->getType(),
-                'value' => $discount->getValue(),
-            );
             if($discount->getType() == 'percent') {
+                $line['discount'] = '-' . $discount->getValue() . '%';
                 $due *= 1 - $discount->getValue() / 100;
             } else {
+                $line['discount'] = '-' . $discount->getValue() . '&euro;';
                 $due -= $discount->getValue();
             }
+        } else {
+            $line['discount'] = '';
         }
-        
+
         $line['balance'] = $due - $alreadyPaid;
         return $line;
     }
-    
+
     private function chooseDiscount($i, Account $account, $discounts)
     {
         foreach($discounts as $discount) {

@@ -35,6 +35,9 @@ class AddressType extends AbstractType
                 ->add('country', CountryType::class, array(
                     'label' => 'Pays',
                     'data' => 'FR',
+                    'attr' => array(
+                        'class' => 'js-select-single',
+                    ),
                 ))
         ;
     }

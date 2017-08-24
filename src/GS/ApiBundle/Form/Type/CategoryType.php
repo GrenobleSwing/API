@@ -52,6 +52,9 @@ class CategoryType extends AbstractType
                     'position' => array('after' => 'price'),
                     'choices' => $category->getActivity()->getDiscounts(),
                     'required' => false,
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
+                    ),
                 ));
             }
         });

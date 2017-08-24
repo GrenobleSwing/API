@@ -47,6 +47,9 @@ class ActivityType extends AbstractType
                     'choices' => $options['membership_topics'],
                     'placeholder' => "Choissisez l'adhésion obligatoire",
                     'required' => false,
+                    'attr' => array(
+                        'class' => 'js-select-single',
+                    ),
                 ))
                 ->add('membership', ChoiceType::class, array(
                     'label' => 'Ensemble des adhésions possibles',

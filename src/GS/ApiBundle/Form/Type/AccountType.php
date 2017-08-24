@@ -36,7 +36,7 @@ class AccountType extends AbstractType
                     'label' => 'Nom',
                 ))
                 ->add('birthDate', BirthdayType::class, array(
-                    'label' => 'Description',
+                    'label' => 'Date de naissance',
                     'widget' => 'single_text',
                     'html5' => false,
                     'attr' => ['class' => 'js-datepicker'],
@@ -49,10 +49,10 @@ class AccountType extends AbstractType
                 ->add('address', AddressType::class, array(
                     'label' => 'Adresse',
                 ))
-                ->add('imageFile', VichImageType::class, [
-                    'label' => 'Photo du compte',
-                    'required' => false,
-                ])
+//                ->add('imageFile', VichImageType::class, [
+//                    'label' => 'Photo du compte',
+//                    'required' => false,
+//                ])
                 ->add('submit', SubmitType::class)
         ;
 
