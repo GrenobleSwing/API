@@ -48,12 +48,17 @@
                 },
                 "columns": [
                     {
-                        "data": 'id',
+                        "data": null,
                         "render": function ( data, type, full, meta ) {
                             return '<a href="' +
-                                    Routing.generate('edit_user', { 'id': data }) +
+                                    Routing.generate('edit_user', { 'id': full.id }) +
                                     '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Modifier">' +
                                     '<i class="glyphicon glyphicon-edit"></i>' +
+                                    '</a> ' +
+                                    '<a href="' +
+                                    Routing.generate('homepage', { '_switch_user': full.email }) +
+                                    '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Impersoniser">' +
+                                    '<i class="glyphicon glyphicon-user"></i>' +
                                     '</a>';
                         }
                     },

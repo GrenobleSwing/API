@@ -10,7 +10,7 @@ class DefaultController extends Controller
 {
 
     /**
-     * @Route("/", name="homepage")
+     * @Route("/", name="homepage", options = { "expose" = true })
      * @Security("has_role('ROLE_USER')")
      */
     public function indexAnonymous()
