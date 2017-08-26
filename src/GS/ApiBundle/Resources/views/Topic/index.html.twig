@@ -3,7 +3,7 @@
 {% block gs_body %}
     {{ parent() }}
 
-    <h2>Liste des topics</h2>
+    <h2>Liste des cours/niveaux</h2>
 
     {% import "GSApiBundle:Topic:macros.html.twig" as macro %}
     <ul>
@@ -14,7 +14,7 @@
                 </a>
             </li>
         {% else %}
-            <li>Pas (encore !) de topics</li>
+            <li>Pas (encore !) de cours/niveaux</li>
         {% endfor %}
     </ul>
 

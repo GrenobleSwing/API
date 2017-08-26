@@ -15,6 +15,9 @@ class YearVoter extends Voter
     const CREATE = 'create';
     const VIEW = 'view';
     const EDIT = 'edit';
+    const OPEN = 'open';
+    const CLOSE = 'close';
+    const ADD_ACTIVITY = 'add_activity';
     const DELETE = 'delete';
 
     private $decisionManager;
@@ -27,7 +30,8 @@ class YearVoter extends Voter
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::CREATE, self::VIEW, self::EDIT, self::DELETE))) {
+        if (!in_array($attribute, array(self::CREATE, self::VIEW, self::EDIT,
+            self::OPEN, self::CLOSE, self::DELETE, self::ADD_ACTIVITY))) {
             return false;
         }
 
@@ -58,6 +62,12 @@ class YearVoter extends Voter
                 return $this->canView($token);
             case self::EDIT:
                 return $this->canEdit($year, $user, $token);
+            case self::OPEN:
+                return $this->canOpen($year, $user, $token);
+            case self::CLOSE:
+                return $this->canClose($year, $user, $token);
+            case self::ADD_ACTIVITY:
+                return $this->canAddActivity($year, $user, $token);
             case self::DELETE:
                 return $this->canDelete($year, $user, $token);
         }
@@ -81,7 +91,7 @@ class YearVoter extends Voter
         return false;
     }
 
-    private function canEdit(Year $year, User $user, TokenInterface $token)
+    private function isOwner(Year $year, User $user, TokenInterface $token)
     {
         if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
             return true;
@@ -94,6 +104,38 @@ class YearVoter extends Voter
         return false;
     }
 
+    private function canEdit(Year $year, User $user, TokenInterface $token)
+    {
+        return $this->isOwner($year, $user, $token);
+    }
+
+    private function canAddActivity(Year $year, User $user, TokenInterface $token)
+    {
+        if ('CLOSE' == $year->getState()) {
+            return false;
+        }
+        if ($this->decisionManager->decide($token, array('ROLE_ORGANIZER'))) {
+            return true;
+        }
+        return $this->isOwner($year, $user, $token);
+    }
+
+    private function canOpen(Year $year, User $user, TokenInterface $token)
+    {
+        if ('DRAFT' != $year->getState()) {
+            return false;
+        }
+        return $this->isOwner($year, $user, $token);
+    }
+
+    private function canClose(Year $year, User $user, TokenInterface $token)
+    {
+        if ('OPEN' != $year->getState()) {
+            return false;
+        }
+        return $this->isOwner($year, $user, $token);
+    }
+
     private function canDelete(Year $year, User $user, TokenInterface $token)
     {
         if ($this->decisionManager->decide($token, array('ROLE_ADMIN')) &&
@@ -101,11 +143,7 @@ class YearVoter extends Voter
             return true;
         }
         if ('DRAFT' === $year->getState()) {
-            foreach ( $year->getOwners() as $owner) {
-                if ($user === $owner) {
-                    return true;
-                }
-            }
+            return $this->isOwner($year, $user, $token);
         }
         return false;
     }

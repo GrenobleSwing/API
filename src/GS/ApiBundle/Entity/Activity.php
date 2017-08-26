@@ -23,11 +23,16 @@ class Activity
 
     /**
      * @ORM\Column(type="string", length=200)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 200
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Type("string")
      */
     private $description;
 
@@ -35,16 +40,19 @@ class Activity
      * States: draft, open, close
      *
      * @ORM\Column(type="string", length=16)
+     * @Assert\Choice({"DRAFT", "OPEN", "CLOSE"})
      */
     private $state = 'DRAFT';
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\Type("bool")
      */
     private $membership = false;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\Type("bool")
      */
     private $membersOnly = false;
 

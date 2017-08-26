@@ -15,6 +15,8 @@ class TopicVoter extends Voter
     const CREATE = 'create';
     const VIEW = 'view';
     const EDIT = 'edit';
+    const OPEN = 'open';
+    const CLOSE = 'close';
     const DELETE = 'delete';
 
     private $decisionManager;
@@ -27,7 +29,8 @@ class TopicVoter extends Voter
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::CREATE, self::VIEW, self::EDIT, self::DELETE))) {
+        if (!in_array($attribute, array(self::CREATE, self::VIEW, self::EDIT,
+            self::OPEN, self::CLOSE, self::DELETE))) {
             return false;
         }
 
@@ -58,6 +61,10 @@ class TopicVoter extends Voter
                 return $this->canView($topic, $user, $token);
             case self::EDIT:
                 return $this->canEdit($topic, $user, $token);
+            case self::OPEN:
+                return $this->canOpen($topic, $user, $token);
+            case self::CLOSE:
+                return $this->canClose($topic, $user, $token);
             case self::DELETE:
                 return $this->canDelete($topic, $user, $token);
         }
@@ -86,7 +93,7 @@ class TopicVoter extends Voter
         return false;
     }
 
-    private function canEdit(Topic $topic, User $user, TokenInterface $token)
+    private function isOwner(Topic $topic, User $user, TokenInterface $token)
     {
         if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
             return true;
@@ -99,17 +106,34 @@ class TopicVoter extends Voter
         return false;
     }
 
+    private function canEdit(Topic $topic, User $user, TokenInterface $token)
+    {
+        return $this->isOwner($topic, $user, $token);
+    }
+
+    private function canOpen(Topic $topic, User $user, TokenInterface $token)
+    {
+        if ('DRAFT' != $topic->getState()) {
+            return false;
+        }
+        return $this->isOwner($topic, $user, $token);
+    }
+
+    private function canClose(Topic $topic, User $user, TokenInterface $token)
+    {
+        if ('OPEN' != $topic->getState()) {
+            return false;
+        }
+        return $this->isOwner($topic, $user, $token);
+    }
+
     private function canDelete(Topic $topic, User $user, TokenInterface $token)
     {
         if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
             return true;
         }
         if (count($topic->getRegistrations()) == 0) {
-            foreach ($topic->getOwners() as $owner) {
-                if ($user === $owner) {
-                    return true;
-                }
-            }
+            return $this->isOwner($topic, $user, $token);
         }
         return false;
     }

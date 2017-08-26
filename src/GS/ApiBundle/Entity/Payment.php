@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
 use PayPal\Api\ItemList;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Payment
@@ -25,6 +26,7 @@ class Payment
      * Valid types: CASH, TRANSFER, CHECK, PAYPAL, CARD
      *
      * @ORM\Column(type="string", length=10)
+     * @Assert\Choice({"CASH", "TRANSFER", "CHECK", "PAYPAL", "CARD"})
      */
     private $type;
 
@@ -34,6 +36,7 @@ class Payment
      *   - PAID
      *
      * @ORM\Column(type="string", length=6)
+     * @Assert\Choice({"DRAFT", "PAID"})
      */
     private $state = 'DRAFT';
 
@@ -44,12 +47,14 @@ class Payment
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Type("float")
      */
     private $amount = 0.0;
 
     /**
      * @ORM\Column(type="date")
      * @Type("DateTime<'Y-m-d'>")
+     * @Assert\Date()
      */
     private $date;
 

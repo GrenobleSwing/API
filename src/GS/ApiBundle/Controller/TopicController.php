@@ -36,7 +36,7 @@ class TopicController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $request->getSession()->getFlashBag()->add('success', "Le topic a bien été ouverte.");
+            $request->getSession()->getFlashBag()->add('success', "Le cours/niveau a bien été ouverte.");
 
             return $this->redirectToRoute('view_topic', array('id' => $topic->getId()));
         }
@@ -66,7 +66,7 @@ class TopicController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $request->getSession()->getFlashBag()->add('success', "Le topic a bien été fermée.");
+            $request->getSession()->getFlashBag()->add('success', "Le cours/niveau a bien été fermée.");
 
             return $this->redirectToRoute('view_topic', array('id' => $topic->getId()));
         }
@@ -77,6 +77,16 @@ class TopicController extends Controller
         ));
     }
 
+    private function checkDates(Topic $topic)
+    {
+        foreach ($topic->getSchedules() as $schedule) {
+            if ($topic->getActivity()->getYear()->getStartDate() > $schedule->getStartDate() ||
+                    $topic->getActivity()->getYear()->getEndDate() < $schedule->getEndDate()) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * @Route("/topic/add/{id}", name="add_topic", requirements={"id": "\d+"})
      * @Security("has_role('ROLE_ORGANIZER')")
@@ -89,6 +99,12 @@ class TopicController extends Controller
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->checkDates($topic)) {
+                $request->getSession()->getFlashBag()->add('danger', 'Les dates ne sont pas bonnes pour le cours/niveau.');
+                return $this->render('GSApiBundle:Topic:add.html.twig', array(
+                            'form' => $form->createView(),
+                ));
+            }
             if (!$topic->getOwners()->contains($this->getUser())) {
                 $topic->addOwner($this->getUser());
             }
@@ -98,7 +114,7 @@ class TopicController extends Controller
             $em->persist($topic);
             $em->flush();
 
-            $request->getSession()->getFlashBag()->add('success', 'Topic bien enregistré.');
+            $request->getSession()->getFlashBag()->add('success', 'Cours/niveau bien enregistré.');
 
             return $this->redirectToRoute('view_topic', array('id' => $topic->getId()));
         }
@@ -125,7 +141,7 @@ class TopicController extends Controller
             $em->remove($topic);
             $em->flush();
 
-            $request->getSession()->getFlashBag()->add('success', "Le topic a bien été supprimé.");
+            $request->getSession()->getFlashBag()->add('success', "Le cours/niveau a bien été supprimé.");
 
             return $this->redirectToRoute('view_activity', array('id' => $activity->getId()));
         }
@@ -153,9 +169,15 @@ class TopicController extends Controller
             ->getRepository('GSApiBundle:Registration')
             ->getRegistrationsForAccountAndTopic($account, $topic);
 
+        $topics = [];
+        foreach ($registrations as $registration) {
+            $topics[] = $registration->getTopic();
+        }
+
         return $this->render('GSApiBundle:Topic:view.html.twig', array(
             'topic' => $topic,
             'user_registrations' => $registrations,
+            'user_topics' => $topics,
         ));
     }
 
@@ -185,10 +207,16 @@ class TopicController extends Controller
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->checkDates($topic)) {
+                $request->getSession()->getFlashBag()->add('danger', 'Les dates ne sont pas bonnes pour le cours/niveau.');
+                return $this->render('GSApiBundle:Topic:edit.html.twig', array(
+                            'form' => $form->createView(),
+                ));
+            }
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $request->getSession()->getFlashBag()->add('success', 'Topic bien modifié.');
+            $request->getSession()->getFlashBag()->add('success', 'Cours/niveau bien modifié.');
 
             return $this->redirectToRoute('view_topic', array('id' => $topic->getId()));
         }

@@ -13,30 +13,31 @@
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
             Retour à l'activité
         </a>
-        {% if topic.state == 'DRAFT' and is_granted("edit", topic) %}
+        {% if is_granted("open", topic) %}
             <a href="{{ path('open_topic', {'id': topic.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                 Ouvrir le topic
             </a>
-        {% elseif topic.state == 'OPEN' and is_granted("edit", topic) %}
+        {% endif %}
+        {% if is_granted("close", topic) %}
             <a href="{{ path('close_topic', {'id': topic.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                Clore le topic
+                Fermer le topic
             </a>
         {% endif %}
-        {% if topic.state != 'CLOSE' and (topic.state == 'DRAFT' or is_granted("edit", topic)) %}
+        {% if is_granted("edit", topic) %}
             <a href="{{ path('edit_topic', {'id': topic.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 Modifier le topic
             </a>
         {% endif %}
-        {% if (topic.state == 'DRAFT' and is_granted("edit", topic)) or is_granted("ROLE_SUPER_ADMIN") %}
+        {% if is_granted("delete", topic) %}
             <a href="{{ path('delete_topic', {'id': topic.id}) }}" class="btn btn-danger">
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 Supprimer le topic
             </a>
         {% endif %}
-        {% if topic.state == 'OPEN' %}
+        {% if topic.state == 'OPEN' and topic not in user_topics%}
             <a href="{{ path('add_registration', {'id': topic.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 S'inscrire

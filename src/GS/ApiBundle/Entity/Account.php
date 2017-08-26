@@ -39,16 +39,25 @@ class Account
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\Type("string")
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 64
      */
     private $firstName = "";
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\Type("string")
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 64
      */
     private $lastName = "";
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Date()
      */
     private $birthDate;
 
@@ -67,6 +76,7 @@ class Account
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\Type("bool")
      */
     private $student = false;
 

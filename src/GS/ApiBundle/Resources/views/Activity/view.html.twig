@@ -13,24 +13,25 @@
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
             Retour à l'année
         </a>
-        {% if activity.state == 'DRAFT' and is_granted("edit", activity) %}
+        {% if is_granted("open", activity) %}
             <a href="{{ path('open_activity', {'id': activity.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                 Ouvrir l'activité
             </a>
-        {% elseif activity.state == 'OPEN' and is_granted("edit", activity) %}
+        {% endif %}
+        {% if is_granted("close", activity) %}
             <a href="{{ path('close_activity', {'id': activity.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 Clore l'activité
             </a>
         {% endif %}
-        {% if activity.state != 'CLOSE' and ((activity.state == 'DRAFT' and is_granted("edit", activity)) or is_granted("ROLE_ADMIN")) %}
+        {% if is_granted("edit", activity) %}
             <a href="{{ path('edit_activity', {'id': activity.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 Modifier l'activité
             </a>
         {% endif %}
-        {% if (activity.state == 'DRAFT' and is_granted("edit", activity)) or is_granted("ROLE_SUPER_ADMIN") %}
+        {% if is_granted("delete", activity) %}
             <a href="{{ path('delete_activity', {'id': activity.id}) }}" class="btn btn-danger">
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 Supprimer l'activité
@@ -38,15 +39,19 @@
         {% endif %}
     </p>
     <p>
-        {% if activity.state != 'CLOSE' and is_granted("edit", activity) %}
+        {% if is_granted("add_topic", activity) %}
             <a href="{{ path('add_topic', {'id': activity.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                Ajouter un topic
+                Ajouter un cours/niveau
             </a>
+        {% endif %}
+        {% if is_granted("add_category", activity) %}
             <a href="{{ path('add_category', {'id': activity.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Ajouter une catégorie
             </a>
+        {% endif %}
+        {% if is_granted("add_discount", activity) %}
             <a href="{{ path('add_discount', {'id': activity.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Ajouter une réduction
@@ -60,7 +65,7 @@
     </div>
 
     {% import "GSApiBundle:Topic:macros.html.twig" as macro_topic %}
-    <h3>Liste des topics :</h3>
+    <h3>Liste des cours/niveaux :</h3>
     <ul>
         {% for topic in activity.topics %}
             <li>
@@ -77,24 +82,25 @@
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                 </a>
 
-                {% if topic.state == 'DRAFT' and is_granted("edit", topic) %}
+                {% if is_granted("open", topic) %}
                     <a href="{{ path('open_topic', {'id': topic.id}) }}" class="btn btn-default btn-xs"
                        data-toggle="tooltip" data-placement="top" title="Ouvrir le topic">
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                     </a>
-                {% elseif topic.state == 'OPEN' and is_granted("edit", topic) %}
+                {% endif %}
+                {% if is_granted("close", topic) %}
                     <a href="{{ path('close_topic', {'id': topic.id}) }}" class="btn btn-default btn-xs"
                        data-toggle="tooltip" data-placement="top" title="Clore le topic">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                 {% endif %}
-                {% if topic.state != 'CLOSE' and (topic.state == 'DRAFT' or is_granted("edit", topic)) %}
+                {% if is_granted("edit", topic) %}
                     <a href="{{ path('edit_topic', {'id': topic.id}) }}" class="btn btn-default btn-xs"
                        data-toggle="tooltip" data-placement="top" title="Modifier le topic">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </a>
                 {% endif %}
-                {% if (topic.state == 'DRAFT' and is_granted("edit", topic)) or is_granted("ROLE_SUPER_ADMIN") %}
+                {% if is_granted("delete", topic) %}
                     <a href="{{ path('delete_topic', {'id': topic.id}) }}" class="btn btn-danger btn-xs"
                        data-toggle="tooltip" data-placement="top" title="Supprimer le topic">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -103,14 +109,14 @@
 
             </li>
         {% else %}
-            <li>Pas (encore !) de topics</li>
+            <li>Pas (encore !) de cours/niveaux</li>
         {% endfor %}
 
-        {% if activity.state != 'CLOSE' and is_granted("edit", activity) %}
+        {% if is_granted("add_topic", activity) %}
             <li>
                 <a href="{{ path('add_topic', {'id': activity.id}) }}" class="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon-plus"></span>
-                    Ajouter un topic
+                    Ajouter un cours/niveau
                 </a>
             </li>
         {% endif %}
@@ -127,7 +133,7 @@
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     </a>
 
-                    {% if activity.state != 'CLOSE' and ((activity.state == 'DRAFT' and is_granted("edit", activity)) or is_granted("ROLE_ADMIN")) %}
+                    {% if is_granted("edit", activity) %}
                         <a href="{{ path('edit_category', {'id': category.id}) }}" class="btn btn-default btn-xs"
                             data-toggle="tooltip" data-placement="top" title="Modifier">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
@@ -138,7 +144,7 @@
                 <li>Pas (encore !) de catégories</li>
             {% endfor %}
 
-            {% if activity.state != 'CLOSE' and is_granted("edit", activity) %}
+            {% if is_granted("add_category", activity) %}
                 <li>
                     <a href="{{ path('add_category', {'id': activity.id}) }}" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -158,7 +164,7 @@
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     </a>
 
-                    {% if activity.state != 'CLOSE' and ((activity.state == 'DRAFT' and is_granted("edit", activity)) or is_granted("ROLE_ADMIN")) %}
+                    {% if is_granted("edit", activity) %}
                         <a href="{{ path('edit_discount', {'id': discount.id}) }}" class="btn btn-default btn-xs"
                             data-toggle="tooltip" data-placement="top" title="Modifier">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
@@ -169,7 +175,7 @@
                 <li>Pas (encore !) de réductions</li>
             {% endfor %}
 
-            {% if activity.state != 'CLOSE' and is_granted("edit", activity) %}
+            {% if is_granted("add_discount", activity) %}
                 <li>
                     <a href="{{ path('add_discount', {'id': activity.id}) }}" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>

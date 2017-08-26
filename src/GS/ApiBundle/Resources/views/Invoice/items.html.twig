@@ -16,7 +16,7 @@
             <tbody>
                 {% for item in items %}
                     {% set price = item.registration.topic.category.price %}
-                    {% set alreadyPaid = alreadyPaid + price - item.registration.amountPaid %}
+                    {% set alreadyPaid = alreadyPaid + item.amount - item.registration.amountPaid %}
                     <tr style="text-align: right;">
                         <td style="width:60%; text-align: left;">
                             {{ item.registration.topic.title }}<br>

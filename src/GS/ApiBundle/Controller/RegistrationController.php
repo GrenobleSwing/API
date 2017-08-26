@@ -312,7 +312,7 @@ class RegistrationController extends Controller
      * @Route("/registration/{id}/edit", name="edit_registration", requirements={"id": "\d+"})
      * @Security("is_granted('edit', registration)")
      */
-    public function putAction(Registration $registration, Request $request)
+    public function editAction(Registration $registration, Request $request)
     {
         $form = $this->createForm(RegistrationType::class, $registration);
 

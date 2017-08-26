@@ -3,8 +3,9 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Type;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Schedule
@@ -22,35 +23,44 @@ class Schedule
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Date()
      * @Type("DateTime<'Y-m-d'>")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="time")
+     * @Assert\Time()
      * @Type("DateTime<'G:i'>")
      */
     private $startTime;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Date()
      * @Type("DateTime<'Y-m-d'>")
      */
     private $endDate;
 
     /**
      * @ORM\Column(type="time")
+     * @Assert\Time()
      * @Type("DateTime<'G:i'>")
      */
     private $endTime;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Assert\Choice({"once", "weekly"})
      */
     private $frequency;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 100
+     * )
      */
     private $teachers = null;
 

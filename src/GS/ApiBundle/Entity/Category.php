@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Category
@@ -22,11 +23,16 @@ class Category
 
     /**
      * @ORM\Column(type="string", length=200)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 200
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Type("float")
      */
     private $price;
 

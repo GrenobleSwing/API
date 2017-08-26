@@ -67,6 +67,9 @@ class Builder implements ContainerAwareInterface
         $menu['Admin']->addChild('Liste des utilisateurs', array(
             'route' => 'index_user',
         ));
+        $menu['Admin']->addChild('Liste des inscriptions', array(
+            'route' => 'index_registration',
+        ));
 
         return $menu;
     }

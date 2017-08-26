@@ -2,10 +2,10 @@
 
 namespace GS\ApiBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Year
@@ -22,6 +22,10 @@ class Year
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 64
+     * )
      */
     private $title;
 
@@ -32,12 +36,14 @@ class Year
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Date()
      * @Type("DateTime<'Y-m-d'>")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Date()
      * @Type("DateTime<'Y-m-d'>")
      */
     private $endDate;
@@ -46,6 +52,7 @@ class Year
      * States: draft, open, close
      *
      * @ORM\Column(type="string", length=16)
+     * @Assert\Choice({"DRAFT", "OPEN", "CLOSE"})
      */
     private $state = 'DRAFT';
 

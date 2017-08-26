@@ -13,30 +13,31 @@
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
             Retour à l'accueil
         </a>
-        {% if year.state != 'CLOSE' and is_granted("edit", year) %}
+        {% if is_granted("add_activity", year) %}
             <a href="{{ path('add_activity', {'id': year.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Ajouter une activité
             </a>
         {% endif %}
-        {% if year.state == 'DRAFT' and is_granted("edit", year) %}
+        {% if is_granted("open", year) %}
             <a href="{{ path('open_year', {'id': year.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                 Ouvrir l'année
             </a>
-        {% elseif year.state == 'OPEN' and is_granted("edit", year) %}
+        {% endif %}
+        {% if is_granted("close", year) %}
             <a href="{{ path('close_year', {'id': year.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                Clore l'année
+                Fermer l'année
             </a>
         {% endif %}
-        {% if year.state != 'CLOSE' and ((year.state == 'DRAFT' and is_granted("edit", year)) or is_granted("ROLE_ADMIN")) %}
+        {% if is_granted("edit", year) %}
             <a href="{{ path('edit_year', {'id': year.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 Modifier l'année
             </a>
         {% endif %}
-        {% if (year.state == 'DRAFT' and is_granted("edit", year)) or is_granted("ROLE_SUPER_ADMIN") %}
+        {% if is_granted("delete", year) %}
             <a href="{{ path('delete_year', {'id': year.id}) }}" class="btn btn-danger">
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 Supprimer l'année
@@ -67,7 +68,7 @@
             <li>Pas (encore !) d'activités</li>
         {% endfor %}
 
-        {% if year.state != 'CLOSE' and is_granted("edit", year) %}
+        {% if is_granted("add_activity", year) %}
             <li>
                 <a href="{{ path('add_activity', {'id': year.id}) }}" class="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>

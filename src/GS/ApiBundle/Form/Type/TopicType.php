@@ -77,6 +77,7 @@ class TopicType extends AbstractType
                         return $er->createQueryBuilder('u')
                                 ->orderBy('u.username', 'ASC');
                     },
+                    'required' => false,
                     'attr' => array(
                         'class' => 'js-select-multiple',
                     ),
@@ -90,6 +91,7 @@ class TopicType extends AbstractType
                         return $er->createQueryBuilder('u')
                                 ->orderBy('u.username', 'ASC');
                     },
+                    'required' => false,
                     'attr' => array(
                         'class' => 'js-select-multiple',
                     ),

@@ -3,6 +3,7 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Venue
@@ -23,6 +24,10 @@ class Venue
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255
+     * )
      */
     private $name;
 

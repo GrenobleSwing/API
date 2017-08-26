@@ -108,15 +108,12 @@ class RegistrationVoter extends Voter
         return false;
     }
 
-    private function canEdit(Registration $registration, User $user, TokenInterface $token)
+    private function isEditor(Registration $registration, User $user, TokenInterface $token)
     {
         if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
             return true;
         }
-        if ($user === $registration->getAccount()->getUser() &&
-                'SUBMITTED' == $registration->getState()) {
-            return true;
-        }
+
         $editors = new ArrayCollection(
                 array_merge($registration->getTopic()->getOwners()->toArray(),
                         $registration->getTopic()->getModerators()->toArray(),
@@ -130,8 +127,25 @@ class RegistrationVoter extends Voter
         return false;
     }
 
+    private function canEdit(Registration $registration, User $user, TokenInterface $token)
+    {
+        if ('SUBMITTED' != $registration->getState()) {
+            return false;
+        }
+
+        if ($user === $registration->getAccount()->getUser()) {
+            return true;
+        }
+
+        return $this->isEditor($registration, $user, $token);
+    }
+
     private function canDelete(Registration $registration, User $user, TokenInterface $token)
     {
+        if ('PAID' == $registration->getState()) {
+            return false;
+        }
+
         if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
             return true;
         }
@@ -140,22 +154,40 @@ class RegistrationVoter extends Voter
 
     private function canWait(Registration $registration, User $user, TokenInterface $token)
     {
-        return $this->canEdit($registration, $user, $token);
+        if ('SUBMITTED' != $registration->getState()) {
+            return false;
+        }
+
+        return $this->isEditor($registration, $user);
     }
 
     private function canValidate(Registration $registration, User $user, TokenInterface $token)
     {
-        return $this->canEdit($registration, $user, $token);
+        if ('SUBMITTED' != $registration->getState() &&
+                'WAITING' != $registration->getState()) {
+            return false;
+        }
+
+        return $this->isEditor($registration, $user, $token);
     }
 
     private function canCancel(Registration $registration, User $user, TokenInterface $token)
     {
-        return $this->canEdit($registration, $user, $token);
+        if ('SUBMITTED' == $registration->getState() &&
+                $user === $registration->getAccount()->getUser()) {
+            return true;
+        }
+
+        return $this->isEditor($registration, $user, $token);
     }
 
     private function canPay(Registration $registration, User $user, TokenInterface $token)
     {
-        return $this->canEdit($registration, $user, $token);
+        if ($this->decisionManager->decide($token, array('ROLE_TREASURER')) &&
+                'VALIDATED' == $registration->getState()) {
+            return true;
+        }
+        return false;
     }
 
 }

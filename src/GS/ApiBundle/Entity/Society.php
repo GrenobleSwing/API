@@ -24,16 +24,22 @@ class Society
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Type("string")
      */
     private $taxInformation;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Type("string")
      */
     private $vatInformation;
 

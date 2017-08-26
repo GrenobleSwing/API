@@ -157,6 +157,7 @@ class ActivityController extends Controller
         foreach ($registrations as $registration) {
             $topics[] = $registration->getTopic();
         }
+
         return $this->render('GSApiBundle:Activity:view.html.twig', array(
             'activity' => $activity,
             'user_topics' => $topics,

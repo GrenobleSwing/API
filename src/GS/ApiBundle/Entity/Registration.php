@@ -32,16 +32,19 @@ class Registration
      * @Gedmo\Timestampable(on="create")
      *
      * @var \DateTime
+     * @Assert\Date()
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="string", length=16, nullable=true)
+     * @Assert\Choice({"leader", "follower"})
      */
     private $role = 'leader';
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\Type("bool")
      */
     private $withPartner = false;
 
@@ -56,16 +59,24 @@ class Registration
 
     /**
      * @ORM\Column(type="string", length=64, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 64
+     * )
      */
     private $partnerFirstName;
 
     /**
      * @ORM\Column(type="string", length=64, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 64
+     * )
      */
     private $partnerLastName;
 
     /**
-     * States: submitted, waiting, validated, paid, cancelled and partially_cancelled
+     * States: submitted, waiting, validated, paid and cancelled
      *                      validate
      *     |---------------------------------------|
      *     |                                       |
@@ -77,6 +88,7 @@ class Registration
      *     |-----> "delete the registration" <-----|               cancelled
      *
      * @ORM\Column(type="string", length=20)
+     * @Assert\Choice({"SUBMITTED", "WAITING", "VALIDATED", "PAID", "CANCELLED"})
      */
     private $state = "SUBMITTED";
 
@@ -88,6 +100,7 @@ class Registration
      * it has to be taken into account for the balance.
      *
      * @ORM\Column(type="float")
+     * @Assert\Type("float")
      */
     private $amountPaid = 0.0;
 
