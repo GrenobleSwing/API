@@ -158,7 +158,7 @@ class RegistrationVoter extends Voter
             return false;
         }
 
-        return $this->isEditor($registration, $user);
+        return $this->isEditor($registration, $user, $token);
     }
 
     private function canValidate(Registration $registration, User $user, TokenInterface $token)
