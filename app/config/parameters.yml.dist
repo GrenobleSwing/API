@@ -34,4 +34,4 @@ parameters:
     wkhtmltopdf.binary: ~/wkhtmltox/bin/wkhtmltopdf
 
     cors_regexp: false
-    cors_origin: *
+    cors_origin: '*'

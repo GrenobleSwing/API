@@ -95,7 +95,7 @@ class Payment
     private $items;
 
     /**
-     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Invoice", inversedBy="payment")
+     * @ORM\OneToOne(targetEntity="GS\ApiBundle\Entity\Invoice", mappedBy="payment")
      * @Type("Relation")
      */
     private $invoice;
