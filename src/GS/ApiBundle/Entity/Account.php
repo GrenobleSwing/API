@@ -43,6 +43,7 @@ class Account
      * @Assert\Length(
      *      min = 2,
      *      max = 64
+     * )
      */
     private $firstName = "";
 
@@ -52,6 +53,7 @@ class Account
      * @Assert\Length(
      *      min = 2,
      *      max = 64
+     * )
      */
     private $lastName = "";
 

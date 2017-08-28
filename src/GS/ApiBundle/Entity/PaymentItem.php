@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use PayPal\Api\Item;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Payment
