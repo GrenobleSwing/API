@@ -4,9 +4,11 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\Type;
+use Lexik\Bundle\MailerBundle\Entity\Layout;
+use Lexik\Bundle\MailerBundle\Entity\LayoutTranslation;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use JMS\Serializer\Annotation\Type;
 
 /**
  * Activity
@@ -55,6 +57,21 @@ class Activity
      * @Assert\Type("bool")
      */
     private $membersOnly = false;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $triggeredEmails;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\ActivityEmail", mappedBy="activity", cascade={"persist", "remove"})
+     */
+    private $emailTemplates;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Lexik\Bundle\MailerBundle\Entity\Layout", cascade={"persist", "remove"})
+     */
+    private $emailLayout;
 
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Topic")
@@ -123,6 +140,30 @@ class Activity
         $this->categories = new ArrayCollection();
         $this->discounts = new ArrayCollection();
         $this->owners = new ArrayCollection();
+        $this->triggeredEmails = array();
+
+        $layoutTranslations = array(
+            array(
+                'locale' => 'fr',
+                'body' => '{% block content %}{% endblock %}',
+            ),
+            array(
+                'locale' => 'en',
+                'body' => '{% block content %}{% endblock %}',
+            ),
+        );
+        $layout = new Layout();
+        $layout->setReference(uniqid('layout_'));
+        $layout->setDescription('Layout');
+        $layout->setDefaultLocale('fr');
+        foreach ($layoutTranslations as $trans) {
+            $layoutTranslation = new LayoutTranslation();
+            $layoutTranslation->setBody($trans['body']);
+            $layoutTranslation->setLang($trans['locale']);
+            $layout->addTranslation($layoutTranslation);
+        }
+        $this->setEmailLayout($layout);
+
     }
 
     /**
@@ -451,4 +492,110 @@ class Activity
     {
         return $this->membershipTopic;
     }
+
+    /**
+     * Add triggeredEmail
+     *
+     * @return Activity
+     */
+    public function addTriggeredEmail($triggeredEmail)
+    {
+        $this->triggeredEmails[] = $triggeredEmail;
+        return $this;
+    }
+
+    /**
+     * Remove triggeredEmail
+     */
+    public function removeTriggeredEmail($triggeredEmail)
+    {
+        $this->triggeredEmails->removeElement($triggeredEmail);
+    }
+
+    /**
+     * Get triggeredEmails
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTriggeredEmails()
+    {
+        return $this->triggeredEmails;
+    }
+
+
+    /**
+     * Set triggeredEmails
+     *
+     * @param array $triggeredEmails
+     *
+     * @return Activity
+     */
+    public function setTriggeredEmails($triggeredEmails)
+    {
+        foreach ($triggeredEmails as $triggeredEmail) {
+            $this->addTriggeredEmail($triggeredEmail);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set emailLayout
+     *
+     * @param \Lexik\Bundle\MailerBundle\Entity\Layout $emailLayout
+     *
+     * @return Activity
+     */
+    public function setEmailLayout(\Lexik\Bundle\MailerBundle\Entity\Layout $emailLayout = null)
+    {
+        $this->emailLayout = $emailLayout;
+
+        return $this;
+    }
+
+    /**
+     * Get emailLayout
+     *
+     * @return \Lexik\Bundle\MailerBundle\Entity\Layout
+     */
+    public function getEmailLayout()
+    {
+        return $this->emailLayout;
+    }
+
+    /**
+     * Add emailTemplate
+     *
+     * @param \GS\ApiBundle\Entity\ActivityEmail $emailTemplate
+     *
+     * @return Activity
+     */
+    public function addEmailTemplate(\GS\ApiBundle\Entity\ActivityEmail $emailTemplate)
+    {
+        $this->emailTemplates[] = $emailTemplate;
+        $emailTemplate->setActivity($this);
+        return $this;
+    }
+
+    /**
+     * Remove emailTemplate
+     *
+     * @param \GS\ApiBundle\Entity\ActivityEmail $emailTemplate
+     */
+    public function removeEmailTemplate(\GS\ApiBundle\Entity\ActivityEmail $emailTemplate)
+    {
+        $this->emailTemplates->removeElement($emailTemplate);
+        $emailTemplate->setActivity(null);
+    }
+
+    /**
+     * Get emailTemplates
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEmailTemplates()
+    {
+        return $this->emailTemplates;
+    }
+
 }

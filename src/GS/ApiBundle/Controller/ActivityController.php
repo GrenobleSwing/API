@@ -3,8 +3,12 @@
 namespace GS\ApiBundle\Controller;
 
 use GS\ApiBundle\Entity\Activity;
+use GS\ApiBundle\Entity\ActivityEmail;
+use GS\ApiBundle\Entity\Registration;
 use GS\ApiBundle\Entity\Year;
 use GS\ApiBundle\Form\Type\ActivityType;
+use Lexik\Bundle\MailerBundle\Entity\Email;
+use Lexik\Bundle\MailerBundle\Entity\EmailTranslation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -92,6 +96,49 @@ class ActivityController extends Controller
             $activity = $form->getData();
             if (!$activity->getOwners()->contains($this->getUser())) {
                 $activity->addOwner($this->getUser());
+            }
+
+            $layout = $activity->getEmailLayout();
+            $emailTranslations = array(
+                array(
+                    'locale' => 'fr',
+                    'subject' => '[Grenoble Swing] Inscription',
+                    'body' => 'Mettre votre texte ici.',
+                    'from_address' => 'info@grenobleswing.com',
+                    'from_name' => 'Grenoble Swing',
+                ),
+                array(
+                    'locale' => 'en',
+                    'subject' => '[Grenoble Swing] Registration',
+                    'body' => 'Put your text here.',
+                    'from_address' => 'info@grenobleswing.com',
+                    'from_name' => 'Grenoble Swing',
+                ),
+            );
+
+            foreach (array(Registration::CREATE, Registration::WAIT,
+                Registration::VALIDATE, Registration::CANCEL, Registration::PAY) as
+                    $action) {
+                $email = new Email();
+                $email->setDescription($action);
+                $email->setReference(uniqid('template_'));
+                $email->setSpool(false);
+                $email->setLayout($layout);
+                $email->setUseFallbackLocale(true);
+                foreach ($emailTranslations as $trans) {
+                    $emailTranslation = new EmailTranslation();
+                    $emailTranslation->setLang($trans['locale']);
+                    $emailTranslation->setSubject($trans['subject']);
+                    $emailTranslation->setBody($trans['body']);
+                    $emailTranslation->setFromAddress($trans['from_address']);
+                    $emailTranslation->setFromName($trans['from_name']);
+                    $email->addTranslation($emailTranslation);
+                }
+                $activityEmail = new ActivityEmail();
+                $activityEmail->setAction($action);
+                $activityEmail->setEmailTemplate($email);
+
+                $activity->addEmailTemplate($activityEmail);
             }
 
             $em = $this->getDoctrine()->getManager();

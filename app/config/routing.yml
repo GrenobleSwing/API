@@ -23,5 +23,9 @@ fos_user_change_password:
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
+LexikMailerBundle:
+    resource: "@LexikMailerBundle/Resources/config/routing.xml"
+    prefix:   /templates
+
 gsapi:
     resource: "@GSApiBundle/Resources/config/routing.yml"

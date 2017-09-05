@@ -11,7 +11,7 @@ parameters:
 
 framework:
     #esi:             ~
-    translator:      ~
+    translator:      { fallbacks: [en, fr]}
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -75,7 +75,10 @@ doctrine:
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
+    auth_mode: "%mailer_auth_mode%"
     host:      "%mailer_host%"
+    encryption: "%mailer_encryption%"
+    port:      "%mailer_port%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
@@ -85,6 +88,11 @@ lexik_jwt_authentication:
     public_key_path:  '%jwt_public_key_path%'
     pass_phrase:      '%jwt_key_pass_phrase%'
     token_ttl:        '%jwt_token_ttl%'
+
+lexik_mailer:
+    admin_email: %admin_email%
+    templating_extensions:
+        - 'twig.extension.trans' # load the translation extension
 
 fos_rest:
     routing_loader:
@@ -124,12 +132,12 @@ kmj_pay_pal_bridge:
         retry: true
 
 assetic:
-  debug:          '%kernel.debug%'
-  filters:
-    cssrewrite: ~
-    jsqueeze:   ~
-    scssphp:
-      formatter: 'Leafo\ScssPhp\Formatter\Compressed'
+    debug:          '%kernel.debug%'
+    filters:
+        cssrewrite: ~
+        jsqueeze:   ~
+        scssphp:
+            formatter: 'Leafo\ScssPhp\Formatter\Compressed'
 
 # Using default values
 doctrine_migrations:

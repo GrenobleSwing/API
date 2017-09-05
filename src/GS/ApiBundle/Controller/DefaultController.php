@@ -13,7 +13,7 @@ class DefaultController extends Controller
      * @Route("/", name="homepage", options = { "expose" = true })
      * @Security("has_role('ROLE_USER')")
      */
-    public function indexAnonymous()
+    public function indexAction()
     {
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_PRIVILEGED')) {
             return $this->render('GSApiBundle:Default:rejected.html.twig');

@@ -35,9 +35,6 @@ class Builder implements ContainerAwareInterface
         $menu['Orga']->addChild('Liste des années', array(
             'route' => 'index_year',
         ));
-        $menu['Orga']->addChild('Ajouter une année', array(
-            'route' => 'add_year',
-        ));
 
         return $menu;
     }
@@ -64,11 +61,22 @@ class Builder implements ContainerAwareInterface
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
         $menu->addChild('Admin')->setAttribute('dropdown', true);
+        $menu['Admin']->addChild('Ajouter une année', array(
+            'route' => 'add_year',
+        ));
         $menu['Admin']->addChild('Liste des utilisateurs', array(
             'route' => 'index_user',
         ));
         $menu['Admin']->addChild('Liste des inscriptions', array(
             'route' => 'index_registration',
+        ));
+        $menu['Admin']
+            ->addChild('Email list', array(
+                'route' => 'lexik_mailer.email_list',
+            ))
+            ->setAttribute('divider_prepend', true);
+        $menu['Admin']->addChild('Layout list', array(
+            'route' => 'lexik_mailer.layout_list',
         ));
 
         return $menu;

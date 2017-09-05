@@ -54,7 +54,7 @@
     <h3>Status : {{ registration.state }}</h3>
 
     {% if registration.topic.type == 'couple' %}
-        <h4>Role : {{ registration.role }}</h4>
+        <h3>Role : {{ registration.role }}</h3>
         {% if registration.withPartner %}
             Partenaire :
             {% if registration.partnerRegistration %}

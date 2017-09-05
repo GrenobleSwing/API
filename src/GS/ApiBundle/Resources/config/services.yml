@@ -120,6 +120,6 @@ services:
         class: GS\ApiBundle\Services\MembershipService
         arguments: [ '@doctrine.orm.entity_manager' ]
 
-#    gsapi.registration.service:
-#        class: GS\ApiBundle\Services\RegistrationService
-#        arguments: [ '@doctrine.orm.entity_manager' ]
+    gsapi.registration.service:
+        class: GS\ApiBundle\Services\RegistrationService
+        arguments: [ '@doctrine.orm.entity_manager', '@mailer', '@lexik_mailer.message_factory' ]

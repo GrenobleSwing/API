@@ -10,10 +10,25 @@ use GS\ApiBundle\Entity\Year;
 class MembershipService
 {
     private $entityManager;
-    
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+
+    public function isAlmostMember(Account $account, Year $year)
+    {
+        $registrations = $this->entityManager
+            ->getRepository('GSApiBundle:Registration')
+            ->getMembershipRegistrationsForAccountAndYear($account, $year);
+
+        foreach ($registrations as $registration) {
+            if ($registration->getState() == 'PAID' ||
+                    $registration->getState() == 'VALIDATED') {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function isMember(Account $account, Year $year)
@@ -22,8 +37,10 @@ class MembershipService
             ->getRepository('GSApiBundle:Registration')
             ->getMembershipRegistrationsForAccountAndYear($account, $year);
 
-        if (count($registrations)) {
-            return true;
+        foreach ($registrations as $registration) {
+            if ($registration->getState() == 'PAID') {
+                return true;
+            }
         }
         return false;
     }
@@ -36,7 +53,9 @@ class MembershipService
 
         $accounts = [];
         foreach ($registrations as $registration) {
-            $accounts[] = $registration->getAccount();
+            if ($registration->getState() == 'PAID') {
+                $accounts[] = $registration->getAccount();
+            }
         }
 
         return $accounts;

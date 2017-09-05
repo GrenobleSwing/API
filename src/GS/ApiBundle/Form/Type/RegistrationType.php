@@ -51,6 +51,10 @@ class RegistrationType extends AbstractType
 //                    'class' => 'GSApiBundle:Registration',
 //                    'choice_label' => 'account.displayName',
 //                ))
+                ->add('acceptRules', CheckboxType::class, array(
+                    'label' => "J'ai lu et j'accepte les status et le règlement intérieur.",
+                    'required' => true,
+                ))
                 ->add('submit', SubmitType::class)
         ;
 
@@ -65,6 +69,10 @@ class RegistrationType extends AbstractType
                     $form->remove('partnerFirstName');
                     $form->remove('partnerLastName');
                     $form->remove('partnerEmail');
+                }
+                if (!$registration->getTopic()->getActivity()->getMembersOnly() &&
+                        !$registration->getTopic()->getActivity()->isMembership()) {
+                    $form->remove('acceptRules');
                 }
             }
         });

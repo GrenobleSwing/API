@@ -39,6 +39,9 @@ class RegistrationController extends Controller
                 $registration->getPartnerRegistration()->validate();
                 $this->fulfillMembershipRegistration($registration->getPartnerRegistration(), $em);
             }
+
+            $this->get('gsapi.registration.service')->onValidate($registration);
+
             $em->flush();
 
             $request->getSession()->getFlashBag()->add('success', "L'inscription a bien été validée.");
@@ -61,11 +64,12 @@ class RegistrationController extends Controller
         $year = $activity->getYear();
 
         if ($activity->getMembersOnly() &&
-                !$this->get('gsapi.user.membership')->isMember($account, $year) &&
+                !$this->get('gsapi.user.membership')->isAlmostMember($account, $year) &&
                 null !== $activity->getMembershipTopic()) {
             $membership = new Registration();
             $membership->setAccount($account);
             $membership->setTopic($activity->getMembershipTopic());
+            $membership->setAcceptRules($registration->getAcceptRules());
             $membership->validate();
             $em->persist($membership);
         }
@@ -89,6 +93,9 @@ class RegistrationController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $registration->wait();
             $em = $this->getDoctrine()->getManager();
+
+            $this->get('gsapi.registration.service')->onWait($registration);
+
             $em->flush();
 
             $request->getSession()->getFlashBag()->add('success', "L'inscription a bien été mise en liste d'attente.");
@@ -126,11 +133,14 @@ class RegistrationController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
-        // If the registration is not paid, there is no need to keep it.
-        if ($registration->getState() != 'PAID') {
-            $em->remove($registration);
-        }
-        $em->flush();
+            // If the registration is not paid, there is no need to keep it.
+            if ($registration->getState() != 'PAID') {
+                $em->remove($registration);
+            }
+
+            $this->get('gsapi.registration.service')->onCancel($registration);
+
+            $em->flush();
 
             $request->getSession()->getFlashBag()->add('success', "L'inscription a bien été annulée.");
 
@@ -195,6 +205,9 @@ class RegistrationController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($registration);
+
+            $this->get('gsapi.registration.service')->onSubmitted($registration);
+
             $em->flush();
 
             $request->getSession()->getFlashBag()->add('success', 'Inscription bien enregistrée.');
@@ -256,7 +269,7 @@ class RegistrationController extends Controller
     }
 
     /**
-     * @Route("/category/{id}/delete", name="delete_registration", requirements={"id": "\d+"})
+     * @Route("/registration/{id}/delete", name="delete_registration", requirements={"id": "\d+"})
      * @Security("is_granted('delete', registration)")
      */
     public function deleteAction(Registration $registration, Request $request)
@@ -271,7 +284,7 @@ class RegistrationController extends Controller
 
             $request->getSession()->getFlashBag()->add('success', "L'inscription a bien été supprimée.");
 
-            return $this->redirectToRoute('view_registration', array('id' => $registration->getId()));
+            return $this->redirectToRoute('homepage');
         }
 
         // Si la requête est en GET, on affiche une page de confirmation avant de supprimer

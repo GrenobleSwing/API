@@ -187,6 +187,61 @@
     {% endif %}
 
     {% if is_granted("edit", activity) %}
+        <h3>Liste des actions envoyant des emails :</h3>
+        {% set i = 0 %}
+        {% for action in activity.triggeredEmails %}
+            {% if i > 0 %}
+                -
+            {% endif %}
+            {% set i = i + 1 %}
+
+            {% if action == 'validate' %}
+                Validation
+            {% elseif action == 'wait' %}
+                Mise en liste d'attente
+            {% elseif action == 'create' %}
+                Soumission
+            {% elseif action == 'pay' %}
+                Paiement
+            {% elseif action == 'cancel' %}
+                Annulation
+            {% endif %}
+        {% endfor %}
+
+        <h3>Templates pour les emails</h3>
+        Layout des emails (ne pas modifier sauf si vous savez ce que vous faites)
+        <a href="{{ path('lexik_mailer.layout_edit', {'layoutId': activity.emailLayout.id}) }}" class="btn btn-default btn-xs"
+                data-toggle="tooltip" data-placement="top" title="Editer">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            Modifier
+        </a>
+        <br>
+        Liste des templates (à personnaliser selon vos besoins) :
+        <ul>
+            {% for template in activity.emailTemplates %}
+                <li>
+                    {% if template.action == 'validate' %}
+                        Validation
+                    {% elseif template.action == 'wait' %}
+                        Mise en liste d'attente
+                    {% elseif template.action == 'create' %}
+                        Soumission
+                    {% elseif template.action == 'pay' %}
+                        Paiement
+                    {% elseif template.action == 'cancel' %}
+                        Annulation
+                    {% endif %}
+                    <a href="{{ path('lexik_mailer.email_edit', {'emailId': template.emailTemplate.id}) }}" class="btn btn-default btn-xs"
+                            data-toggle="tooltip" data-placement="top" title="Editer">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        Modifier
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if is_granted("edit", activity) %}
         <h3>Liste des admins :</h3>
         {{ activity.owners|join(', ') }}
     {% endif %}

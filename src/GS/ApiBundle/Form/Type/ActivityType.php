@@ -8,11 +8,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use GS\ApiBundle\Entity\Activity;
+use GS\ApiBundle\Entity\Registration;
 
 class ActivityType extends AbstractType
 {
@@ -62,6 +64,18 @@ class ActivityType extends AbstractType
                     'attr' => array(
                         'class' => 'js-select-multiple',
                     ),
+                ))
+                ->add('triggeredEmails', ChoiceType::class, array(
+                    'label' => 'Liste des emails à envoyer',
+                    'choices' => array(
+                        "Soumission" => Registration::CREATE,
+                        "Mise en liste d'attente" => Registration::WAIT,
+                        "Validation" => Registration::VALIDATE,
+                        "Paiement" => Registration::PAY,
+                        "Annulation" => Registration::CANCEL,
+                    ),
+                    'multiple' => true,
+                    'expanded' => true,
                 ))
                 ->add('submit', SubmitType::class)
         ;

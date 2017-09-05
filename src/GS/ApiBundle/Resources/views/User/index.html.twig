@@ -29,8 +29,6 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.15/b-colvis-1.4.0/r-2.1.1/datatables.min.js"></script>
-
     <script>
         $(document).ready(function () {
             // Setup - add a text input to each footer cell
@@ -88,9 +86,4 @@
 
         });
     </script>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.15/b-colvis-1.4.0/r-2.1.1/datatables.min.css"/>
 {% endblock %}

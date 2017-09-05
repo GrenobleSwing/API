@@ -5,11 +5,15 @@ namespace GS\ApiBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Lexik\Bundle\MailerBundle\Entity\Email;
+use Lexik\Bundle\MailerBundle\Entity\EmailTranslation;
 
 use GS\ApiBundle\Entity\Activity;
+use GS\ApiBundle\Entity\ActivityEmail;
 use GS\ApiBundle\Entity\Address;
 use GS\ApiBundle\Entity\Category;
 use GS\ApiBundle\Entity\Discount;
+use GS\ApiBundle\Entity\Registration;
 use GS\ApiBundle\Entity\Schedule;
 use GS\ApiBundle\Entity\Society;
 use GS\ApiBundle\Entity\Topic;
@@ -79,6 +83,49 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $activity1->setMembership(true);
         $activity1->addOwner($organizerUser);
 
+        $emailTranslations = array(
+            array(
+                'locale' => 'fr',
+                'subject' => '[Grenoble Swing] Inscription',
+                'body' => 'Mettre votre texte ici.',
+                'from_address' => 'info@grenobleswing.com',
+                'from_name' => 'Grenoble Swing',
+            ),
+            array(
+                'locale' => 'en',
+                'subject' => '[Grenoble Swing] Registration',
+                'body' => 'Put your text here.',
+                'from_address' => 'info@grenobleswing.com',
+                'from_name' => 'Grenoble Swing',
+            ),
+        );
+
+        $layout1 = $activity1->getEmailLayout();
+        foreach (array(Registration::CREATE, Registration::WAIT,
+            Registration::VALIDATE, Registration::CANCEL, Registration::PAY) as
+                $action) {
+            $email = new Email();
+            $email->setDescription($action);
+            $email->setReference(uniqid('template_'));
+            $email->setSpool(false);
+            $email->setLayout($layout1);
+            $email->setUseFallbackLocale(true);
+            foreach ($emailTranslations as $trans) {
+                $emailTranslation = new EmailTranslation();
+                $emailTranslation->setLang($trans['locale']);
+                $emailTranslation->setSubject($trans['subject']);
+                $emailTranslation->setBody($trans['body']);
+                $emailTranslation->setFromAddress($trans['from_address']);
+                $emailTranslation->setFromName($trans['from_name']);
+                $email->addTranslation($emailTranslation);
+            }
+            $activityEmail = new ActivityEmail();
+            $activityEmail->setAction($action);
+            $activityEmail->setEmailTemplate($email);
+
+            $activity1->addEmailTemplate($activityEmail);
+        }
+
         $category1 = new Category();
         $category1->setName('Adhesion');
         $category1->setPrice(10.0);
@@ -110,6 +157,32 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $activity2->setMembersOnly(true);
         $activity2->setMembershipTopic($topic1);
         $activity2->addOwner($organizerUser);
+
+        $layout2 = $activity2->getEmailLayout();
+        foreach (array(Registration::CREATE, Registration::WAIT,
+            Registration::VALIDATE, Registration::CANCEL, Registration::PAY) as
+                $action) {
+            $email = new Email();
+            $email->setDescription($action);
+            $email->setReference(uniqid('template_'));
+            $email->setSpool(false);
+            $email->setLayout($layout2);
+            $email->setUseFallbackLocale(true);
+            foreach ($emailTranslations as $trans) {
+                $emailTranslation = new EmailTranslation();
+                $emailTranslation->setLang($trans['locale']);
+                $emailTranslation->setSubject($trans['subject']);
+                $emailTranslation->setBody($trans['body']);
+                $emailTranslation->setFromAddress($trans['from_address']);
+                $emailTranslation->setFromName($trans['from_name']);
+                $email->addTranslation($emailTranslation);
+            }
+            $activityEmail = new ActivityEmail();
+            $activityEmail->setAction($action);
+            $activityEmail->setEmailTemplate($email);
+
+            $activity2->addEmailTemplate($activityEmail);
+        }
 
         $category2 = new Category();
         $category2->setName('Cours');

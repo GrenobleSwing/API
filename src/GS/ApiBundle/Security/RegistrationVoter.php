@@ -13,14 +13,9 @@ use GS\ApiBundle\Entity\User;
 class RegistrationVoter extends Voter
 {
     // these strings are just invented: you can use anything
-    const CREATE = 'create';
     const VIEW = 'view';
     const EDIT = 'edit';
     const DELETE = 'delete';
-    const WAIT = 'wait';
-    const VALIDATE = 'validate';
-    const CANCEL = 'cancel';
-    const PAY = 'pay';
 
     private $decisionManager;
 
@@ -32,8 +27,9 @@ class RegistrationVoter extends Voter
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::CREATE, self::VIEW, self::EDIT,
-            self::DELETE, self::WAIT, self::VALIDATE, self::CANCEL, self::PAY))) {
+        if (!in_array($attribute, array(Registration::CREATE, self::VIEW,
+            self::EDIT, self::DELETE, Registration::WAIT, Registration::VALIDATE,
+            Registration::CANCEL, Registration::PAY))) {
             return false;
         }
 
@@ -58,7 +54,7 @@ class RegistrationVoter extends Voter
         $registration = $subject;
 
         switch ($attribute) {
-            case self::CREATE:
+            case Registration::CREATE:
                 return $this->canCreate($registration, $user, $token);
             case self::VIEW:
                 return $this->canView($registration, $user, $token);
@@ -66,13 +62,13 @@ class RegistrationVoter extends Voter
                 return $this->canEdit($registration, $user, $token);
             case self::DELETE:
                 return $this->canDelete($registration, $user, $token);
-            case self::WAIT:
+            case Registration::WAIT:
                 return $this->canWait($registration, $user, $token);
-            case self::VALIDATE:
+            case Registration::VALIDATE:
                 return $this->canValidate($registration, $user, $token);
-            case self::CANCEL:
+            case Registration::CANCEL:
                 return $this->canCancel($registration, $user, $token);
-            case self::PAY:
+            case Registration::PAY:
                 return $this->canPay($registration, $user, $token);
         }
 
@@ -129,7 +125,11 @@ class RegistrationVoter extends Voter
 
     private function canEdit(Registration $registration, User $user, TokenInterface $token)
     {
-        if ('SUBMITTED' != $registration->getState()) {
+        if ('PAID' != $registration->getState() &&
+                $this->isEditor($registration, $user, $token)) {
+            // Organizer should be able to add a partner or change information if needed
+            return true;
+        } elseif ('SUBMITTED' != $registration->getState()) {
             return false;
         }
 
@@ -137,7 +137,7 @@ class RegistrationVoter extends Voter
             return true;
         }
 
-        return $this->isEditor($registration, $user, $token);
+        return false;
     }
 
     private function canDelete(Registration $registration, User $user, TokenInterface $token)

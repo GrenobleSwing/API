@@ -357,7 +357,7 @@ class Account
      */
     public function getDisplayName()
     {
-        return $this->getFirstName() . ' ' . $this->getLastName();
+        return $this->getFirstName() . ' ' . $this->getLastName() . ' (' . $this->getEmail() . ')';
     }
 
     /**

@@ -14,7 +14,10 @@ parameters:
     mysql_server_version: 5.6
 
     mailer_transport:  smtp
+    mailer_auth_mode:  ~
     mailer_host:       127.0.0.1
+    mailer_encryption: ~
+    mailer_port:       ~
     mailer_user:       ~
     mailer_password:   ~
 
@@ -32,3 +35,5 @@ parameters:
     paypal_prod_secret: 1234567890        # Client Secret provided from developer.paypal.com
 
     wkhtmltopdf.binary: /var/local/wkhtmltox/bin/wkhtmltopdf
+
+    admin_email: admin@test.com
