@@ -304,4 +304,18 @@ class FormGeneratorService
         return $view;
     }
 
+    public function getRegistrationFormView($registration, $form, $statusCode = 200)
+    {
+        $data = array(
+            'form' => $form,
+            'registration' => $registration,
+        );
+        $view = View::create($data, $statusCode)
+            ->setTemplate("GSApiBundle:Registration:add.html.twig")
+            ->setTemplateVar('data')
+            ->setFormat('html')
+            ;
+        return $view;
+    }
+
 }

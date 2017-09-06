@@ -17,5 +17,8 @@
 **/*~
 nbproject/
 /web/js/
+/web/css/
+/web/Resources/
+/web/fonts/
 newman/
 /web/images/

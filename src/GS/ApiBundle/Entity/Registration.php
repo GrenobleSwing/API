@@ -93,6 +93,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Registration
 {
+    const CREATE = 'create';
+    const WAIT = 'wait';
+    const VALIDATE = 'validate';
+    const CANCEL = 'cancel';
+    const PAY = 'pay';
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -198,6 +204,12 @@ class Registration
      * @Type("Relation")
      */
     private $partnerRegistration = null;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Assert\Type("bool")
+     */
+    private $acceptRules = false;
 
     /**
      * Get id
@@ -529,5 +541,29 @@ class Registration
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set acceptRules
+     *
+     * @param boolean $acceptRules
+     *
+     * @return Registration
+     */
+    public function setAcceptRules($acceptRules)
+    {
+        $this->acceptRules = $acceptRules;
+
+        return $this;
+    }
+
+    /**
+     * Get acceptRules
+     *
+     * @return boolean
+     */
+    public function getAcceptRules()
+    {
+        return $this->acceptRules;
     }
 }

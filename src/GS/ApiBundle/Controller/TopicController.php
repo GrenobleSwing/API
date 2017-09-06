@@ -286,7 +286,7 @@ class TopicController extends FOSRestController
         else
         {
             $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'gs_api_post_registration');
-            $view = $this->get('gsapi.form_generator')->getFormView($form);
+            $view = $this->get('gsapi.form_generator')->getRegistrationFormView($registration, $form);
         }
         return $this->handleView($view);
     }

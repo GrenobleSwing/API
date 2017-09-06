@@ -58,6 +58,31 @@ class ActivityType extends AbstractType
                         "Non" => false
                     )
                 ))
+                ->add('owners', EntityType::class, array(
+                    'label' => 'Admins',
+                    'class' => 'GSApiBundle:User',
+                    'choice_label' => 'email',
+                    'multiple' => true,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                                ->orderBy('u.username', 'ASC');
+                    },
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
+                    ),
+                ))
+                ->add('triggeredEmails', ChoiceType::class, array(
+                    'label' => 'Liste des emails à envoyer',
+                    'choices' => array(
+                        "Soumission" => Registration::CREATE,
+                        "Mise en liste d'attente" => Registration::WAIT,
+                        "Validation" => Registration::VALIDATE,
+                        "Paiement" => Registration::PAY,
+                        "Annulation" => Registration::CANCEL,
+                    ),
+                    'multiple' => true,
+                    'expanded' => true,
+                ))
                 ->add('submit', SubmitType::class)
         ;
 

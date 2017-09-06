@@ -231,6 +231,8 @@ class RegistrationController extends FOSRestController
                 $registration->validate();
             }
 
+            $this->get('gsapi.registration.service')->onSubmitted($registration);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($registration);
             $em->flush();
@@ -238,7 +240,7 @@ class RegistrationController extends FOSRestController
             $view = $this->view(array('id' => $registration->getId()), 201);
 
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            $view = $this->get('gsapi.form_generator')->getRegistrationFormView($registration, $form, 412);
         }
         return $this->handleView($view);
     }
@@ -440,7 +442,7 @@ class RegistrationController extends FOSRestController
     public function editAction(Registration $registration)
     {
         $form = $this->get('gsapi.form_generator')->getRegistrationForm($registration, 'gs_api_put_registration', 'PUT');
-        $view = $this->get('gsapi.form_generator')->getFormView($form);
+        $view = $this->get('gsapi.form_generator')->getRegistrationFormView($registration, $form);
         return $this->handleView($view);
     }
 
@@ -475,7 +477,7 @@ class RegistrationController extends FOSRestController
             $view = $this->view(null, 204);
 
         } else {
-            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+            $view = $this->get('gsapi.form_generator')->getRegistrationFormView($registration, $form, 412);
         }
         return $this->handleView($view);
     }

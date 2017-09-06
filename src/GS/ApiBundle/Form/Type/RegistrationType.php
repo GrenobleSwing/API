@@ -54,6 +54,14 @@ class RegistrationType extends AbstractType
 //                    'class' => 'GSApiBundle:Registration',
 //                    'choice_label' => 'account.displayName',
 //                ))
+                ->add('acceptRules', CheckboxType::class, array(
+                    'label' => "Je m'engage à respecter l'objet associatif, les " .
+                        "statuts (http://www.grenobleswing.com/pour-les-membres/statuts/)" .
+                        " et le " .
+                        "règlement intérieur (http://www.grenobleswing.com/pour-les-membres/reglement-interieur/)" .
+                        ", et je déclare vouloir adhérer à l'association Grenoble Swing.",
+                    'required' => true,
+                ))
                 ->add('submit', SubmitType::class)
         ;
 
@@ -68,6 +76,10 @@ class RegistrationType extends AbstractType
                     $form->remove('partnerFirstName');
                     $form->remove('partnerLastName');
                     $form->remove('partnerEmail');
+                }
+                if (!$registration->getTopic()->getActivity()->getMembersOnly() &&
+                        !$registration->getTopic()->getActivity()->isMembership()) {
+                    $form->remove('acceptRules');
                 }
             }
         });

@@ -116,7 +116,7 @@ class Topic
 
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Activity", inversedBy="topics")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      * @SerializedName("activityId")
      * @Type("Relation")
      */
