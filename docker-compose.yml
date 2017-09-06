@@ -25,9 +25,9 @@ services:
     links:
       - db:db
 
-  elk:
-    build: .docker/elk
-    ports:
-      - 8082:80
-    volumes:
-      - .:/var/www/html
+#  elk:
+#    build: .docker/elk
+#    ports:
+#      - 8082:80
+#    volumes:
+#      - .:/var/www/html

@@ -150,7 +150,12 @@ class YearController extends FOSRestController
             ->getRepository('GSApiBundle:Year')
             ->findCurrentYear()
             ;
-        $view = $this->view($year, 200);
+        if ($year === null) {
+            $status = 400;
+        } else {
+            $status = 200;
+        }
+        $view = $this->view($year, $status);
         return $this->handleView($view);
     }
 
@@ -172,7 +177,12 @@ class YearController extends FOSRestController
             ->getRepository('GSApiBundle:Year')
             ->findNextYear()
             ;
-        $view = $this->view($year, 200);
+        if ($year === null) {
+            $status = 400;
+        } else {
+            $status = 200;
+        }
+        $view = $this->view($year, $status);
         return $this->handleView($view);
     }
 
@@ -194,7 +204,12 @@ class YearController extends FOSRestController
             ->getRepository('GSApiBundle:Year')
             ->findPreviousYear()
             ;
-        $view = $this->view($year, 200);
+        if ($year === null) {
+            $status = 400;
+        } else {
+            $status = 200;
+        }
+        $view = $this->view($year, $status);
         return $this->handleView($view);
     }
 
