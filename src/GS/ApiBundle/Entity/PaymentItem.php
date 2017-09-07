@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 use PayPal\Api\Item;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Payment
@@ -23,6 +24,7 @@ class PaymentItem
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Type("float")
      */
     private $amount = 0.0;
 
@@ -96,7 +98,7 @@ class PaymentItem
 
         // Save the amount
         $this->setAmount($amount);
-        
+
         if (null !== $this->getPayment()) {
             $this->getPayment()->updateAmount();
         }
@@ -209,7 +211,7 @@ class PaymentItem
     {
         $amount = $this->getRegistration()->getTopic()
                 ->getCategory()->getPrice();
-        
+
         $item = new Item();
         $item->setName($this->getRegistration()->getTopic()->getTitle())
                 ->setDescription($this->getRegistration()->getTopic()->getDescription())
@@ -217,7 +219,7 @@ class PaymentItem
                 ->setQuantity(1)
                 ->setTax(0)
                 ->setPrice($amount);
-        
+
         $itemList = array($item);
 
         $alreadyPaid = $this->getRegistration()->getAmountPaid();
@@ -230,7 +232,7 @@ class PaymentItem
                     ->setPrice(-1 * $alreadyPaid);
             $itemList[] = $item2;
         }
-        
+
         $discountAmount = $this->getDiscountAmount($amount);
         if (0 < $discountAmount) {
             $item3 = new Item();
@@ -242,7 +244,7 @@ class PaymentItem
                     ->setPrice(-1 * $discountAmount);
             $itemList[] = $item3;
         }
-        
+
         return $itemList;
     }
 }

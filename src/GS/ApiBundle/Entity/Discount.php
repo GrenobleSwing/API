@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Discount
@@ -53,21 +54,28 @@ class Discount
 
     /**
      * @ORM\Column(type="string", length=200)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 200
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Assert\Choice({"percent", "amount"})
      */
     private $type;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Type("float")
      */
     private $value;
 
     /**
      * @ORM\Column(name="`condition`", type="string", length=200)
+     * @Assert\Choice({"member", "student", "2nd", "3rd", "4th", "5th"})
      */
     private $condition;
 

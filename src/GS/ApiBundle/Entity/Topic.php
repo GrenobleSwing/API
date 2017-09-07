@@ -8,7 +8,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Topic
@@ -78,17 +78,24 @@ class Topic
     /**
      * @ORM\Column(type="string", length=200)
      * @Groups({"registration_group"})
+     * @Assert\Type("string")
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 200
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Type("string")
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=16)
      * @Groups({"registration_group"})
+     * @Assert\Choice({"couple", "solo", "adhesion"})
      */
     private $type = 'couple';
 
@@ -96,11 +103,13 @@ class Topic
      * States: draft, open, close
      *
      * @ORM\Column(type="string", length=16)
+     * @Assert\Choice({"DRAFT", "OPEN", "CLOSE"})
      */
     private $state = 'DRAFT';
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\Type("bool")
      */
     private $autoValidation = false;
 

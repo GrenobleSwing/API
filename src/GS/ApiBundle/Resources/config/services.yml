@@ -122,3 +122,7 @@ services:
     gsapi.registration.service:
         class: GS\ApiBundle\Services\RegistrationService
         arguments: [ '@doctrine.orm.entity_manager', '@mailer', '@lexik_mailer.message_factory' ]
+
+    gsapi.payment.service:
+        class: GS\ApiBundle\Services\PaymentService
+        arguments: [ '@mailer', '@lexik_mailer.message_factory' ]

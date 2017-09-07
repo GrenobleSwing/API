@@ -3,6 +3,7 @@
 namespace GS\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Address
@@ -24,6 +25,10 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255
+     * )
      */
     private $street;
 
@@ -31,6 +36,10 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255
+     * )
      */
     private $zipCode;
 
@@ -38,6 +47,10 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255
+     * )
      */
     private $city;
 
@@ -45,6 +58,10 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255
+     * )
      */
     private $county;
 
@@ -52,6 +69,10 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255
+     * )
      */
     private $state;
 
@@ -59,6 +80,10 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=2, nullable=true)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 2
+     * )
      */
     private $country = 'FR';
 

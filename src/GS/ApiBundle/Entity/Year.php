@@ -2,11 +2,11 @@
 
 namespace GS\ApiBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Hateoas\Configuration\Annotation as Hateoas;
-
 use JMS\Serializer\Annotation\Type;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Year
@@ -74,6 +74,10 @@ class Year
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 64
+     * )
      */
     private $title;
 
@@ -84,12 +88,14 @@ class Year
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Date()
      * @Type("DateTime<'Y-m-d'>")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Date()
      * @Type("DateTime<'Y-m-d'>")
      */
     private $endDate;
@@ -98,6 +104,7 @@ class Year
      * States: draft, open, close
      *
      * @ORM\Column(type="string", length=16)
+     * @Assert\Choice({"DRAFT", "OPEN", "CLOSE"})
      */
     private $state = 'DRAFT';
 
@@ -106,6 +113,13 @@ class Year
      * @Type("Relation<Activity>")
      */
     private $activities;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Society", inversedBy="years")
+     * @ORM\JoinColumn(nullable=false)
+     * @Type("Relation")
+     */
+    private $society;
 
     /**
      * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
@@ -320,5 +334,29 @@ class Year
     public function getState()
     {
         return $this->state;
+    }
+
+    /**
+     * Set society
+     *
+     * @param \GS\ApiBundle\Entity\Society $society
+     *
+     * @return Year
+     */
+    public function setSociety(\GS\ApiBundle\Entity\Society $society)
+    {
+        $this->society = $society;
+
+        return $this;
+    }
+
+    /**
+     * Get society
+     *
+     * @return \GS\ApiBundle\Entity\Society
+     */
+    public function getSociety()
+    {
+        return $this->society;
     }
 }
