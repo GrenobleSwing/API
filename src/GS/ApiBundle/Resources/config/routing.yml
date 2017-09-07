@@ -23,6 +23,10 @@ registration:
     type:     annotation
     resource: GS\ApiBundle\Controller\RegistrationController
 
+society:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\SocietyController
+
 topic:
     type:     annotation
     resource: GS\ApiBundle\Controller\TopicController

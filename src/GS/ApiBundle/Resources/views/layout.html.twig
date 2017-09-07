@@ -4,15 +4,15 @@
     {{ parent() }}
 
     {% if is_granted("ROLE_PRIVILEGED") %}
-{#        {{ knp_menu_render('GSApiBundle:Builder:mainMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}#}
+{#        {{ knp_menu_render('mainMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}#}
         {% if is_granted("ROLE_ORGANIZER") %}
-            {{ knp_menu_render('GSApiBundle:Builder:organizerMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
+            {{ knp_menu_render('organizerMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
         {% endif %}
         {% if is_granted("ROLE_TREASURER") %}
-            {{ knp_menu_render('GSApiBundle:Builder:treasurerMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
+            {{ knp_menu_render('treasurerMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
         {% endif %}
         {% if is_granted("ROLE_ADMIN") %}
-            {{ knp_menu_render('GSApiBundle:Builder:adminMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
+            {{ knp_menu_render('adminMenu', {'currentClass': 'active', 'template': 'GSApiBundle:Menu:knp_menu.html.twig'}) }}
         {% endif %}
     {% endif %}
 

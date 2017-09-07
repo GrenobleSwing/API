@@ -88,15 +88,14 @@ class ActivityController extends Controller
     public function addAction(Year $year, Request $request)
     {
         $activity = new Activity();
-        $activity->setYear($year);
         $form = $this->createForm(ActivityType::class, $activity);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $activity = $form->getData();
             if (!$activity->getOwners()->contains($this->getUser())) {
                 $activity->addOwner($this->getUser());
             }
+            $year->addActivity($activity);
 
             $layout = $activity->getEmailLayout();
             $emailTranslations = array(
@@ -117,7 +116,7 @@ class ActivityController extends Controller
             );
 
             foreach (array(Registration::CREATE, Registration::WAIT,
-                Registration::VALIDATE, Registration::CANCEL, Registration::PAY) as
+                Registration::VALIDATE, Registration::CANCEL) as
                     $action) {
                 $email = new Email();
                 $email->setDescription($action);

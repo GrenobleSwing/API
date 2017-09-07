@@ -63,6 +63,13 @@ class Year
     private $activities;
 
     /**
+     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Society", inversedBy="years")
+     * @ORM\JoinColumn(nullable=false)
+     * @Type("Relation")
+     */
+    private $society;
+
+    /**
      * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
      * @Type("Relation<User>")
      */
@@ -275,5 +282,29 @@ class Year
     public function getState()
     {
         return $this->state;
+    }
+
+    /**
+     * Set society
+     *
+     * @param \GS\ApiBundle\Entity\Society $society
+     *
+     * @return Year
+     */
+    public function setSociety(\GS\ApiBundle\Entity\Society $society)
+    {
+        $this->society = $society;
+
+        return $this;
+    }
+
+    /**
+     * Get society
+     *
+     * @return \GS\ApiBundle\Entity\Society
+     */
+    public function getSociety()
+    {
+        return $this->society;
     }
 }

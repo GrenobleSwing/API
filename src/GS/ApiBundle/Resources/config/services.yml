@@ -3,6 +3,15 @@ services:
 #        class: GS\ApiBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
 
+    gsapi.menu.builder:
+        class: GS\ApiBundle\Menu\Builder
+        arguments: [ '@knp_menu.factory', '@doctrine.orm.entity_manager' ]
+        tags:
+            - { name: knp_menu.menu_builder, method: mainMenu, alias: mainMenu }
+            - { name: knp_menu.menu_builder, method: organizerMenu, alias: organizerMenu }
+            - { name: knp_menu.menu_builder, method: treasurerMenu, alias: treasurerMenu }
+            - { name: knp_menu.menu_builder, method: adminMenu, alias: adminMenu }
+
     gsapi.profiler.admin.matcher:
         class: GS\ApiBundle\Profiler\AdminMatcher
         arguments: ['@security.authorization_checker']
@@ -123,3 +132,7 @@ services:
     gsapi.registration.service:
         class: GS\ApiBundle\Services\RegistrationService
         arguments: [ '@doctrine.orm.entity_manager', '@mailer', '@lexik_mailer.message_factory' ]
+
+    gsapi.payment.service:
+        class: GS\ApiBundle\Services\PaymentService
+        arguments: [ '@mailer', '@lexik_mailer.message_factory' ]

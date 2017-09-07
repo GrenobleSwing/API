@@ -2,6 +2,7 @@
 
 namespace GS\ApiBundle\Controller;
 
+use GS\ApiBundle\Entity\Society;
 use GS\ApiBundle\Entity\Year;
 use GS\ApiBundle\Form\Type\YearType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -72,10 +73,10 @@ class YearController extends Controller
     }
 
     /**
-     * @Route("/year/add", name="add_year")
+     * @Route("/year/add/{id}", name="add_year")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function addAction(Request $request)
+    public function addAction(Society $society, Request $request)
     {
         $year = new Year();
         $form = $this->createForm(YearType::class, $year);
@@ -85,6 +86,8 @@ class YearController extends Controller
             if (!$year->getOwners()->contains($this->getUser())) {
                 $year->addOwner($this->getUser());
             }
+            $society->addYear($year);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($year);
             $em->flush();

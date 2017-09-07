@@ -2,17 +2,23 @@
 
 namespace GS\ApiBundle\Menu;
 
+use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class Builder implements ContainerAwareInterface
+class Builder
 {
-    use ContainerAwareTrait;
+    private $entityManager;
+    private $factory;
 
-    public function mainMenu(FactoryInterface $factory, array $options)
+    public function __construct(FactoryInterface $factory, EntityManager $entityManager)
     {
-        $menu = $factory->createItem('root');
+        $this->entityManager = $entityManager;
+        $this->factory = $factory;
+    }
+
+    public function mainMenu(array $options)
+    {
+        $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
         $menu->addChild('Profil')->setAttribute('dropdown', true);
@@ -26,9 +32,9 @@ class Builder implements ContainerAwareInterface
         return $menu;
     }
 
-    public function organizerMenu(FactoryInterface $factory, array $options)
+    public function organizerMenu(array $options)
     {
-        $menu = $factory->createItem('root');
+        $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
         $menu->addChild('Orga')->setAttribute('dropdown', true);
@@ -39,9 +45,9 @@ class Builder implements ContainerAwareInterface
         return $menu;
     }
 
-    public function treasurerMenu(FactoryInterface $factory, array $options)
+    public function treasurerMenu(array $options)
     {
-        $menu = $factory->createItem('root');
+        $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
         $menu->addChild('Trésorier')->setAttribute('dropdown', true);
@@ -55,14 +61,24 @@ class Builder implements ContainerAwareInterface
         return $menu;
     }
 
-    public function adminMenu(FactoryInterface $factory, array $options)
+    public function adminMenu(array $options)
     {
-        $menu = $factory->createItem('root');
+        $societies = $this->entityManager
+            ->getRepository('GSApiBundle:Society')
+            ->findAll()
+            ;
+        $society = $societies[0];
+
+        $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
         $menu->addChild('Admin')->setAttribute('dropdown', true);
+        $menu['Admin']->addChild('Société', array(
+            'route' => 'view_society',
+        ));
         $menu['Admin']->addChild('Ajouter une année', array(
             'route' => 'add_year',
+            'routeParameters' => array('id' => $society->getId())
         ));
         $menu['Admin']->addChild('Liste des utilisateurs', array(
             'route' => 'index_user',

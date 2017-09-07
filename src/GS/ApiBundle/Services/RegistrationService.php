@@ -91,14 +91,6 @@ class RegistrationService
         return true;
     }
 
-    public function onPay(Registration $registration)
-    {
-        if (in_array(Registration::PAY, $registration->getTopic()->getActivity()->getTriggeredEmails())) {
-            $this->sendEmail($registration, Registration::PAY);
-        }
-        return true;
-    }
-
     public function onCancel(Registration $registration)
     {
         if (in_array(Registration::CANCEL, $registration->getTopic()->getActivity()->getTriggeredEmails())) {

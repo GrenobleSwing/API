@@ -201,8 +201,6 @@
                 Mise en liste d'attente
             {% elseif action == 'create' %}
                 Soumission
-            {% elseif action == 'pay' %}
-                Paiement
             {% elseif action == 'cancel' %}
                 Annulation
             {% endif %}
@@ -226,8 +224,6 @@
                         Mise en liste d'attente
                     {% elseif template.action == 'create' %}
                         Soumission
-                    {% elseif template.action == 'pay' %}
-                        Paiement
                     {% elseif template.action == 'cancel' %}
                         Annulation
                     {% endif %}

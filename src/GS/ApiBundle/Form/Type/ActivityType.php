@@ -71,7 +71,6 @@ class ActivityType extends AbstractType
                         "Soumission" => Registration::CREATE,
                         "Mise en liste d'attente" => Registration::WAIT,
                         "Validation" => Registration::VALIDATE,
-                        "Paiement" => Registration::PAY,
                         "Annulation" => Registration::CANCEL,
                     ),
                     'multiple' => true,

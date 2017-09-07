@@ -66,8 +66,6 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $society->setTaxInformation('SIRET : 22222222');
         $society->setVatInformation('TVA Intra : FR2222222');
 
-        $manager->persist($society);
-
         $year = new Year();
         $year->setTitle('Annee 2016-2017');
         $year->setDescription('description pour annee 2016-2017');
@@ -102,7 +100,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
 
         $layout1 = $activity1->getEmailLayout();
         foreach (array(Registration::CREATE, Registration::WAIT,
-            Registration::VALIDATE, Registration::CANCEL, Registration::PAY) as
+            Registration::VALIDATE, Registration::CANCEL) as
                 $action) {
             $email = new Email();
             $email->setDescription($action);
@@ -160,7 +158,7 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
 
         $layout2 = $activity2->getEmailLayout();
         foreach (array(Registration::CREATE, Registration::WAIT,
-            Registration::VALIDATE, Registration::CANCEL, Registration::PAY) as
+            Registration::VALIDATE, Registration::CANCEL) as
                 $action) {
             $email = new Email();
             $email->setDescription($action);
@@ -271,7 +269,9 @@ class LoadData extends AbstractFixture implements ContainerAwareInterface, Order
         $year->addActivity($activity1);
         $year->addActivity($activity2);
 
-        $manager->persist($year);
+        $society->addYear($year);
+
+        $manager->persist($society);
         $manager->flush();
     }
 

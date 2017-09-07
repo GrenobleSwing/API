@@ -39,6 +39,9 @@ class PaymentController extends Controller
                 $invoice = new Invoice($payment);
                 $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));
                 $invoice->setDate($payment->getDate());
+
+                $this->get('gsapi.payment.service')->sendEmail($payment);
+
                 $em->persist($invoice);
             }
             $em->flush();
@@ -128,6 +131,9 @@ class PaymentController extends Controller
                 $invoice = new Invoice($payment);
                 $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));
                 $invoice->setDate($payment->getDate());
+
+                $this->get('gsapi.payment.service')->sendEmail($payment);
+
                 $em->persist($invoice);
             }
             $em->flush();
