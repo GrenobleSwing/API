@@ -79,6 +79,7 @@ class YearController extends Controller
     public function addAction(Society $society, Request $request)
     {
         $year = new Year();
+        $year->setSociety($society);
         $form = $this->createForm(YearType::class, $year);
 
         $form->handleRequest($request);

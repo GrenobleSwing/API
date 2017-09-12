@@ -88,6 +88,7 @@ class ActivityController extends Controller
     public function addAction(Year $year, Request $request)
     {
         $activity = new Activity();
+        $activity->setYear($year);
         $form = $this->createForm(ActivityType::class, $activity);
 
         $form->handleRequest($request);
