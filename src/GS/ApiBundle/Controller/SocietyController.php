@@ -12,6 +12,31 @@ use Symfony\Component\HttpFoundation\Request;
 class SocietyController extends Controller
 {
     /**
+     * @Route("/society/add", name="add_society")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function addAction(Request $request)
+    {
+        $society = new Society();
+        $form = $this->createForm(SocietyType::class, $society);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($society);
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('success', 'Société bien enregistrée.');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('GSApiBundle:Society:add.html.twig', array(
+                    'form' => $form->createView(),
+        ));
+    }
+
+    /**
      * @Route("/society", name="view_society")
      * @Security("has_role('ROLE_ADMIN')")
      */

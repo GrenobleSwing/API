@@ -173,7 +173,7 @@ class RegistrationVoter extends Voter
 
     private function canCancel(Registration $registration, User $user, TokenInterface $token)
     {
-        if ('SUBMITTED' == $registration->getState() &&
+        if ('PAID' != $registration->getState() &&
                 $user === $registration->getAccount()->getUser()) {
             return true;
         }

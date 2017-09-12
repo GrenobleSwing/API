@@ -63,8 +63,10 @@ class TopicRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder('t');
         $qb
+                ->leftJoin('t.moderators', 'm')
                 ->leftJoin('t.owners', 'o')
                 ->where('o.id = :user')
+                ->orWhere('m.id = :user')
                 ->setParameter('user', $user->getId())
                 ;
 

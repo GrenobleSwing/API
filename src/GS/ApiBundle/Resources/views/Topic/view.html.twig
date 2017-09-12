@@ -87,7 +87,7 @@
             {% endfor %}
         </ul>
 
-    {% if is_granted("edit", topic) %}
+    {% if is_granted("moderate", topic) %}
         {% import "GSApiBundle:Registration:macros.html.twig" as macro_reg %}
         <h3>Liste des inscriptions :</h3>
         <ul>

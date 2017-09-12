@@ -135,6 +135,7 @@ class Registration
     /**
      * @ORM\Column(type="boolean")
      * @Assert\Type("bool")
+     * @Assert\IsTrue()
      */
     private $acceptRules = false;
 

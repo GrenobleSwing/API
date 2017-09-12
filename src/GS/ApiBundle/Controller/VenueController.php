@@ -23,8 +23,6 @@ class VenueController extends Controller
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $venue = $form->getData();
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($venue);
             $em->flush();

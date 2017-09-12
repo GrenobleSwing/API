@@ -15,6 +15,7 @@ class TopicVoter extends Voter
     const CREATE = 'create';
     const VIEW = 'view';
     const EDIT = 'edit';
+    const MODERATE = 'moderate';
     const OPEN = 'open';
     const CLOSE = 'close';
     const DELETE = 'delete';
@@ -30,7 +31,7 @@ class TopicVoter extends Voter
     {
         // if the attribute isn't one we support, return false
         if (!in_array($attribute, array(self::CREATE, self::VIEW, self::EDIT,
-            self::OPEN, self::CLOSE, self::DELETE))) {
+            self::MODERATE, self::OPEN, self::CLOSE, self::DELETE))) {
             return false;
         }
 
@@ -61,6 +62,8 @@ class TopicVoter extends Voter
                 return $this->canView($topic, $user, $token);
             case self::EDIT:
                 return $this->canEdit($topic, $user, $token);
+            case self::MODERATE:
+                return $this->canModerate($topic, $user, $token);
             case self::OPEN:
                 return $this->canOpen($topic, $user, $token);
             case self::CLOSE:
@@ -106,9 +109,28 @@ class TopicVoter extends Voter
         return false;
     }
 
+    private function isModerator(Topic $topic, User $user, TokenInterface $token)
+    {
+        if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
+            return true;
+        }
+        foreach ($topic->getModerators() as $moderator) {
+            if ($user === $moderator) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private function canEdit(Topic $topic, User $user, TokenInterface $token)
     {
         return $this->isOwner($topic, $user, $token);
+    }
+
+    private function canModerate(Topic $topic, User $user, TokenInterface $token)
+    {
+        return $this->isOwner($topic, $user, $token) ||
+                $this->isModerator($topic, $user, $token);
     }
 
     private function canOpen(Topic $topic, User $user, TokenInterface $token)

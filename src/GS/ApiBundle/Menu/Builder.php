@@ -67,19 +67,25 @@ class Builder
             ->getRepository('GSApiBundle:Society')
             ->findAll()
             ;
-        $society = $societies[0];
 
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
         $menu->addChild('Admin')->setAttribute('dropdown', true);
-        $menu['Admin']->addChild('Société', array(
-            'route' => 'view_society',
-        ));
-        $menu['Admin']->addChild('Ajouter une année', array(
-            'route' => 'add_year',
-            'routeParameters' => array('id' => $society->getId())
-        ));
+        if (count($societies) > 0) {
+            $society = $societies[0];
+            $menu['Admin']->addChild('Société', array(
+                'route' => 'view_society',
+            ));
+            $menu['Admin']->addChild('Ajouter une année', array(
+                'route' => 'add_year',
+                'routeParameters' => array('id' => $society->getId())
+            ));
+        } else {
+            $menu['Admin']->addChild('Créer société', array(
+                'route' => 'add_society',
+            ));
+        }
         $menu['Admin']->addChild('Liste des utilisateurs', array(
             'route' => 'index_user',
         ));
