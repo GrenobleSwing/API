@@ -147,6 +147,8 @@ class AccountBalanceService
                 return $discount;
             } elseif($i >= 1 && $discount->getCondition() == '2nd') {
                 return $discount;
+            } elseif($account->isUnemployed() && $discount->getCondition() == 'unemployed') {
+                return $discount;
             } elseif($account->isStudent() && $discount->getCondition() == 'student') {
                 return $discount;
             } elseif($account->isMember() && $discount->getCondition() == 'member') {

@@ -36,6 +36,7 @@ class DiscountType extends AbstractType
                     'choices' => array(
                         'Membre' => 'member',
                         'Etudiant' => 'student',
+                        'Chômeur' => 'unemployed',
                         '2e cours' => '2nd',
                         '3e cours' => '3rd',
                         '4e cours' => '4th',

@@ -1,3 +1,7 @@
+gs_e_transaction:
+    resource: "@GSETransactionBundle/Resources/config/routing.yml"
+    prefix:   /toto
+
 #fos_user:
 #    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 

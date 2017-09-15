@@ -37,6 +37,7 @@ services:
             - { name: jms_serializer.handler, type: Relation<?>, direction: serialization, format: json, method: serializeRelation}
             - { name: jms_serializer.handler, type: Relation<?>, direction: deserialization, format: json, method: deserializeRelation}
 
+    # It is an event subscriber, not an event listener! To be corrected to avoid confusion
     gsapi.user.listener:
         class: GS\ApiBundle\EventListener\UserListener
         arguments:
