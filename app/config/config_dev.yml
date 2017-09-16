@@ -1,6 +1,9 @@
 imports:
     - { resource: config.yml }
 
+parameters:
+    gsapi_doctrine_table_prefix: "test_api_"
+
 framework:
     router:
         resource: "%kernel.root_dir%/config/routing_dev.yml"
@@ -12,7 +15,7 @@ web_profiler:
     intercept_redirects: false
 
 gs_api:
-    doctrine_table_prefix: "test_api_"
+    doctrine_table_prefix: %gsapi_doctrine_table_prefix%
 
 monolog:
     handlers:

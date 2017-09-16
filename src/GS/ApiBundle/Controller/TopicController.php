@@ -155,7 +155,7 @@ class TopicController extends FOSRestController
     {
         $listTopics = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Topic')
-            ->findAll()
+            ->findByState('OPEN')
             ;
 
         $view = $this->view($listTopics, 200);

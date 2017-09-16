@@ -46,6 +46,7 @@ class DiscountType extends AbstractType
                     'choices' => array(
                         'Membre' => 'member',
                         'Etudiant' => 'student',
+                        'Chômeur' => 'unemployed',
                         '2e cours' => '2nd',
                         '3e cours' => '3rd',
                         '4e cours' => '4th',
@@ -54,7 +55,7 @@ class DiscountType extends AbstractType
                 ))
                 ->add('submit', SubmitType::class)
         ;
-        
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $discount = $event->getData();
             $form = $event->getForm();

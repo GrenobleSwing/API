@@ -1,13 +1,17 @@
 imports:
     - { resource: config.yml }
 
+parameters:
+    gsapi_doctrine_table_prefix: "gs_api_"
+
 #doctrine:
 #    orm:
 #        metadata_cache_driver: apc
 #        result_cache_driver: apc
 #        query_cache_driver: apc
 
-gs_api: ~
+gs_api:
+    doctrine_table_prefix: %gsapi_doctrine_table_prefix%
 
 monolog:
     handlers:

@@ -2,3 +2,7 @@ gsapi:
     type: rest
     resource: "@GSApiBundle/Resources/config/routing.yml"
     prefix:   /api
+
+gs_e_transaction:
+    resource: "@GSETransactionBundle/Resources/config/routing.yml"
+    prefix:   /etrans

@@ -46,8 +46,6 @@
             virement bancaire
         {% elseif invoice.payment.type == "CHECK" %}
             cheque
-        {% elseif invoice.payment.type == "PAYPAL" %}
-            Paypal
         {% elseif invoice.payment.type == "CARD" %}
             carte bancaire
         {% endif %}

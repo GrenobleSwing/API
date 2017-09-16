@@ -1,3 +1,8 @@
+test:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\TestController
+    name_prefix: gs_api_
+    prefix: /toto
 
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
@@ -64,11 +69,6 @@ registration:
 payment:
     type:     rest
     resource: GS\ApiBundle\Controller\PaymentController
-    name_prefix: gs_api_
-
-paypal:
-    resource: GS\ApiBundle\Controller\PaypalController
-    type:     annotation
     name_prefix: gs_api_
 
 user:

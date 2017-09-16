@@ -33,7 +33,6 @@ class PaymentType extends AbstractType
                         'Virement' => 'TRANSFER',
                         'Liquide' => 'CASH',
                         'Cheque' => 'CHECK',
-                        'Paypal' => 'PAYPAL',
                         'CB' => 'CARD',
                     ),
                 ))

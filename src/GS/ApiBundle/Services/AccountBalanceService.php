@@ -8,10 +8,15 @@ use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Activity;
 use GS\ApiBundle\Entity\Category;
 use GS\ApiBundle\Entity\Discount;
+use GS\ApiBundle\Entity\Payment;
+use GS\ApiBundle\Entity\PaymentItem;
 use GS\ApiBundle\Entity\Registration;
 
 class AccountBalanceService
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -19,23 +24,16 @@ class AccountBalanceService
         $this->entityManager = $entityManager;
     }
 
-    public function getBalanceForPaypal(Account $account, Activity $activity = null)
-    {
-        return $this->getDetails($account, $activity, true);
-    }
-
     public function getBalance(Account $account, Activity $activity = null)
     {
-        return $this->getDetails($account, $activity);
-    }
-
-    private function getDetails(Account $account, Activity $activity = null, $paypal = false)
-    {
-        if ($paypal) {
-            return $this->getDetailsPaypal($account, $activity);
-        }
-
         $registrations = $this->getRegistrations($account, $activity);
+
+        if (count($registrations)) {
+            $payment = new Payment();
+            $payment->setType('CARD');
+        } else {
+            $payment = null;
+        }
 
         $details = array();
         $totalBalance = 0.0;
@@ -53,7 +51,7 @@ class AccountBalanceService
             // When we change Category, we reset the index of the Registration
             // since some discount are based on the number of Topics having the
             // same Category.
-            if ($currentCategory !== $category && ! $paypal) {
+            if ($currentCategory !== $category) {
                 $currentCategory = $category;
                 $i = 0;
             }
@@ -65,12 +63,12 @@ class AccountBalanceService
             }
 
             // We append the name of the year for better display
-            if ($currentActivity->isMembership()) {
-                $displayName = $currentActivity->getTitle() . ' - ' .
+            if ($activity->isMembership()) {
+                $displayName = $activity->getTitle() . ' - ' .
                         $activity->getYear()->getTitle();
             } else {
-                $displayName = $currentCategory->getName() . ' - ' .
-                        $currentActivity->getTopic()->getTitle();
+                $displayName = $category->getName() . ' - ' .
+                        $registration->getTopic()->getTitle();
             }
 
             $discounts = $category->getDiscounts();
@@ -81,54 +79,27 @@ class AccountBalanceService
             $details[] = $line;
             $totalBalance += $line['balance'];
 
+            if (null !== $payment) {
+                $paymentItem = new PaymentItem();
+                $paymentItem->setRegistration($registration);
+                $paymentItem->setDiscount($discount);
+                $payment->addItem($paymentItem);
+            }
+
             $i++;
+        }
+
+        if (null !== $payment) {
+            $this->entityManager->persist($payment);
+            $this->entityManager->flush();
         }
 
         $balance = array(
             'details' => $details,
             'totalBalance' => $totalBalance,
+            'payment' => $payment,
         );
         return $balance;
-    }
-
-    private function getDetailsPaypal(Account $account, Activity $activity = null)
-    {
-        $registrations = $this->getRegistrations($account, $activity);
-
-        $details = array();
-        $i = 0;
-        $currentActivity = null;
-        $currentCategory = null;
-
-        // Registrations are sorted by Category and Price.
-        // All Discounts are linked to Category and they apply from the most
-        // expensive Category to the less expensive one.
-        foreach ($registrations as $registration) {
-            $activity = $registration->getTopic()->getActivity();
-            $category = $registration->getTopic()->getCategory();
-
-            // For a better display, we group registrations by activity.
-            if ($currentActivity !== $activity) {
-                $currentActivity = $activity;
-                $i = 0;
-            }
-
-            // When we change Category, we reset the index of the Registration
-            // since some discount are based on the number of Topics having the
-            // same Category.
-            if ($currentCategory !== $category) {
-                $currentCategory = $category;
-                $i = 0;
-            }
-
-            $discounts = $category->getDiscounts();
-            $discount = $this->chooseDiscount($i, $account, $discounts);
-
-            $details[] = array($registration, $discount);
-            $i++;
-        }
-
-        return $details;
     }
 
     private function getRegistrations(Account $account, Activity $activity = null)
@@ -184,6 +155,8 @@ class AccountBalanceService
             } elseif($i >= 1 && $discount->getCondition() == '2nd') {
                 return $discount;
             } elseif($account->isStudent() && $discount->getCondition() == 'student') {
+                return $discount;
+            } elseif($account->getUnemployed() && $discount->getCondition() == 'unemployed') {
                 return $discount;
             } elseif($account->isMember() && $discount->getCondition() == 'member') {
                 return $discount;

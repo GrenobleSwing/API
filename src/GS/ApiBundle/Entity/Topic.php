@@ -24,26 +24,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     )
  * )
  * @Hateoas\Relation(
- *     "edit",
- *     href = @Hateoas\Route(
- *         "gs_api_edit_topic",
- *         parameters = { "topic" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "remove",
- *     href = @Hateoas\Route(
- *         "gs_api_remove_topic",
- *         parameters = { "topic" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('delete', object))"
- *     )
- * )
- * @Hateoas\Relation(
  *     "new_registration",
  *     href = @Hateoas\Route(
  *         "gs_api_new_topic_registration",
@@ -51,16 +31,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     ),
  *     exclusion = @Hateoas\Exclusion(
  *         excludeIf = "expr(not is_granted(['ROLE_USER']))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "registrations",
- *     href = @Hateoas\Route(
- *         "gs_api_get_topic_registrations",
- *         parameters = { "topic" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('view', object))"
  *     )
  * )
  * @ORM\Entity(repositoryClass="GS\ApiBundle\Repository\TopicRepository")

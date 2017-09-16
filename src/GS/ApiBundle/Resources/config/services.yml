@@ -3,6 +3,15 @@ services:
 #        class: GS\ApiBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
 
+    gsapi.ipn.listener:
+        class: GS\ApiBundle\EventListener\IpnListener
+        arguments:
+            - '%kernel.root_dir%'
+            - '@filesystem'
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: kernel.event_listener, event: gse_transaction.ipn.received, method: onIpnReceived }
+
     jms_serializer.handler.relation:
         class: GS\ApiBundle\Serializer\RelationsHandler
         arguments:

@@ -2,17 +2,19 @@
 
 namespace GS\ApiBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
 use GS\ApiBundle\Entity\Account;
+use GS\ETransactionBundle\Entity\Config;
+use GS\ETransactionBundle\Entity\Environment;
+use GS\ETransactionBundle\Entity\Payment;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @RouteResource("Account", pluralize=false)
@@ -269,6 +271,35 @@ class AccountController extends FOSRestController
             $activity = null;
         }
         $balance = $this->get('gsapi.account_balance')->getBalance($account, $activity);
+
+        $payment = $balance['payment'];
+        if ( null !== $payment) {
+            $transaction = new Payment();
+            $transaction->setCmd($payment->getRef());
+            $transaction->setEnvironment(
+                    $payment->getItems()[0]
+                    ->getRegistration()
+                    ->getTopic()
+                    ->getActivity()
+                    ->getYear()
+                    ->getSociety()
+                    ->getPaymentEnvironment());
+            $transaction->setPorteur($account->getEmail());
+            $transaction->setTotal((int)($payment->getAmount() * 100));
+            $transaction->setUrlAnnule($this->generateUrl('homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+            $transaction->setUrlEffectue($this->generateUrl('homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+            $transaction->setUrlRefuse($this->generateUrl('homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+            $transaction->setIpnUrl($this->generateUrl('gse_transaction_ipn', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+
+            $buttons = $this->get('twig')->render('GSApiBundle:Payment:button.html.twig', array(
+                    'payment' => $transaction,
+            ));
+        } else {
+            $buttons = "";
+        }
+        $balance['buttons'] = $buttons;
+        unset($balance['payment']);
+
         $view = $this->view($balance, 200);
         return $this->handleView($view);
     }
