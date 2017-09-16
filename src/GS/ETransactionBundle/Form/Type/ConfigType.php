@@ -6,10 +6,8 @@ use GS\ETransactionBundle\Entity\Config;
 use GS\ETransactionBundle\Form\Type\EnvironmentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,7 +27,7 @@ class ConfigType extends AbstractType
                     'label' => 'Rang',
                 ))
                 ->add('identifiant', TextType::class, array(
-                    'label' => 'Description',
+                    'label' => 'Identifiant',
                 ))
                 ->add('environments', CollectionType::class, array(
                     'label' => 'Environment',
@@ -43,6 +41,7 @@ class ConfigType extends AbstractType
                     ),
                 ))
                 ->add('submit', SubmitType::class)
+
         ;
 
     }

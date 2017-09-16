@@ -4,6 +4,7 @@ namespace GS\ApiBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use GS\ETransactionBundle\Entity\Config;
 use JMS\Serializer\Annotation\Type;
 use Lexik\Bundle\MailerBundle\Entity\Email;
 use Lexik\Bundle\MailerBundle\Entity\EmailTranslation;
@@ -84,6 +85,17 @@ class Society
      * @ORM\OneToOne(targetEntity="Lexik\Bundle\MailerBundle\Entity\Email", cascade={"persist", "remove"})
      */
     private $emailPaymentTemplate;
+
+    /**
+     * @ORM\OneToOne(targetEntity="GS\ETransactionBundle\Entity\Config", cascade={"persist", "remove"})
+     */
+    private $paymentConfig;
+
+    /**
+     * @ORM\OneToOne(targetEntity="GS\ETransactionBundle\Entity\Environment")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $paymentEnvironment;
 
 
     /**
@@ -166,6 +178,8 @@ class Society
         }
 
         $this->setEmailPaymentTemplate($email);
+
+        $this->setPaymentConfig(new Config());
     }
 
     /**
@@ -404,5 +418,53 @@ class Society
     public function getEmailPaymentTemplate()
     {
         return $this->emailPaymentTemplate;
+    }
+
+    /**
+     * Set paymentConfig
+     *
+     * @param \GS\ETransactionBundle\Entity\Config $paymentConfig
+     *
+     * @return Society
+     */
+    public function setPaymentConfig(\GS\ETransactionBundle\Entity\Config $paymentConfig = null)
+    {
+        $this->paymentConfig = $paymentConfig;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentConfig
+     *
+     * @return \GS\ETransactionBundle\Entity\Config
+     */
+    public function getPaymentConfig()
+    {
+        return $this->paymentConfig;
+    }
+
+    /**
+     * Set paymentEnvironment
+     *
+     * @param \GS\ETransactionBundle\Entity\Environment $paymentEnvironment
+     *
+     * @return Society
+     */
+    public function setPaymentEnvironment(\GS\ETransactionBundle\Entity\Environment $paymentEnvironment = null)
+    {
+        $this->paymentEnvironment = $paymentEnvironment;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentEnvironment
+     *
+     * @return \GS\ETransactionBundle\Entity\Environment
+     */
+    public function getPaymentEnvironment()
+    {
+        return $this->paymentEnvironment;
     }
 }

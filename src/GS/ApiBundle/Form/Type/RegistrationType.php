@@ -52,7 +52,11 @@ class RegistrationType extends AbstractType
 //                    'choice_label' => 'account.displayName',
 //                ))
                 ->add('acceptRules', CheckboxType::class, array(
-                    'label' => "J'ai lu et j'accepte les status et le règlement intérieur.",
+                    'label' => "Je m'engage à respecter l'objet associatif, les " .
+                        "statuts (http://www.grenobleswing.com/pour-les-membres/statuts/)" .
+                        " et le " .
+                        "règlement intérieur (http://www.grenobleswing.com/pour-les-membres/reglement-interieur/)" .
+                        ", et je déclare vouloir adhérer à l'association Grenoble Swing.",
                     'required' => true,
                 ))
                 ->add('submit', SubmitType::class)

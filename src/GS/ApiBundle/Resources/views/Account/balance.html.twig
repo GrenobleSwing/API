@@ -1,0 +1,10 @@
+{% extends "GSApiBundle::layout.html.twig" %}
+
+{% block gs_body %}
+    {{ parent() }}
+
+    {{ buttonGenerator.createButton1x(payment)|raw }}
+    {{ buttonGenerator.createButton2x(payment)|raw }}
+    {{ buttonGenerator.createButton3x(payment)|raw }}
+
+{% endblock %}

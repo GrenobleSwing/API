@@ -2,22 +2,22 @@
 
 namespace GS\ApiBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
+use GS\ApiBundle\Entity\Account;
+use GS\ApiBundle\Form\Type\AddressType;
 use libphonenumber\PhoneNumberFormat;
+use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-
-use GS\ApiBundle\Entity\Account;
-use GS\ApiBundle\Form\Type\AddressType;
 
 class AccountType extends AbstractType
 {
@@ -36,7 +36,7 @@ class AccountType extends AbstractType
                     'label' => 'Nom',
                 ))
                 ->add('birthDate', BirthdayType::class, array(
-                    'label' => 'Description',
+                    'label' => 'Date de naissance',
                     'widget' => 'single_text',
                     'html5' => false,
                     'attr' => ['class' => 'js-datepicker'],
@@ -48,6 +48,14 @@ class AccountType extends AbstractType
                 ))
                 ->add('address', AddressType::class, array(
                     'label' => 'Adresse',
+                ))
+                ->add('student', CheckboxType::class, array(
+                    'label'    => 'Etudiant',
+                    'required' => false,
+                ))
+                ->add('unemployed', CheckboxType::class, array(
+                    'label'    => 'Chômeur',
+                    'required' => false,
                 ))
 //                ->add('imageFile', VichImageType::class, [
 //                    'label' => 'Photo du compte',

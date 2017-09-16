@@ -5,7 +5,6 @@ namespace GS\ApiBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
-use PayPal\Api\Item;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -202,49 +201,4 @@ class PaymentItem
         return $this->amount;
     }
 
-    /**
-     * Get PayPal Payment Item
-     *
-     * @return \PayPal\Api\Item[]
-     */
-    public function getPaypalPaymentItems()
-    {
-        $amount = $this->getRegistration()->getTopic()
-                ->getCategory()->getPrice();
-
-        $item = new Item();
-        $item->setName($this->getRegistration()->getTopic()->getTitle())
-                ->setDescription($this->getRegistration()->getTopic()->getDescription())
-                ->setCurrency('EUR')
-                ->setQuantity(1)
-                ->setTax(0)
-                ->setPrice($amount);
-
-        $itemList = array($item);
-
-        $alreadyPaid = $this->getRegistration()->getAmountPaid();
-        if (0 < $alreadyPaid) {
-            $item2 = new Item();
-            $item2->setName('Deja paye')
-                    ->setCurrency('EUR')
-                    ->setQuantity(1)
-                    ->setTax(0)
-                    ->setPrice(-1 * $alreadyPaid);
-            $itemList[] = $item2;
-        }
-
-        $discountAmount = $this->getDiscountAmount($amount);
-        if (0 < $discountAmount) {
-            $item3 = new Item();
-            $item3->setName('Reduction')
-                    ->setDescription($this->getDiscount()->getName())
-                    ->setCurrency('EUR')
-                    ->setQuantity(1)
-                    ->setTax(0)
-                    ->setPrice(-1 * $discountAmount);
-            $itemList[] = $item3;
-        }
-
-        return $itemList;
-    }
 }

@@ -4,11 +4,14 @@ namespace GS\ApiBundle\Form\Type;
 
 use libphonenumber\PhoneNumberFormat;
 use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use GS\ApiBundle\Entity\Society;
@@ -44,6 +47,20 @@ class SocietyType extends AbstractType
                 ->add('submit', SubmitType::class)
         ;
 
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $society = $event->getData();
+            $form = $event->getForm();
+
+            if (null !== $society->getId()) {
+                $form->add('paymentEnvironment', EntityType::class, array(
+                    'label' => 'Configuration pour les paiements',
+                    'class' => 'GSETransactionBundle:Environment',
+                    'choice_label' => 'name',
+                    'choices' => $society->getPaymentConfig()->getEnvironments(),
+                    'position' => array('before' => 'submit'),
+                ));
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

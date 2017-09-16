@@ -47,3 +47,18 @@
         samedi
     {% endif %}
 {% endmacro %}
+
+{% macro print_short(schedule) %}
+    {% import _self as macro %}
+    {% import "GSApiBundle:Address:macros.html.twig" as macro_address %}
+    {{ macro.print_day(schedule.startDate|date('w')) }}
+    {{ schedule.startTime|date('H:i', timezone="Europe/Paris") }}
+    à {{ schedule.endTime|date('H:i', timezone="Europe/Paris") }}
+    {% if schedule.venue %}
+        - {{ schedule.venue.name }}
+    {% endif %}
+    {% if schedule.teachers %}
+        ({{- schedule.teachers -}})
+    {% endif %}
+{% endmacro %}
+

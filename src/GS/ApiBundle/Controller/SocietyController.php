@@ -73,7 +73,7 @@ class SocietyController extends Controller
 
             $request->getSession()->getFlashBag()->add('success', 'Société bien modifiée.');
 
-            return $this->redirectToRoute('view_society', array('id' => $society->getId()));
+            return $this->redirectToRoute('view_society');
         }
 
         return $this->render('GSApiBundle:Society:edit.html.twig', array(

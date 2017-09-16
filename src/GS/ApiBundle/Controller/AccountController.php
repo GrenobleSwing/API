@@ -3,15 +3,26 @@
 namespace GS\ApiBundle\Controller;
 
 use GS\ApiBundle\Entity\Account;
+use GS\ETransactionBundle\Entity\Payment;
 use GS\ApiBundle\Form\Type\AccountType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class AccountController extends Controller
 {
+
+    private function myAccount()
+    {
+        $account = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Account')
+            ->findOneByUser($this->getUser())
+            ;
+        return $account;
+    }
 
     /**
      * @Route("/my_account", name="my_account")
@@ -19,10 +30,7 @@ class AccountController extends Controller
      */
     public function myAccountAction(Request $request)
     {
-        $account = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Account')
-            ->findOneByUser($this->getUser())
-            ;
+        $account = $this->myAccount();
 
         if ( null === $account ) {
             $request->getSession()->getFlashBag()->add('danger', "Le profil demandé n'existe pas.");
@@ -40,10 +48,7 @@ class AccountController extends Controller
      */
     public function myRegistrationsAction(Request $request)
     {
-        $account = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Account')
-            ->findOneByUser($this->getUser())
-            ;
+        $account = $this->myAccount();
 
         if ( null === $account ) {
             $request->getSession()->getFlashBag()->add('danger', "Le profil demandé n'existe pas.");
@@ -63,10 +68,7 @@ class AccountController extends Controller
      */
     public function myPaymentsAction(Request $request)
     {
-        $account = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Account')
-            ->findOneByUser($this->getUser())
-            ;
+        $account = $this->myAccount();
 
         if ( null === $account ) {
             $request->getSession()->getFlashBag()->add('danger', "Le profil demandé n'existe pas.");
@@ -133,11 +135,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @Route("/account/{id}/balance", name="balance_account", requirements={"id": "\d+"})
-     * @Security("is_granted('view', account)")
+     * @Route("/my_balance", name="my_balance")
+     * @Security("has_role('ROLE_USER')")
      */
-    public function getBalanceAction(Account $account, Request $request)
+    public function getMyBalanceAction(Request $request)
     {
+        $account = $this->myAccount();
         $activityId = $request->query->get('activityId');
         if (null !== $activityId) {
             $em = $this->getDoctrine()->getManager();
@@ -146,7 +149,32 @@ class AccountController extends Controller
             $activity = null;
         }
         $balance = $this->get('gsapi.account_balance')->getBalance($account, $activity);
-        return new Response(json_encode($balance));
+
+        $payment = $balance['payment'];
+        if ( null !== $payment) {
+            $transaction = new Payment();
+            $transaction->setCmd($payment->getRef());
+            $transaction->setEnvironment(
+                    $payment->getItems()[0]
+                    ->getRegistration()
+                    ->getTopic()
+                    ->getActivity()
+                    ->getYear()
+                    ->getSociety()
+                    ->getPaymentEnvironment());
+            $transaction->setPorteur($account->getEmail());
+            $transaction->setTotal((int)($payment->getAmount() * 100));
+            $transaction->setUrlAnnule($this->generateUrl('homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+            $transaction->setUrlEffectue($this->generateUrl('homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+            $transaction->setUrlRefuse($this->generateUrl('homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+            $transaction->setIpnUrl($this->generateUrl('gse_transaction_ipn', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+
+            return $this->render('GSApiBundle:Account:balance.html.twig', array(
+                'payment' => $transaction,
+            ));
+        }
+
+        return $this->redirectToRoute('my_account');
     }
 
     private function getRegistrations(Account $account, Request $request)

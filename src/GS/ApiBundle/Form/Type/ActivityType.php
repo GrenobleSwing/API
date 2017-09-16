@@ -5,6 +5,7 @@ namespace GS\ApiBundle\Form\Type;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -28,12 +29,9 @@ class ActivityType extends AbstractType
                 ->add('description', TextareaType::class, array(
                     'label' => 'Description',
                 ))
-                ->add('membersOnly', ChoiceType::class, array(
+                ->add('membersOnly', CheckboxType::class, array(
                     'label' => "Reservé aux membres de l'association",
-                    'choices' => array(
-                        "Oui" => true,
-                        "Non" => false
-                    )
+                    'required' => false,
                 ))
                 ->add('membershipTopic', EntityType::class, array(
                     'label' => "Adhésion (obligatoire) associée a l'activité",

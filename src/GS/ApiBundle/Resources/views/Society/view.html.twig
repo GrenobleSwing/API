@@ -13,9 +13,13 @@
             Retour à l'accueil
         </a>
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('edit_society', {'id': society.id}) }}" class="btn btn-default">
+            <a href="{{ path('edit_society') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 Modifier la société
+            </a>
+            <a href="{{ path('gs_etran_edit_config', {'id': society.paymentConfig.id}) }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                Modifier la config pour les paiements
             </a>
         {% endif %}
     </p>
@@ -49,6 +53,11 @@
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
         Modifier
     </a>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <h3>Config paiements</h3>
+        {{ society.paymentEnvironment.name }}
+    {% endif %}
 
     <h3>Liste des années</h3>
 

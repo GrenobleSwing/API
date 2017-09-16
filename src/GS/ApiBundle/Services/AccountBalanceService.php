@@ -8,10 +8,15 @@ use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Activity;
 use GS\ApiBundle\Entity\Category;
 use GS\ApiBundle\Entity\Discount;
+use GS\ApiBundle\Entity\Payment;
+use GS\ApiBundle\Entity\PaymentItem;
 use GS\ApiBundle\Entity\Registration;
 
 class AccountBalanceService
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -19,19 +24,16 @@ class AccountBalanceService
         $this->entityManager = $entityManager;
     }
 
-    public function getBalanceForPaypal(Account $account, Activity $activity = null)
-    {
-        return $this->getDetails($account, $activity, true);
-    }
-
     public function getBalance(Account $account, Activity $activity = null)
     {
-        return $this->getDetails($account, $activity);
-    }
-
-    private function getDetails(Account $account, Activity $activity = null, $paypal = false)
-    {
         $registrations = $this->getRegistrations($account, $activity);
+
+        if (count($registrations)) {
+            $payment = new Payment();
+            $payment->setType('CARD');
+        } else {
+            $payment = null;
+    }
 
         $details = array();
         $totalBalance = 0.0;
@@ -46,47 +48,56 @@ class AccountBalanceService
             $activity = $registration->getTopic()->getActivity();
             $category = $registration->getTopic()->getCategory();
 
-            // For a better display, we group registrations by activity.
-            if ($currentActivity !== $activity) {
-                $currentActivity = $activity;
-
-                if (! $paypal) {
-                    // We append the name of the year for better display
-                    $displayName = $currentActivity->getTitle() . ' - ' .
-                            $activity->getYear()->getTitle();
-                    $details[$displayName] = array();
-                }
-                $i = 0;
-            }
-
             // When we change Category, we reset the index of the Registration
             // since some discount are based on the number of Topics having the
             // same Category.
-            if ($currentCategory !== $category && ! $paypal) {
+            if ($currentCategory !== $category) {
                 $currentCategory = $category;
-                $details[$displayName][$currentCategory->getName()] = array();
                 $i = 0;
+            }
+
+            // For a better display, we group registrations by activity.
+            if ($currentActivity !== $activity) {
+                $currentActivity = $activity;
+                $i = 0;
+            }
+
+            // We append the name of the year for better display
+            if ($activity->isMembership()) {
+                $displayName = $activity->getTitle() . ' - ' .
+                            $activity->getYear()->getTitle();
+            } else {
+                $displayName = $category->getName() . ' - ' .
+                        $registration->getTopic()->getTitle();
             }
 
             $discounts = $category->getDiscounts();
             $discount = $this->chooseDiscount($i, $account, $discounts);
 
-            if (!$paypal) {
                 $line = $this->getPriceToPay($registration, $category, $discount);
-                $details[$displayName][$currentCategory->getName()][] = $line;
+            $line['title'] = $displayName;
+            $details[] = $line;
                 $totalBalance += $line['balance'];
-            } else {
-                $details[] = array($registration, $discount);
+
+            if (null !== $payment) {
+                $paymentItem = new PaymentItem();
+                $paymentItem->setRegistration($registration);
+                $paymentItem->setDiscount($discount);
+                $payment->addItem($paymentItem);
             }
+
             $i++;
         }
 
-        if ($paypal) {
-            return $details;
+        if (null !== $payment) {
+            $this->entityManager->persist($payment);
+            $this->entityManager->flush();
         }
+
         $balance = array(
             'details' => $details,
             'totalBalance' => $totalBalance,
+            'payment' => $payment,
         );
         return $balance;
     }
@@ -107,29 +118,25 @@ class AccountBalanceService
 
     private function getPriceToPay(Registration $registration, Category $category, Discount $discount = null)
     {
-        $topic = $registration->getTopic();
         $price = $category->getPrice();
         $alreadyPaid = $registration->getAmountPaid();
 
         $line = array(
-            'registrationId' => $registration->getId(),
-            'name' => $topic->getTitle(),
-            'description' => $topic->getDescription(),
             'price' => $price,
             'alreadyPaid' => $alreadyPaid,
         );
         $due = $price;
 
         if (null !== $discount) {
-            $line['discount'] = array(
-                'type' => $discount->getType(),
-                'value' => $discount->getValue(),
-            );
             if($discount->getType() == 'percent') {
+                $line['discount'] = '-' . $discount->getValue() . '%';
                 $due *= 1 - $discount->getValue() / 100;
             } else {
+                $line['discount'] = '-' . $discount->getValue() . '&euro;';
                 $due -= $discount->getValue();
             }
+        } else {
+            $line['discount'] = '';
         }
 
         $line['balance'] = $due - $alreadyPaid;
@@ -147,9 +154,9 @@ class AccountBalanceService
                 return $discount;
             } elseif($i >= 1 && $discount->getCondition() == '2nd') {
                 return $discount;
-            } elseif($account->isUnemployed() && $discount->getCondition() == 'unemployed') {
-                return $discount;
             } elseif($account->isStudent() && $discount->getCondition() == 'student') {
+                return $discount;
+            } elseif($account->getUnemployed() && $discount->getCondition() == 'unemployed') {
                 return $discount;
             } elseif($account->isMember() && $discount->getCondition() == 'member') {
                 return $discount;

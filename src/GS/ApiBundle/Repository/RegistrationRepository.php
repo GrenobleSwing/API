@@ -170,9 +170,10 @@ class RegistrationRepository extends \Doctrine\ORM\EntityRepository
         $qb
                 ->where('reg.account = :acc')
                 ->andWhere('reg.topic = :topic')
+                ->andWhere($qb->expr()->notLike('reg.state', ':cancel'))
                 ->setParameter('acc', $account)
                 ->setParameter('topic', $topic)
-                ;
+                ->setParameter('cancel', '%CANCELLED');
 
         return $qb->getQuery()->getResult();
     }

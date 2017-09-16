@@ -23,12 +23,17 @@ class Payment
     private $id;
 
     /**
-     * Valid types: CASH, TRANSFER, CHECK, PAYPAL, CARD
+     * Valid types: CASH, TRANSFER, CHECK, CARD
      *
      * @ORM\Column(type="string", length=10)
-     * @Assert\Choice({"CASH", "TRANSFER", "CHECK", "PAYPAL", "CARD"})
+     * @Assert\Choice({"CASH", "TRANSFER", "CHECK", "CARD"})
      */
     private $type;
+
+    /**
+     * @ORM\Column(type="string", length=23, nullable=true)
+     */
+    private $ref;
 
     /**
      * States:
@@ -36,7 +41,7 @@ class Payment
      *   - PAID
      *
      * @ORM\Column(type="string", length=6)
-     * @Assert\Choice({"DRAFT", "PAID"})
+     * @Assert\Choice({"DRAFT", "IN_PROGRESS", "PAID"})
      */
     private $state = 'DRAFT';
 
@@ -57,11 +62,6 @@ class Payment
      * @Assert\Date()
      */
     private $date;
-
-    /**
-     * @ORM\Column(type="string", length=64, nullable=true)
-     */
-    private $paypalPaymentId = null;
 
     /**
      * @ORM\OneToMany(targetEntity="GS\ApiBundle\Entity\PaymentItem", mappedBy="payment", cascade={"persist", "remove"})
@@ -86,6 +86,7 @@ class Payment
     {
         $this->items = new ArrayCollection();
         $this->date = new \DateTime();
+        $this->ref = uniqid("", true);
     }
 
     /**
@@ -263,48 +264,6 @@ class Payment
     }
 
     /**
-     * Set paypalPaymentId
-     *
-     * @param string $paypalPaymentId
-     *
-     * @return Payment
-     */
-    public function setPaypalPaymentId($paypalPaymentId)
-    {
-        $this->paypalPaymentId = $paypalPaymentId;
-
-        return $this;
-    }
-
-    /**
-     * Get paypalPaymentId
-     *
-     * @return string
-     */
-    public function getPaypalPaymentId()
-    {
-        return $this->paypalPaymentId;
-    }
-
-    /**
-     * Get PayPal Payment Item List
-     *
-     * @return \PayPal\Api\ItemList
-     */
-    public function getPaypalPaymentItemList()
-    {
-        $itemList = new ItemList();
-        foreach ($this->getItems() as $item) {
-            // One item for the registration and one for the discount if any
-            foreach ($item->getPaypalPaymentItems() as $paypalItem) {
-                $itemList->addItem($paypalItem);
-            }
-        }
-        return $itemList;
-    }
-
-
-    /**
      * Set comment
      *
      * @param string $comment
@@ -389,5 +348,29 @@ class Payment
     public function getInvoice()
     {
         return $this->invoice;
+    }
+
+    /**
+     * Set ref
+     *
+     * @param string $ref
+     *
+     * @return Payment
+     */
+    public function setRef($ref)
+    {
+        $this->ref = $ref;
+
+        return $this;
+    }
+
+    /**
+     * Get ref
+     *
+     * @return string
+     */
+    public function getRef()
+    {
+        return $this->ref;
     }
 }
