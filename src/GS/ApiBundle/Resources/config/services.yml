@@ -9,6 +9,7 @@ services:
             - '%kernel.root_dir%'
             - '@filesystem'
             - '@doctrine.orm.entity_manager'
+            - '@gsapi.payment.service'
         tags:
             - { name: kernel.event_listener, event: gse_transaction.ipn.received, method: onIpnReceived }
 

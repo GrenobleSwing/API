@@ -273,29 +273,31 @@ class AccountController extends FOSRestController
         $balance = $this->get('gsapi.account_balance')->getBalance($account, $activity);
 
         $payment = $balance['payment'];
+        $buttons = "";
         if ( null !== $payment) {
-            $transaction = new Payment();
-            $transaction->setCmd($payment->getRef());
-            $transaction->setEnvironment(
-                    $payment->getItems()[0]
+            $etranEnv = $payment->getItems()[0]
                     ->getRegistration()
                     ->getTopic()
                     ->getActivity()
                     ->getYear()
                     ->getSociety()
-                    ->getPaymentEnvironment());
-            $transaction->setPorteur($account->getEmail());
-            $transaction->setTotal((int)($payment->getAmount() * 100));
-            $transaction->setUrlAnnule($this->generateUrl('homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL));
-            $transaction->setUrlEffectue($this->generateUrl('homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL));
-            $transaction->setUrlRefuse($this->generateUrl('homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL));
-            $transaction->setIpnUrl($this->generateUrl('gse_transaction_ipn', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+                    ->getPaymentEnvironment();
 
-            $buttons = $this->get('twig')->render('GSApiBundle:Payment:button.html.twig', array(
-                    'payment' => $transaction,
-            ));
-        } else {
-            $buttons = "";
+            if (null !== $etranEnv) {
+                $transaction = new Payment();
+                $transaction->setCmd($payment->getRef());
+                $transaction->setEnvironment($etranEnv);
+                $transaction->setPorteur($account->getEmail());
+                $transaction->setTotal((int)($payment->getAmount() * 100));
+                $transaction->setUrlAnnule($this->getParameter('return_url_cancelled'));
+                $transaction->setUrlEffectue($this->getParameter('return_url_success'));
+                $transaction->setUrlRefuse($this->getParameter('return_url_rejected'));
+                $transaction->setIpnUrl($this->generateUrl('gse_transaction_ipn', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+
+                $buttons = $this->get('twig')->render('GSApiBundle:Payment:button.html.twig', array(
+                        'payment' => $transaction,
+                ));
+            }
         }
         $balance['buttons'] = $buttons;
         unset($balance['payment']);

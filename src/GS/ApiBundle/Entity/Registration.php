@@ -24,26 +24,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     )
  * )
  * @Hateoas\Relation(
- *     "validate",
- *     href = @Hateoas\Route(
- *         "gs_api_validate_registration",
- *         parameters = { "id" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('validate', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "wait",
- *     href = @Hateoas\Route(
- *         "gs_api_wait_registration",
- *         parameters = { "id" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('wait', object))"
- *     )
- * )
- * @Hateoas\Relation(
  *     "cancel",
  *     href = @Hateoas\Route(
  *         "gs_api_cancel_registration",
@@ -54,16 +34,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     )
  * )
  * @Hateoas\Relation(
- *     "pay",
- *     href = @Hateoas\Route(
- *         "gs_api_pay_registration",
- *         parameters = { "id" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('pay', object))"
- *     )
- * )
- * @Hateoas\Relation(
  *     "edit",
  *     href = @Hateoas\Route(
  *         "gs_api_edit_registration",
@@ -71,16 +41,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     ),
  *     exclusion = @Hateoas\Exclusion(
  *         excludeIf = "expr(not is_granted('edit', object))"
- *     )
- * )
- * @Hateoas\Relation(
- *     "remove",
- *     href = @Hateoas\Route(
- *         "gs_api_remove_registration",
- *         parameters = { "registration" = "expr(object.getId())" }
- *     ),
- *     exclusion = @Hateoas\Exclusion(
- *         excludeIf = "expr(not is_granted('delete', object))"
  *     )
  * )
  *

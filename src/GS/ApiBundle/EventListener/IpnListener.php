@@ -4,6 +4,7 @@ namespace GS\ApiBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use GS\ApiBundle\Entity\Invoice;
+use GS\ApiBundle\Services\PaymentService;
 use GS\ETransactionBundle\Event\IpnEvent;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -25,16 +26,22 @@ class IpnListener
     private $entityManager;
 
     /**
+     * @var PaymentService
+     */
+    private $ps;
+
+    /**
      * Constructor.
      *
      * @param string     $rootDir
      * @param Filesystem $filesystem
      */
-    public function __construct($rootDir, Filesystem $filesystem, EntityManager $entityManager)
+    public function __construct($rootDir, Filesystem $filesystem, EntityManager $entityManager, PaymentService $ps)
     {
         $this->rootDir = $rootDir;
         $this->filesystem = $filesystem;
         $this->entityManager = $entityManager;
+        $this->ps = $ps;
     }
 
     /**
@@ -56,6 +63,7 @@ class IpnListener
         if ( !$event->isVerified() ) {
             return;
         }
+
         $em = $this->entityManager;
         $data = $event->getData();
 
@@ -67,7 +75,7 @@ class IpnListener
             $em->remove($payment);
         } else {
             $payment->getAccount()->addPayment($payment);
-            $payment->setStatus('PAID');
+            $payment->setState('PAID');
 
             $repo = $em->getRepository('GSApiBundle:Invoice');
             if (null === $repo->findOneByPayment($payment)) {
@@ -77,12 +85,11 @@ class IpnListener
                 $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));
                 $invoice->setDate($payment->getDate());
 
-                $this->get('gsapi.payment.service')->sendEmail($payment);
+                $this->ps->sendEmail($payment);
 
                 $em->persist($invoice);
             }
         }
         $em->flush();
-
     }
 }
