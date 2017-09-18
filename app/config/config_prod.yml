@@ -13,6 +13,9 @@ parameters:
 gs_api:
     doctrine_table_prefix: %gsapi_doctrine_table_prefix%
 
+doctrine_migrations:
+    table_name: migration_versions_prod
+
 monolog:
     handlers:
         main:
