@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee8c40f675b2b41854707888e9793d5d",
+    "content-hash": "1ba82091c9276be3a28d484368ac61cb",
     "packages": [
         {
             "name": "andres-montanez/magallanes",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/GrenobleSwing/Magallanes.git",
-                "reference": "7e2525de363fd0d3a544f09ad9a82d079c082883"
+                "reference": "fdfc79fd35477b4aa8ef7569204e81adc548995c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GrenobleSwing/Magallanes/zipball/7e2525de363fd0d3a544f09ad9a82d079c082883",
-                "reference": "7e2525de363fd0d3a544f09ad9a82d079c082883",
+                "url": "https://api.github.com/repos/GrenobleSwing/Magallanes/zipball/fdfc79fd35477b4aa8ef7569204e81adc548995c",
+                "reference": "fdfc79fd35477b4aa8ef7569204e81adc548995c",
                 "shasum": ""
             },
             "require": {
@@ -71,7 +71,7 @@
             "support": {
                 "source": "https://github.com/GrenobleSwing/Magallanes/tree/master"
             },
-            "time": "2017-07-23 17:44:58"
+            "time": "2017-09-18 13:42:35"
         },
         {
             "name": "behat/transliterator",
@@ -175,6 +175,69 @@
                 "tls"
             ],
             "time": "2017-09-11T07:24:36+00:00"
+        },
+        {
+            "name": "defuse/php-encryption",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/defuse/php-encryption.git",
+                "reference": "5176f5abb38d3ea8a6e3ac6cd3bbb54d8185a689"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/defuse/php-encryption/zipball/5176f5abb38d3ea8a6e3ac6cd3bbb54d8185a689",
+                "reference": "5176f5abb38d3ea8a6e3ac6cd3bbb54d8185a689",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "paragonie/random_compat": "~2.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "nikic/php-parser": "^2.0|^3.0",
+                "phpunit/phpunit": "^4|^5"
+            },
+            "bin": [
+                "bin/generate-defuse-key"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Defuse\\Crypto\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Hornby",
+                    "email": "taylor@defuse.ca",
+                    "homepage": "https://defuse.ca/"
+                },
+                {
+                    "name": "Scott Arciszewski",
+                    "email": "info@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "Secure PHP Encryption Library",
+            "keywords": [
+                "aes",
+                "authenticated encryption",
+                "cipher",
+                "crypto",
+                "cryptography",
+                "encrypt",
+                "encryption",
+                "openssl",
+                "security",
+                "symmetric key cryptography"
+            ],
+            "time": "2017-05-18T21:28:48+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -1005,16 +1068,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.5.10",
+            "version": "v2.5.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "c78afd51721804f4f76ff30d9b6f6159eb046161"
+                "reference": "249b737094f1e7cba4f0a8d19acf5be6cf3ed504"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/c78afd51721804f4f76ff30d9b6f6159eb046161",
-                "reference": "c78afd51721804f4f76ff30d9b6f6159eb046161",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/249b737094f1e7cba4f0a8d19acf5be6cf3ed504",
+                "reference": "249b737094f1e7cba4f0a8d19acf5be6cf3ed504",
                 "shasum": ""
             },
             "require": {
@@ -1022,7 +1085,7 @@
                 "doctrine/collections": "~1.2",
                 "doctrine/common": ">=2.5-dev,<2.9-dev",
                 "doctrine/dbal": ">=2.5-dev,<2.7-dev",
-                "doctrine/instantiator": "~1.0.1",
+                "doctrine/instantiator": "^1.0.1",
                 "ext-pdo": "*",
                 "php": ">=5.4",
                 "symfony/console": "~2.5|~3.0"
@@ -1077,7 +1140,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2017-08-18T19:17:35+00:00"
+            "time": "2017-09-18T06:50:20+00:00"
         },
         {
             "name": "egeloen/ordered-form",
@@ -2763,6 +2826,53 @@
             "time": "2016-10-12T11:12:48+00:00"
         },
         {
+            "name": "michaeldegroot/doctrine-encrypt-bundle",
+            "version": "3.0.3",
+            "target-dir": "Ambta/DoctrineEncryptBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/michaeldegroot/DoctrineEncryptBundle.git",
+                "reference": "7ff178b554409f8fc3c005d1b089f9551de0c24a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/michaeldegroot/DoctrineEncryptBundle/zipball/7ff178b554409f8fc3c005d1b089f9551de0c24a",
+                "reference": "7ff178b554409f8fc3c005d1b089f9551de0c24a",
+                "shasum": ""
+            },
+            "require": {
+                "defuse/php-encryption": "^2.0",
+                "paragonie/random_compat": "^2.0",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Ambta\\DoctrineEncryptBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael de Groot",
+                    "email": "specamps@gmail.com"
+                }
+            ],
+            "description": "Encrypted symfony entity's by verified and standardized libraries",
+            "keywords": [
+                "Defuse",
+                "decrypt",
+                "doctrine",
+                "encrypt",
+                "halite",
+                "symfony"
+            ],
+            "time": "2017-05-15T09:17:44+00:00"
+        },
+        {
             "name": "michelf/php-markdown",
             "version": "1.7.0",
             "source": {
@@ -2879,6 +2989,58 @@
                 "telephone number"
             ],
             "time": "2016-12-17T17:15:49+00:00"
+        },
+        {
+            "name": "mobiledetect/mobiledetectlib",
+            "version": "2.8.26",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/serbanghita/Mobile-Detect.git",
+                "reference": "a0ed86c9d7c04ae27fa6418b55e3beb04dfe3297"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/a0ed86c9d7c04ae27fa6418b55e3beb04dfe3297",
+                "reference": "a0ed86c9d7c04ae27fa6418b55e3beb04dfe3297",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Mobile_Detect.php"
+                ],
+                "psr-0": {
+                    "Detection": "namespaced/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Serban Ghita",
+                    "email": "serbanghita@gmail.com",
+                    "homepage": "http://mobiledetect.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
+            "homepage": "https://github.com/serbanghita/Mobile-Detect",
+            "keywords": [
+                "detect mobile devices",
+                "mobile",
+                "mobile detect",
+                "mobile detector",
+                "php mobile detect"
+            ],
+            "time": "2017-08-29T18:23:54+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3996,6 +4158,67 @@
                 "tree"
             ],
             "time": "2016-01-26T23:58:32+00:00"
+        },
+        {
+            "name": "suncat/mobile-detect-bundle",
+            "version": "v1.0.6",
+            "target-dir": "SunCat/MobileDetectBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/suncat2000/MobileDetectBundle.git",
+                "reference": "fd5e979c86efcedffe137a26c023ccd117cbd204"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/suncat2000/MobileDetectBundle/zipball/fd5e979c86efcedffe137a26c023ccd117cbd204",
+                "reference": "fd5e979c86efcedffe137a26c023ccd117cbd204",
+                "shasum": ""
+            },
+            "require": {
+                "mobiledetect/mobiledetectlib": "~2.8",
+                "php": ">=5.5.9",
+                "symfony/framework-bundle": "~2.7|~3.3",
+                "twig/twig": "~1.26|~2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.1",
+                "satooshi/php-coveralls": "dev-master",
+                "symfony/phpunit-bridge": "~2.7|~3.3"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "SunCat\\MobileDetectBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nikolay Ivlev",
+                    "email": "nikolay.kotovsky@gmail.com"
+                },
+                {
+                    "name": "Henri Vesala",
+                    "email": "henri.vesala@gmail.com"
+                },
+                {
+                    "name": "netmikey",
+                    "homepage": "https://github.com/netmikey"
+                }
+            ],
+            "description": "Symfony2/3 bundle for detect mobile devices, managing mobile view types, redirect to mobile version.",
+            "homepage": "https://github.com/suncat2000/MobileDetectBundle",
+            "keywords": [
+                "mobile",
+                "mobile detect",
+                "mobile redirect",
+                "mobile view managing",
+                "symfony mobile"
+            ],
+            "time": "2017-06-28T13:31:57+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
