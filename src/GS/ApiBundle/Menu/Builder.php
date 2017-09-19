@@ -53,6 +53,7 @@ class Builder
         $menu->addChild('Trésorier')->setAttribute('dropdown', true);
         $menu['Trésorier']->addChild('Liste des paiements', array(
             'route' => 'index_payment',
+            'routeParameters' => array('state' => 'PAID')
         ));
         $menu['Trésorier']->addChild('Ajouter un paiement', array(
             'route' => 'add_payment',
@@ -91,6 +92,9 @@ class Builder
         ));
         $menu['Admin']->addChild('Liste des inscriptions', array(
             'route' => 'index_registration',
+        ));
+        $menu['Admin']->addChild('Liste des paiements', array(
+            'route' => 'index_payment',
         ));
         $menu['Admin']
             ->addChild('Email list', array(

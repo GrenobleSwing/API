@@ -98,13 +98,19 @@ class PaymentController extends Controller
      * @Route("/payment", name="index_payment")
      * @Security("has_role('ROLE_TREASURER')")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $listPayments = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Payment')
-            ->findAll()
-            ;
-
+        if ( $request->query->has('state') ) {
+            $listPayments = $this->getDoctrine()->getManager()
+                ->getRepository('GSApiBundle:Payment')
+                ->findByState($request->query->get('state'))
+                ;
+        } else {
+            $listPayments = $this->getDoctrine()->getManager()
+                ->getRepository('GSApiBundle:Payment')
+                ->findAll()
+                ;
+        }
         return $this->render('GSApiBundle:Payment:index.html.twig', array(
             'listPayments' => $listPayments
         ));

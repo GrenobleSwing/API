@@ -24,10 +24,12 @@
         {{ payment.comment }}
     </div>
 
-    <a href="{{ path('view_invoice', {'id': payment.invoice.id}) }}" target="_blank" class="btn btn-default">
-        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-        Télécharger la facture
-    </a>
+    {% if payment.invoice %}
+        <a href="{{ path('view_invoice', {'id': payment.invoice.id}) }}" target="_blank" class="btn btn-default">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+            Télécharger la facture
+        </a>
+    {% endif %}
 
 {% endblock %}
 
