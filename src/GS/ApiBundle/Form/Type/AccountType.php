@@ -49,14 +49,6 @@ class AccountType extends AbstractType
                 ->add('address', AddressType::class, array(
                     'label' => 'Adresse',
                 ))
-                ->add('student', CheckboxType::class, array(
-                    'label'    => 'Etudiant',
-                    'required' => false,
-                ))
-                ->add('unemployed', CheckboxType::class, array(
-                    'label'    => 'Chômeur',
-                    'required' => false,
-                ))
 //                ->add('imageFile', VichImageType::class, [
 //                    'label' => 'Photo du compte',
 //                    'required' => false,
