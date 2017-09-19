@@ -12,5 +12,8 @@
         {% elseif registration.state == 'CANCELLED' %}
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         {% endif %}
+        {% if registration.withPartner %}
+            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+        {% endif %}
     {% endif %}
 {% endmacro %}

@@ -4,6 +4,8 @@
     {{ parent() }}
 
     {% import "GSApiBundle:Topic:macros.html.twig" as macro %}
+    {% import "GSApiBundle:Registration:macros.html.twig" as macro_reg %}
+
     <h2>
         {{ macro.print_title(topic) }}
     </h2>
@@ -70,8 +72,8 @@
         <ul>
             {% for registration in user_registrations %}
                 <li>
+                    {{ macro_reg.print_state(registration) }}
                     {{ registration.account.displayName }}
-                    - {{ registration.state }}
                     <a href="{{ path('view_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
                     </a>
@@ -88,36 +90,41 @@
         </ul>
 
     {% if is_granted("moderate", topic) %}
-        {% import "GSApiBundle:Registration:macros.html.twig" as macro_reg %}
         <h3>Liste des inscriptions :</h3>
         <ul>
             {% for registration in topic.registrations %}
                 <li>
                     {{ macro_reg.print_state(registration) }}
                     {{ registration.account.displayName }}
-                    - {{ registration.state }}
+                    {% if registration.withPartner %}
+                        {% if registration.partnerRegistration %}
+                            - partenaire: {{ registration.partnerRegistration.account.displayName }}
+                        {% else %}
+                            - partenaire: {{ registration.partnerFirstName }}
+                            {{ registration.partnerLastName }}
+                            ({{- registration.partnerEmail -}})
+                        {% endif %}
+                    {% endif %}
                     <a href="{{ path('view_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
                     </a>
-                    {% if is_granted("edit", registration) %}
-                        {% if registration.state == 'SUBMITTED' or registration.state == 'WAITING' %}
-                            <a href="{{ path('validate_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs"
-                               data-toggle="tooltip" data-placement="top" title="Valider">
-                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
-                            </a>
-                        {% endif %}
-                        {% if registration.state == 'SUBMITTED' %}
-                            <a href="{{ path('wait_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs"
-                               data-toggle="tooltip" data-placement="top" title="Mettre en list d'attente">
-                                <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                            </a>
-                        {% endif %}
-                        {% if registration.state != 'CANCELLED' %}
-                            <a href="{{ path('cancel_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs"
-                               data-toggle="tooltip" data-placement="top" title="Annuler">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </a>
-                        {% endif %}
+                    {% if is_granted("validate", registration) %}
+                        <a href="{{ path('validate_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs"
+                           data-toggle="tooltip" data-placement="top" title="Valider">
+                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                        </a>
+                    {% endif %}
+                    {% if is_granted("wait", registration) %}
+                        <a href="{{ path('wait_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs"
+                           data-toggle="tooltip" data-placement="top" title="Mettre en list d'attente">
+                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        </a>
+                    {% endif %}
+                    {% if is_granted("cancel", registration) %}
+                        <a href="{{ path('cancel_registration', {'id': registration.id}) }}" class="btn btn-default btn-xs"
+                           data-toggle="tooltip" data-placement="top" title="Annuler">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
                     {% endif %}
                 </li>
             {% else %}
