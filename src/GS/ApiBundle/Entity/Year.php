@@ -123,9 +123,17 @@ class Year
 
     /**
      * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
+     * @ORM\JoinTable(name="year_user")
      * @Type("Relation<User>")
      */
     private $owners;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="GS\ApiBundle\Entity\User")
+     * @ORM\JoinTable(name="year_teacher")
+     * @Type("Relation<User>")
+     */
+    private $teachers;
 
 
     /**
@@ -358,5 +366,39 @@ class Year
     public function getSociety()
     {
         return $this->society;
+    }
+
+    /**
+     * Add teacher
+     *
+     * @param \GS\ApiBundle\Entity\User $teacher
+     *
+     * @return Year
+     */
+    public function addTeacher(\GS\ApiBundle\Entity\User $teacher)
+    {
+        $this->teachers[] = $teacher;
+
+        return $this;
+    }
+
+    /**
+     * Remove teacher
+     *
+     * @param \GS\ApiBundle\Entity\User $teacher
+     */
+    public function removeTeacher(\GS\ApiBundle\Entity\User $teacher)
+    {
+        $this->teachers->removeElement($teacher);
+    }
+
+    /**
+     * Get teachers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTeachers()
+    {
+        return $this->teachers;
     }
 }

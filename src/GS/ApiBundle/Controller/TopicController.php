@@ -155,9 +155,25 @@ class TopicController extends FOSRestController
     {
         $listTopics = $this->getDoctrine()->getManager()
             ->getRepository('GSApiBundle:Topic')
-            ->findByState('OPEN')
+            ->getOpenTopicsNotAdhesion()
             ;
 
+        $listAdhesions = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Topic')
+            ->findBy(array('type' => 'adhesion', 'state' => 'OPEN'))
+            ;
+
+        $account = $this->getDoctrine()->getManager()
+            ->getRepository('GSApiBundle:Account')
+            ->findOneByUser($this->getUser())
+            ;
+
+        foreach ($listAdhesions as $topic) {
+            $year = $topic->getActivity()->getYear();
+            if (!$this->get('gsapi.user.membership')->isTeacher($account, $year)) {
+                $listTopics[] = $topic;
+            }
+        }
         $view = $this->view($listTopics, 200);
         return $this->handleView($view);
     }

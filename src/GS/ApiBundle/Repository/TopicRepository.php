@@ -48,4 +48,22 @@ class TopicRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getOpenTopicsNotAdhesion(Year $year = null)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb
+                ->where('t.type <> :type')
+                ->setParameter('type', 'adhesion');
+
+        if (null !== $year) {
+            $qb
+                    ->leftJoin('t.activity', 'act')
+                    ->addSelect('act')
+                    ->andWhere('act.year = :year')
+                    ->setParameter('year', $year);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
 }

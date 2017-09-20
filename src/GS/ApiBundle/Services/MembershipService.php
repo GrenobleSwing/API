@@ -31,8 +31,23 @@ class MembershipService
         return false;
     }
 
+    public function isTeacher(Account $account, Year $year)
+    {
+        $user = $account->getUser();
+        foreach ($year->getOwners() as $teacher) {
+            if ($user === $teacher) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function isMember(Account $account, Year $year)
     {
+        if ( $this->isTeacher($account, $year) ) {
+            return true;
+        }
+
         $registrations = $this->entityManager
             ->getRepository('GSApiBundle:Registration')
             ->getMembershipRegistrationsForAccountAndYear($account, $year);
@@ -56,6 +71,13 @@ class MembershipService
             if ($registration->getState() == 'PAID') {
                 $accounts[] = $registration->getAccount();
             }
+        }
+
+        foreach ($year->getTeachers() as $teacher) {
+            $account = $this->entityManager
+                    ->getRepository('GSApiBundle:Account')
+                    ->findOneByUser($teacher);
+            $accounts[] = $account;
         }
 
         return $accounts;
