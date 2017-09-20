@@ -1,12 +1,14 @@
 gs_e_transaction:
     resource: "@GSETransactionBundle/Resources/config/routing.yml"
-    prefix:   /toto
+    prefix:   /etrans
+    scheme: [https]
 
 #fos_user:
 #    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    scheme: [https]
 
 #fos_user_profile:
 #    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
@@ -15,21 +17,27 @@ fos_user_security:
 fos_user_register:
     resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
     prefix: /register
+    scheme: [https]
 
 fos_user_resetting:
     resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
     prefix: /resetting
+    scheme: [https]
 
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
+    scheme: [https]
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+    scheme: [https]
 
 LexikMailerBundle:
     resource: "@LexikMailerBundle/Resources/config/routing.xml"
     prefix:   /templates
+    scheme: [https]
 
 gsapi:
     resource: "@GSApiBundle/Resources/config/routing.yml"
+    scheme: [https]

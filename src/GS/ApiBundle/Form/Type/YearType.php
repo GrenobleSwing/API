@@ -37,6 +37,19 @@ class YearType extends AbstractType
                     'html5' => false,
                     'attr' => ['class' => 'js-datepicker'],
                 ))
+                ->add('teachers', EntityType::class, array(
+                    'label' => 'Profs',
+                    'class' => 'GSApiBundle:User',
+                    'choice_label' => 'email',
+                    'multiple' => true,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                                ->orderBy('u.username', 'ASC');
+                    },
+                    'attr' => array(
+                        'class' => 'js-select-multiple',
+                    ),
+                ))
                 ->add('owners', EntityType::class, array(
                     'label' => 'Admins',
                     'class' => 'GSApiBundle:User',
