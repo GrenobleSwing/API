@@ -34,7 +34,7 @@ class MembershipService
     public function isTeacher(Account $account, Year $year)
     {
         $user = $account->getUser();
-        foreach ($year->getOwners() as $teacher) {
+        foreach ($year->getTeachers() as $teacher) {
             if ($user === $teacher) {
                 return true;
             }
