@@ -45,3 +45,5 @@ parameters:
     return_url_cancelled: ''
     return_url_rejected: ''
     return_url_onhold: ''
+
+    httpProtocol: http
