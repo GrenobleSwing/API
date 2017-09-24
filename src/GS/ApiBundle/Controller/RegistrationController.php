@@ -116,11 +116,6 @@ class RegistrationController extends Controller
      */
     public function cancelAction(Registration $registration, Request $request)
     {
-        if (in_array($registration->getState(), array('CANCELLED', 'PARTIALLY_CANCELLED'))) {
-            $request->getSession()->getFlashBag()->add('danger', "Impossible to cancel registration");
-            return $this->redirectToRoute('view_topic', array('id' => $registration->getTopic()->getId()));
-        }
-
         $form = $this->createFormBuilder()->getForm();
 
         $form->handleRequest($request);
@@ -279,6 +274,8 @@ class RegistrationController extends Controller
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('gsapi.registration.service')->cleanPayments($registration);
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($registration);
             $em->flush();
