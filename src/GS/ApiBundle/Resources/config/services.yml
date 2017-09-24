@@ -10,6 +10,7 @@ services:
             - { name: knp_menu.menu_builder, method: mainMenu, alias: mainMenu }
             - { name: knp_menu.menu_builder, method: organizerMenu, alias: organizerMenu }
             - { name: knp_menu.menu_builder, method: treasurerMenu, alias: treasurerMenu }
+            - { name: knp_menu.menu_builder, method: secretaryMenu, alias: secretaryMenu }
             - { name: knp_menu.menu_builder, method: adminMenu, alias: adminMenu }
 
     gsapi.profiler.admin.matcher:

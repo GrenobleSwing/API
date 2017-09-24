@@ -19,6 +19,10 @@ discount:
     type:     annotation
     resource: GS\ApiBundle\Controller\DiscountController
 
+member:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\MemberController
+
 registration:
     type:     annotation
     resource: GS\ApiBundle\Controller\RegistrationController

@@ -5,17 +5,19 @@ namespace GS\ApiBundle\Controller;
 use GS\ApiBundle\Entity\Invoice;
 use GS\ApiBundle\Entity\Payment;
 use GS\ApiBundle\Form\Type\PaymentType;
+use JMS\Serializer\SerializationContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PaymentController extends Controller
 {
 
     /**
      * @Route("/payment/add", name="add_payment")
-     * @Security("has_role('ROLE_ORGANIZER')")
+     * @Security("has_role('ROLE_TREASURER')")
      */
     public function addAction(Request $request)
     {
@@ -84,7 +86,10 @@ class PaymentController extends Controller
     }
 
     /**
-     * @Route("/payment/{id}", name="view_payment", requirements={"id": "\d+"})
+     * @Route("/payment/{id}",
+     *   name="view_payment",
+     *   requirements={"id": "\d+"},
+     *   options = { "expose" = true })
      * @Security("is_granted('view', payment)")
      */
     public function viewAction(Payment $payment)
@@ -98,7 +103,16 @@ class PaymentController extends Controller
      * @Route("/payment", name="index_payment")
      * @Security("has_role('ROLE_TREASURER')")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
+    {
+        return $this->render('GSApiBundle:Payment:index.html.twig');
+    }
+
+    /**
+     * @Route("/payment/json", name="index_payment_json")
+     * @Security("has_role('ROLE_TREASURER')")
+     */
+    public function indexJsonAction(Request $request)
     {
         if ( $request->query->has('state') ) {
             $listPayments = $this->getDoctrine()->getManager()
@@ -111,9 +125,10 @@ class PaymentController extends Controller
                 ->findAll()
                 ;
         }
-        return $this->render('GSApiBundle:Payment:index.html.twig', array(
-            'listPayments' => $listPayments
-        ));
+        $serializedEntity = $this->get('jms_serializer')->serialize($listPayments, 'json',
+                SerializationContext::create()->setGroups(array('Default', 'account' => array('payment'))));
+
+        return new Response($serializedEntity);
     }
 
     /**

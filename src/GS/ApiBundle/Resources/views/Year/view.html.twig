@@ -31,6 +31,12 @@
                 Fermer l'année
             </a>
         {% endif %}
+        {% if is_granted("ROLE_SECRETARY") %}
+            <a href="{{ path('index_member', {'id': year.id}) }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                Liste des membres
+            </a>
+        {% endif %}
         {% if is_granted("edit", year) %}
             <a href="{{ path('edit_year', {'id': year.id}) }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
@@ -77,6 +83,9 @@
             </li>
         {% endif %}
     </ul>
+
+    <h3>Liste des profs :</h3>
+    {{ year.teachers|join(', ') }}
 
     {% if is_granted("edit", year) %}
         <h3>Liste des admins :</h3>

@@ -62,6 +62,41 @@ class Builder
         return $menu;
     }
 
+    public function secretaryMenu(array $options)
+    {
+        $menu = $this->factory->createItem('root');
+        $menu->setChildrenAttribute('class', 'nav navbar-nav');
+
+        $year = $this->entityManager
+            ->getRepository('GSApiBundle:Year')
+            ->findCurrentYear()
+            ;
+
+        $menu->addChild('Secrétaire')->setAttribute('dropdown', true);
+        if (null === $year) {
+            $menu['Secrétaire']->addChild("Aucun membres pour l'année en cours", array(
+                'route' => 'homepage',
+            ));
+
+        } else {
+            $menu['Secrétaire']->addChild('Liste des membres', array(
+                'route' => 'index_member',
+                'routeParameters' => array(
+                    'id' => $year->getId(),
+                )
+            ));
+            $menu['Secrétaire']->addChild("Liste des membres (incluant ceux n'ayant pas encore payé)", array(
+                'route' => 'index_member',
+                'routeParameters' => array(
+                    'id' => $year->getId(),
+                    'all' => true,
+                )
+            ));
+        }
+
+        return $menu;
+    }
+
     public function adminMenu(array $options)
     {
         $societies = $this->entityManager

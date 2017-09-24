@@ -64,7 +64,8 @@ class RegistrationController extends Controller
         $year = $activity->getYear();
 
         if ($activity->getMembersOnly() &&
-                !$this->get('gsapi.user.membership')->isAlmostMember($account, $year) &&
+                !($this->get('gsapi.user.membership')->isMember($account, $year) ||
+                $this->get('gsapi.user.membership')->isAlmostMember($account, $year)) &&
                 null !== $activity->getMembershipTopic()) {
             $membership = new Registration();
             $membership->setAccount($account);

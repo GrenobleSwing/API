@@ -23,8 +23,7 @@ class MembershipService
             ->getMembershipRegistrationsForAccountAndYear($account, $year);
 
         foreach ($registrations as $registration) {
-            if ($registration->getState() == 'PAID' ||
-                    $registration->getState() == 'VALIDATED') {
+            if ($registration->getState() == 'VALIDATED') {
                 return true;
             }
         }
@@ -45,7 +44,7 @@ class MembershipService
         return false;
     }
 
-    private function getMembers(Year $year)
+    public function getMembers(Year $year, $paidOnly = true)
     {
         $registrations = $this->entityManager
             ->getRepository('GSApiBundle:Registration')
@@ -54,6 +53,8 @@ class MembershipService
         $accounts = [];
         foreach ($registrations as $registration) {
             if ($registration->getState() == 'PAID') {
+                $accounts[] = $registration->getAccount();
+            } elseif (!$paidOnly && $registration->getState() == 'VALIDATED') {
                 $accounts[] = $registration->getAccount();
             }
         }

@@ -77,7 +77,6 @@ class Payment
     /**
      * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Account", inversedBy="payments")
      * @ORM\JoinColumn(nullable=false)
-     * @Type("Relation")
      */
     private $account;
 

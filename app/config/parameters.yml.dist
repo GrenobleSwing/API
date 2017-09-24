@@ -37,3 +37,10 @@ parameters:
     wkhtmltopdf.binary: /var/local/wkhtmltox/bin/wkhtmltopdf
 
     admin_email: admin@test.com
+
+    return_url_success: 'http://test.inscriptions.grenobleswing.com/success.html'
+    return_url_cancelled: 'http://test.inscriptions.grenobleswing.com/cancelled.html'
+    return_url_rejected: 'http://test.inscriptions.grenobleswing.com/refused.html'
+    return_url_onhold: 'http://test.inscriptions.grenobleswing.com/waiting.html'
+
+    httpProtocol: http
