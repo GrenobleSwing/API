@@ -22,6 +22,22 @@ class RegistrationService
         $this->messageFactory = $messageFactory;
     }
 
+    public function cleanPayments(Registration $registration)
+    {
+        $em = $this->entityManager;
+
+        $paymentItems = $em
+            ->getRepository('GSApiBundle:PaymentItem')
+            ->findByRegistration($registration);
+
+        foreach ($paymentItems as $paymentItem) {
+            $payment = $paymentItem->getPayment();
+            $em->remove($payment);
+        }
+        $em->flush();
+    }
+
+    // Not used yet
     public function checkRequirements(Registration $registration, User $user)
     {
         $requirements = array();
@@ -90,16 +106,9 @@ class RegistrationService
         return true;
     }
 
-    public function onPay(Registration $registration)
-    {
-        if (in_array(Registration::PAY, $registration->getTopic()->getActivity()->getTriggeredEmails())) {
-            $this->sendEmail($registration, Registration::PAY);
-        }
-        return true;
-    }
-
     public function onCancel(Registration $registration)
     {
+        $this->cleanPayments($registration);
         if (in_array(Registration::CANCEL, $registration->getTopic()->getActivity()->getTriggeredEmails())) {
             $this->sendEmail($registration, Registration::CANCEL);
         }

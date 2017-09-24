@@ -150,6 +150,9 @@ class RegistrationController extends FOSRestController
         if ($registration->getState() != 'PAID') {
             $em->remove($registration);
         }
+
+        $this->get('gsapi.registration.service')->onCancel($registration);
+
         $em->flush();
 
         $view = $this->view(null, 204);
@@ -344,6 +347,8 @@ class RegistrationController extends FOSRestController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('gsapi.registration.service')->cleanPayments($registration, $this->getUser());
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($registration);
             $em->flush();
