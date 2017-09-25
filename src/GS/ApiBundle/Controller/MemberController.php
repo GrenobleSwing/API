@@ -33,7 +33,12 @@ class MemberController extends Controller
      */
     public function indexJsonAction(Year $year, Request $request)
     {
-        $listAccounts = $this->get('gsapi.user.membership')->getMembers($year);
+        $onlyPaid = false;
+        if ($request->query->has('onlyPaid') && $request->query->get('onlyPaid')) {
+            $onlyPaid = true;
+        }
+
+        $listAccounts = $this->get('gsapi.user.membership')->getMembers($year, $onlyPaid);
 
         $serializedEntity = $this->get('jms_serializer')->serialize($listAccounts, 'json');
 
