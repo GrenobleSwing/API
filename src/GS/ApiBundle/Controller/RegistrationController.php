@@ -347,7 +347,7 @@ class RegistrationController extends FOSRestController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('gsapi.registration.service')->cleanPayments($registration, $this->getUser());
+            $this->get('gsapi.registration.service')->cleanPayments($registration);
 
             $em = $this->getDoctrine()->getManager();
             $em->remove($registration);
