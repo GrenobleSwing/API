@@ -42,7 +42,7 @@
                 "dom": 'Blfrtip',
                 "scrollX": true,
                 "ajax": {
-                    "url": "{{ path('index_payment_json') }}",
+                    "url": "{{ path('index_payment_json', {'state': state}) }}",
                     "dataSrc": ''
                 },
                 "columns": [

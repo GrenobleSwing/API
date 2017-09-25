@@ -5,6 +5,7 @@
 
     <h2>Détails du paiement</h2>
 
+    Status du paiement : {{ payment.state }}<br>
     Type de paiement : {{ payment.type }}<br>
     Montant : {{ payment.amount }} &euro;<br>
     Date de paiement : {{ payment.date|date('d/m/Y', timezone="Europe/Paris") }}<br>
