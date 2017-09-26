@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use GS\ApiBundle\Entity\Account;
 use GS\ApiBundle\Entity\Activity;
 use GS\ApiBundle\Entity\Category;
+use GS\ApiBundle\Entity\Certificate;
 use GS\ApiBundle\Entity\Discount;
 use GS\ApiBundle\Entity\Payment;
 use GS\ApiBundle\Entity\PaymentItem;
@@ -154,9 +155,9 @@ class AccountBalanceService
                 return $discount;
             } elseif($i >= 1 && $discount->getCondition() == '2nd') {
                 return $discount;
-            } elseif($account->isStudent() && $discount->getCondition() == 'student') {
+            } elseif($this->isStudent($account) && $discount->getCondition() == 'student') {
                 return $discount;
-            } elseif($account->getUnemployed() && $discount->getCondition() == 'unemployed') {
+            } elseif($this->isUnemployed($account) && $discount->getCondition() == 'unemployed') {
                 return $discount;
             } elseif($account->isMember() && $discount->getCondition() == 'member') {
                 return $discount;
@@ -165,4 +166,31 @@ class AccountBalanceService
         return null;
     }
 
+    public function isStudent(Account $account)
+    {
+        if (null === $account ) {
+            return false;
+        }
+        $certificate = $this->entityManager
+            ->getRepository('GSApiBundle:Certificate')
+            ->getValidCertificate($account, Certificate::STUDENT);
+        if (null === $certificate) {
+            return false;
+        }
+        return true;
+    }
+
+    public function isUnemployed(Account $account)
+    {
+        if (null === $account ) {
+            return false;
+        }
+        $certificate = $this->entityManager
+            ->getRepository('GSApiBundle:Certificate')
+            ->getValidCertificate($account, Certificate::UNEMPLOYED);
+        if (null === $certificate) {
+            return false;
+        }
+        return true;
+    }
 }
