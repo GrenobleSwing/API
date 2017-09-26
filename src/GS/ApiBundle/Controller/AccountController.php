@@ -5,6 +5,7 @@ namespace GS\ApiBundle\Controller;
 use GS\ApiBundle\Entity\Account;
 use GS\ETransactionBundle\Entity\Payment;
 use GS\ApiBundle\Form\Type\AccountType;
+use GS\ApiBundle\Form\Type\AccountPictureType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -125,6 +126,29 @@ class AccountController extends Controller
             $em->flush();
 
             $request->getSession()->getFlashBag()->add('success', 'Profil bien modifié.');
+
+            return $this->redirectToRoute('view_account', array('id' => $account->getId()));
+        }
+
+        return $this->render('GSApiBundle:Account:edit.html.twig', array(
+                    'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @Route("/account/{id}/picture", name="edit_account_picture", requirements={"id": "\d+"})
+     * @Security("is_granted('edit', account)")
+     */
+    public function putPictureAction(Account $account, Request $request)
+    {
+        $form = $this->createForm(AccountPictureType::class, $account);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('success', 'Image du profil bien modifiée.');
 
             return $this->redirectToRoute('view_account', array('id' => $account->getId()));
         }

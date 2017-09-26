@@ -44,3 +44,5 @@ parameters:
     return_url_onhold: 'http://test.inscriptions.grenobleswing.com/waiting.html'
 
     httpProtocol: http
+
+    vich_uri_prefix: /web
