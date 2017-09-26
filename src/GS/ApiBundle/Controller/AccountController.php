@@ -5,6 +5,7 @@ namespace GS\ApiBundle\Controller;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use GS\ApiBundle\Entity\Account;
@@ -239,6 +240,71 @@ class AccountController extends FOSRestController
         } else {
             $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
         }
+        return $this->handleView($view);
+    }
+
+    /**
+     * @ApiDoc(
+     *   section="Account",
+     *   description="Update the picture of an existing Account",
+     *   input="GS\ApiBundle\Form\Type\AccountPictureType",
+     *   requirements={
+     *     {
+     *       "name"="account",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Account id"
+     *     }
+     *   },
+     *   statusCodes={
+     *     204="The Account has been updated",
+     *   }
+     * )
+     * @Security("is_granted('edit', account)")
+     * @Put("/account/{id}/picture")
+     */
+    public function putPictureAction(Account $account, Request $request)
+    {
+        $form = $this->get('gsapi.form_generator')->getAccountPictureForm($account, 'gs_api_put_account_picture', 'PUT');
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $view = $this->view(null, 204);
+
+        } else {
+            $view = $this->get('gsapi.form_generator')->getFormView($form, 412);
+        }
+        return $this->handleView($view);
+    }
+
+    /**
+     * @ApiDoc(
+     *   section="Account",
+     *   description="Return the path of the picture of an existing Account",
+     *   requirements={
+     *     {
+     *       "name"="account",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Account id"
+     *     }
+     *   },
+     *   statusCodes={
+     *     200="The Account's picture path",
+     *   }
+     * )
+     * @Security("is_granted('view', account)")
+     * @Get("/account/{id}/picture")
+     */
+    public function getPictureAction(Account $account)
+    {
+        $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
+        $path = $helper->asset($account, 'imageFile');
+        $view = $this->view(array('path' => $path), 200);
+
         return $this->handleView($view);
     }
 

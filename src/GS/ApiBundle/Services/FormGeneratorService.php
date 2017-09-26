@@ -9,28 +9,29 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use FOS\RestBundle\View\View;
 
-use GS\ApiBundle\Entity\Year;
-use GS\ApiBundle\Form\Type\YearType;
-use GS\ApiBundle\Entity\Activity;
-use GS\ApiBundle\Form\Type\ActivityType;
-use GS\ApiBundle\Entity\Topic;
-use GS\ApiBundle\Form\Type\TopicType;
-use GS\ApiBundle\Entity\Category;
-use GS\ApiBundle\Form\Type\CategoryType;
-use GS\ApiBundle\Entity\Discount;
-use GS\ApiBundle\Form\Type\DiscountType;
-use GS\ApiBundle\Entity\Registration;
-use GS\ApiBundle\Form\Type\RegistrationType;
-use GS\ApiBundle\Entity\Venue;
-use GS\ApiBundle\Form\Type\VenueType;
 use GS\ApiBundle\Entity\Account;
-use GS\ApiBundle\Form\Type\AccountType;
+use GS\ApiBundle\Entity\Activity;
+use GS\ApiBundle\Entity\Category;
+use GS\ApiBundle\Entity\Discount;
 use GS\ApiBundle\Entity\Payment;
 use GS\ApiBundle\Entity\PaymentItem;
-use GS\ApiBundle\Form\Type\PaymentType;
-use GS\ApiBundle\Form\Type\DeleteType;
+use GS\ApiBundle\Entity\Registration;
+use GS\ApiBundle\Entity\Topic;
 use GS\ApiBundle\Entity\User;
+use GS\ApiBundle\Entity\Venue;
+use GS\ApiBundle\Entity\Year;
+use GS\ApiBundle\Form\Type\AccountType;
+use GS\ApiBundle\Form\Type\AccountPictureType;
+use GS\ApiBundle\Form\Type\ActivityType;
+use GS\ApiBundle\Form\Type\CategoryType;
+use GS\ApiBundle\Form\Type\DeleteType;
+use GS\ApiBundle\Form\Type\DiscountType;
+use GS\ApiBundle\Form\Type\PaymentType;
+use GS\ApiBundle\Form\Type\RegistrationType;
+use GS\ApiBundle\Form\Type\TopicType;
 use GS\ApiBundle\Form\Type\UserType;
+use GS\ApiBundle\Form\Type\VenueType;
+use GS\ApiBundle\Form\Type\YearType;
 
 class FormGeneratorService
 {
@@ -231,6 +232,24 @@ class FormGeneratorService
         }
 
         return $this->formFactory->create(AccountType::class, $account, $options);
+    }
+
+    public function getAccountPictureForm($account = null, $routeName = null, $method = null)
+    {
+        $options = array();
+        if (null === $account) {
+            // Should raise an error
+            return null;
+        } else {
+            if (null !== $routeName) {
+                $options['action'] = $this->router->generate($routeName, array('id' => $account->getId()));
+            }
+        }
+        if (null !== $method) {
+            $options['method'] = $method;
+        }
+
+        return $this->formFactory->create(AccountPictureType::class, $account, $options);
     }
 
     public function getPaymentForm($payment = null, $routeName = null, $method = null)

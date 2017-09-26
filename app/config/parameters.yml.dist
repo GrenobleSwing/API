@@ -47,3 +47,5 @@ parameters:
     return_url_onhold: ''
 
     httpProtocol: http
+
+    vich_uri_prefix: /web
