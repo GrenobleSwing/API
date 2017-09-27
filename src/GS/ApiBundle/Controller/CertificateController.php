@@ -76,7 +76,7 @@ class CertificateController extends Controller
 
     /**
      * @Route("/certificate", name="index_certificate")
-     * @Security("has_role('ROLE_ORGANIZER')")
+     * @Security("has_role('ROLE_TREASURER')")
      */
     public function indexAction()
     {

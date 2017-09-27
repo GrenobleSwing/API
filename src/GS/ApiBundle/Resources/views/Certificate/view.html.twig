@@ -3,18 +3,18 @@
 {% block gs_body %}
     {{ parent() }}
 
-    <h2>{{ cert.display }}</h2>
+    <h2>{{ certificate.display }}</h2>
 
     <p>
         <a href="{{ path('homepage') }}" class="btn btn-default">
             <i class="glyphicon glyphicon-chevron-left"></i>
             Retour à l'accueil
         </a>
-        <a href="{{ path('edit_certificate', {'id': cert.id}) }}" class="btn btn-default">
+        <a href="{{ path('edit_certificate', {'id': certificate.id}) }}" class="btn btn-default">
             <i class="glyphicon glyphicon-edit"></i>
             Modifier le justificatif
         </a>
-        <a href="{{ path('delete_certificate', {'id': cert.id}) }}" class="btn btn-danger">
+        <a href="{{ path('delete_certificate', {'id': certificate.id}) }}" class="btn btn-danger">
             <i class="glyphicon glyphicon-trash"></i>
             Supprimer le justificatif
         </a>

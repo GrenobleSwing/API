@@ -17,16 +17,16 @@
     </p>
 
     <ul>
-        {% for cert in listCertificates %}
+        {% for certificate in listCertificates %}
             <li>
-                {{ cert.display }}
-                <a href="{{ path('view_certificate', {'id': cert.id}) }}" class="btn btn-default btn-xs">
+                {{ certificate.display }}
+                <a href="{{ path('view_certificate', {'id': certificate.id}) }}" class="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Voir
                 </a>
-                <a href="{{ path('edit_certificate', {'id': cert.id}) }}" class="btn btn-default btn-xs">
+                <a href="{{ path('edit_certificate', {'id': certificate.id}) }}" class="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Modifier
                 </a>
-                <a href="{{ path('delete_certificate', {'id': cert.id}) }}" class="btn btn-danger btn-xs">
+                <a href="{{ path('delete_certificate', {'id': certificate.id}) }}" class="btn btn-danger btn-xs">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Supprimer
                 </a>
             </li>

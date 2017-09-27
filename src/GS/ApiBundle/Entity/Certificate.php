@@ -196,4 +196,9 @@ class Certificate
     {
         return $this->year;
     }
+
+    public function getDisplay()
+    {
+        return $this->getAccount()->getDisplayName() . ' - ' . $this->getType();
+    }
 }
