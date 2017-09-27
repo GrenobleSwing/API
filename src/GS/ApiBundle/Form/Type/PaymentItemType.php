@@ -28,6 +28,7 @@ class PaymentItemType extends AbstractType
                     },
                     'attr' => array(
                         'class' => 'js-select-single',
+                        'style' => 'width: 100%;',
                     ),
                 ))
                 ->add('discount', EntityType::class, array(
@@ -42,6 +43,7 @@ class PaymentItemType extends AbstractType
                     'required' => false,
                     'attr' => array(
                         'class' => 'js-select-single',
+                        'style' => 'width: 100%;',
                     ),
                 ))
         ;
