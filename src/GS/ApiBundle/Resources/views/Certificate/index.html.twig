@@ -17,7 +17,7 @@
     </p>
 
     <ul>
-        {% for cert in listCerts %}
+        {% for cert in listCertificates %}
             <li>
                 {{ cert.display }}
                 <a href="{{ path('view_certificate', {'id': cert.id}) }}" class="btn btn-default btn-xs">
