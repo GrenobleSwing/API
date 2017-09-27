@@ -15,6 +15,10 @@ category:
     type:     annotation
     resource: GS\ApiBundle\Controller\CategoryController
 
+certificate:
+    type:     annotation
+    resource: GS\ApiBundle\Controller\CertificateController
+
 discount:
     type:     annotation
     resource: GS\ApiBundle\Controller\DiscountController

@@ -3,9 +3,9 @@
 {% block gs_body %}
     {{ parent() }}
 
-    <h2>Editer un paiement</h2>
+    <h2>Editer un justificatif</h2>
 
-    {{ include("GSApiBundle:Payment:form.html.twig") }}
+    {{ include("GSApiBundle:Certificate:form.html.twig") }}
 
 {% endblock %}
 
@@ -16,12 +16,6 @@
         jQuery(document).ready(function() {
             $('.js-datepicker').datepicker({
                 format: 'yyyy-mm-dd'
-            });
-
-            $('.js-collection').collection({
-                after_add: function(collection, element) {
-                    $('.js-select-single').select2();
-                }
             });
 
             $('.js-select-single').select2();

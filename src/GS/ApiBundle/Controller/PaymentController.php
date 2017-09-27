@@ -29,8 +29,7 @@ class PaymentController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($payment);
 
-            $repoAccount = $em->getRepository('GSApiBundle:Account');
-            $account = $repoAccount->findOneByUser($this->getUser());
+            $account = $payment->getAccount();
             $account->addPayment($payment);
 
             $repo = $em->getRepository('GSApiBundle:Invoice');

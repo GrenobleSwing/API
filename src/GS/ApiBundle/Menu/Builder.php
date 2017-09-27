@@ -58,6 +58,14 @@ class Builder
         $menu['Trésorier']->addChild('Ajouter un paiement', array(
             'route' => 'add_payment',
         ));
+        $menu['Trésorier']
+                ->addChild('Liste des justificatifs', array(
+                    'route' => 'index_certificate',
+                ))
+                ->setAttribute('divider_prepend', true);
+        $menu['Trésorier']->addChild('Ajouter un justificatif', array(
+            'route' => 'add_certificate',
+        ));
 
         return $menu;
     }
