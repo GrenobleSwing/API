@@ -73,7 +73,7 @@ class AccountBalanceService
             }
 
             $discounts = $category->getDiscounts();
-            $discount = $this->chooseDiscount($i, $account, $discounts);
+            $discount = $this->chooseDiscount($i, $account, $category, $discounts);
 
             $line = $this->getPriceToPay($registration, $category, $discount);
             $line['title'] = $displayName;
@@ -144,26 +144,39 @@ class AccountBalanceService
         return $line;
     }
 
-    private function chooseDiscount($i, Account $account, $discounts)
+    private function getDiscountAmount (Category $category, Discount $discount)
     {
+        $price = $category->getPrice();
+        if($discount->getType() == 'percent') {
+            return $price * $discount->getValue() / 100;
+        } else {
+            return $discount->getValue();
+        }
+    }
+
+    private function chooseDiscount($i, Account $account, Category $category, $discounts)
+    {
+        $maxAmount = 0;
+        $result = null;
+
         foreach($discounts as $discount) {
-            if($i >= 4 && $discount->getCondition() == '5th') {
-                return $discount;
-            } elseif($i >= 3 && $discount->getCondition() == '4th') {
-                return $discount;
-            } elseif($i >= 2 && $discount->getCondition() == '3rd') {
-                return $discount;
-            } elseif($i >= 1 && $discount->getCondition() == '2nd') {
-                return $discount;
-            } elseif($this->isStudent($account) && $discount->getCondition() == 'student') {
-                return $discount;
-            } elseif($this->isUnemployed($account) && $discount->getCondition() == 'unemployed') {
-                return $discount;
-            } elseif($account->isMember() && $discount->getCondition() == 'member') {
-                return $discount;
+            $amount = 0;
+            if (($i >= 4 && $discount->getCondition() == '5th') ||
+                    ($i >= 3 && $discount->getCondition() == '4th') ||
+                    ($i >= 2 && $discount->getCondition() == '3rd') ||
+                    ($i >= 1 && $discount->getCondition() == '2nd') ||
+                    ($this->isStudent($account) && $discount->getCondition() == 'student') ||
+                    ($this->isUnemployed($account) && $discount->getCondition() == 'unemployed') ||
+                    ($account->isMember() && $discount->getCondition() == 'member')) {
+                $amount = $this->getDiscountAmount($category, $discount);
+            }
+
+            if ($amount > $maxAmount) {
+                $result = $discount;
+                $maxAmount = $amount;
             }
         }
-        return null;
+        return $result;
     }
 
     public function isStudent(Account $account)
