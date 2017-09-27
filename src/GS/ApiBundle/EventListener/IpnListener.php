@@ -72,7 +72,7 @@ class IpnListener
                 ->findOneByRef($data['Ref']);
 
         if ('00000' != $data['Erreur']) {
-            $em->remove($payment);
+            return false;
         } else {
             $payment->getAccount()->addPayment($payment);
             $payment->setState('PAID');
