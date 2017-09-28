@@ -194,7 +194,8 @@ class AccountController extends Controller
             $transaction->setIpnUrl($this->generateUrl('gse_transaction_ipn', array(), UrlGeneratorInterface::ABSOLUTE_URL));
 
             return $this->render('GSApiBundle:Account:balance.html.twig', array(
-                'payment' => $transaction,
+                'transaction' => $transaction,
+                'payment' => $payment,
             ));
         }
 
