@@ -161,6 +161,10 @@ vich_uploader:
             uri_prefix:         '%vich_uri_prefix%/images/account'
             namer:              vich_uploader.namer_uniqid
             upload_destination: '%kernel.root_dir%/../web/images/account'
+        certificate_file:
+            uri_prefix:         '%vich_uri_prefix%/files/certificate'
+            namer:              vich_uploader.namer_uniqid
+            upload_destination: '%kernel.root_dir%/../web/files/certificate'
 
 stof_doctrine_extensions:
     default_locale: fr_FR
