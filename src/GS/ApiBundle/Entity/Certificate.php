@@ -52,13 +52,6 @@ class Certificate
     private $account;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GS\ApiBundle\Entity\Year")
-     * @ORM\JoinColumn(nullable=false)
-     * @Type("Relation")
-     */
-    private $year;
-
-    /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      *
@@ -200,30 +193,6 @@ class Certificate
     public function getAccount()
     {
         return $this->account;
-    }
-
-    /**
-     * Set year
-     *
-     * @param \GS\ApiBundle\Entity\Year $year
-     *
-     * @return Certificate
-     */
-    public function setYear(\GS\ApiBundle\Entity\Year $year)
-    {
-        $this->year = $year;
-
-        return $this;
-    }
-
-    /**
-     * Get year
-     *
-     * @return \GS\ApiBundle\Entity\Year
-     */
-    public function getYear()
-    {
-        return $this->year;
     }
 
     /**
