@@ -9,8 +9,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use GS\ApiBundle\Entity\Invoice;
-use GS\ApiBundle\Entity\Payment;
+use GS\StructureBundle\Entity\Invoice;
+use GS\StructureBundle\Entity\Payment;
 
 /**
  * @RouteResource("Payment", pluralize=false)
@@ -22,7 +22,7 @@ class PaymentController extends FOSRestController
      * @ApiDoc(
      *   section="Payment",
      *   description="Returns a form to create a new Payment",
-     *   output="GS\ApiBundle\Form\Type\PaymentType",
+     *   output="GS\StructureBundle\Form\Type\PaymentType",
      *   statusCodes={
      *     200="You have permission to create a Payment, the form is returned",
      *   }
@@ -41,7 +41,7 @@ class PaymentController extends FOSRestController
      * @ApiDoc(
      *   section="Payment",
      *   description="Create a new Payment",
-     *   input="GS\ApiBundle\Form\Type\PaymentType",
+     *   input="GS\StructureBundle\Form\Type\PaymentType",
      *   statusCodes={
      *     201="The Payment has been created",
      *   }
@@ -99,7 +99,7 @@ class PaymentController extends FOSRestController
      *       "description"="Payment id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   output="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     200="You have permission to delete a Payment, the form is returned",
      *   }
@@ -129,7 +129,7 @@ class PaymentController extends FOSRestController
      *       "description"="Payment id"
      *     }
      *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   input="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     204="The Payment has been deleted",
      *   }
@@ -171,7 +171,7 @@ class PaymentController extends FOSRestController
      *       "description"="Payment id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Payment",
+     *   output="GS\StructureBundle\Entity\Payment",
      *   statusCodes={
      *     200="Returns the Payment",
      *   }
@@ -188,7 +188,7 @@ class PaymentController extends FOSRestController
      * @ApiDoc(
      *   section="Payment",
      *   description="Returns a collection of Payments",
-     *   output="array<GS\ApiBundle\Entity\Payment>",
+     *   output="array<GS\StructureBundle\Entity\Payment>",
      *   statusCodes={
      *     200="Returns all the Payments",
      *   }
@@ -218,7 +218,7 @@ class PaymentController extends FOSRestController
      *       "description"="Payment id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\PaymentType",
+     *   output="GS\StructureBundle\Form\Type\PaymentType",
      *   statusCodes={
      *     200="You have permission to create a Payment, the form is returned",
      *   }
@@ -236,7 +236,7 @@ class PaymentController extends FOSRestController
      * @ApiDoc(
      *   section="Payment",
      *   description="Update an existing Payment",
-     *   input="GS\ApiBundle\Form\Type\PaymentType",
+     *   input="GS\StructureBundle\Form\Type\PaymentType",
      *   requirements={
      *     {
      *       "name"="payment",

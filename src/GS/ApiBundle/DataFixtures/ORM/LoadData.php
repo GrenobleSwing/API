@@ -6,15 +6,15 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use GS\ApiBundle\Entity\Activity;
-use GS\ApiBundle\Entity\Address;
-use GS\ApiBundle\Entity\Category;
-use GS\ApiBundle\Entity\Discount;
-use GS\ApiBundle\Entity\Schedule;
-use GS\ApiBundle\Entity\Society;
-use GS\ApiBundle\Entity\Topic;
-use GS\ApiBundle\Entity\Venue;
-use GS\ApiBundle\Entity\Year;
+use GS\StructureBundle\Entity\Activity;
+use GS\StructureBundle\Entity\Address;
+use GS\StructureBundle\Entity\Category;
+use GS\StructureBundle\Entity\Discount;
+use GS\StructureBundle\Entity\Schedule;
+use GS\StructureBundle\Entity\Society;
+use GS\StructureBundle\Entity\Topic;
+use GS\StructureBundle\Entity\Venue;
+use GS\StructureBundle\Entity\Year;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

@@ -5,8 +5,8 @@ namespace GS\ApiBundle\Services;
 use Doctrine\ORM\EntityManager;
 use Lexik\Bundle\MailerBundle\Message\MessageFactory;
 
-use GS\ApiBundle\Entity\User;
-use GS\ApiBundle\Entity\Registration;
+use GS\StructureBundle\Entity\User;
+use GS\StructureBundle\Entity\Registration;
 
 class RegistrationService
 {

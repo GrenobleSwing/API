@@ -9,7 +9,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use GS\ApiBundle\Entity\Category;
+use GS\StructureBundle\Entity\Category;
 
 /**
  * @RouteResource("Category", pluralize=false)
@@ -21,7 +21,7 @@ class CategoryController extends FOSRestController
      * @ApiDoc(
      *   section="Category",
      *   description="Create a new Category",
-     *   input="GS\ApiBundle\Form\Type\CategoryType",
+     *   input="GS\StructureBundle\Form\Type\CategoryType",
      *   statusCodes={
      *     201="The Category has been created",
      *   }
@@ -63,7 +63,7 @@ class CategoryController extends FOSRestController
      *       "description"="Category id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Category",
+     *   output="GS\StructureBundle\Entity\Category",
      *   statusCodes={
      *     200="Returns the Category",
      *   }
@@ -80,7 +80,7 @@ class CategoryController extends FOSRestController
      * @ApiDoc(
      *   section="Category",
      *   description="Returns a collection of Categorys",
-     *   output="array<GS\ApiBundle\Entity\Category>",
+     *   output="array<GS\StructureBundle\Entity\Category>",
      *   statusCodes={
      *     200="Returns all the Categorys",
      *   }
@@ -110,7 +110,7 @@ class CategoryController extends FOSRestController
      *       "description"="Category id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\CategoryType",
+     *   output="GS\StructureBundle\Form\Type\CategoryType",
      *   statusCodes={
      *     200="You have permission to create a Category, the form is returned",
      *   }
@@ -128,7 +128,7 @@ class CategoryController extends FOSRestController
      * @ApiDoc(
      *   section="Category",
      *   description="Update an existing Category",
-     *   input="GS\ApiBundle\Form\Type\CategoryType",
+     *   input="GS\StructureBundle\Form\Type\CategoryType",
      *   requirements={
      *     {
      *       "name"="category",
@@ -172,7 +172,7 @@ class CategoryController extends FOSRestController
      *       "description"="Category id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   output="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     200="You have permission to delete a Category, the form is returned",
      *   }
@@ -198,7 +198,7 @@ class CategoryController extends FOSRestController
      *       "description"="Category id"
      *     }
      *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   input="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     204="The Category has been deleted",
      *   }

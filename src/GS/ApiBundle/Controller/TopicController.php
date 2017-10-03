@@ -9,8 +9,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use GS\ApiBundle\Entity\Topic;
-use GS\ApiBundle\Entity\Registration;
+use GS\StructureBundle\Entity\Topic;
+use GS\StructureBundle\Entity\Registration;
 
 /**
  * @RouteResource("Topic", pluralize=false)
@@ -22,7 +22,7 @@ class TopicController extends FOSRestController
      * @ApiDoc(
      *   section="Topic",
      *   description="Create a new Topic",
-     *   input="GS\ApiBundle\Form\Type\TopicType",
+     *   input="GS\StructureBundle\Form\Type\TopicType",
      *   statusCodes={
      *     201="The Topic has been created",
      *   }
@@ -65,7 +65,7 @@ class TopicController extends FOSRestController
      *       "description"="Topic id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   output="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     200="You have permission to delete a Topic, the form is returned",
      *   }
@@ -91,7 +91,7 @@ class TopicController extends FOSRestController
      *       "description"="Topic id"
      *     }
      *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   input="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     204="The Topic has been deleted",
      *   }
@@ -127,7 +127,7 @@ class TopicController extends FOSRestController
      *       "description"="Topic id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Topic",
+     *   output="GS\StructureBundle\Entity\Topic",
      *   statusCodes={
      *     200="Returns the Topic",
      *   }
@@ -144,7 +144,7 @@ class TopicController extends FOSRestController
      * @ApiDoc(
      *   section="Topic",
      *   description="Returns a collection of Topics",
-     *   output="array<GS\ApiBundle\Entity\Topic>",
+     *   output="array<GS\StructureBundle\Entity\Topic>",
      *   statusCodes={
      *     200="Returns all the Topics",
      *   }
@@ -190,7 +190,7 @@ class TopicController extends FOSRestController
      *       "description"="Topic id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\TopicType",
+     *   output="GS\StructureBundle\Form\Type\TopicType",
      *   statusCodes={
      *     200="You have permission to create a Topic, the form is returned",
      *   }
@@ -208,7 +208,7 @@ class TopicController extends FOSRestController
      * @ApiDoc(
      *   section="Topic",
      *   description="Update an existing Topic",
-     *   input="GS\ApiBundle\Form\Type\TopicType",
+     *   input="GS\StructureBundle\Form\Type\TopicType",
      *   requirements={
      *     {
      *       "name"="topic",
@@ -252,7 +252,7 @@ class TopicController extends FOSRestController
      *       "description"="Topic id"
      *     }
      *   },
-     *   output="array<GS\ApiBundle\Entity\Registration>",
+     *   output="array<GS\StructureBundle\Entity\Registration>",
      *   statusCodes={
      *     200="Returns all the Registrations attached to a given Topic",
      *   }
@@ -274,7 +274,7 @@ class TopicController extends FOSRestController
      * @ApiDoc(
      *   section="Topic",
      *   description="Returns a form to create a new Registration for the given Topic",
-     *   input="GS\ApiBundle\Form\Type\RegistrationType",
+     *   input="GS\StructureBundle\Form\Type\RegistrationType",
      *   requirements={
      *     {
      *       "name"="topic",

@@ -3,7 +3,7 @@
 namespace GS\ApiBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
-use GS\ApiBundle\Entity\Invoice;
+use GS\StructureBundle\Entity\Invoice;
 use GS\ApiBundle\Services\PaymentService;
 use GS\ETransactionBundle\Event\IpnEvent;
 use Symfony\Component\Filesystem\Filesystem;

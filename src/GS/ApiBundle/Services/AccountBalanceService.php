@@ -4,14 +4,14 @@ namespace GS\ApiBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 
-use GS\ApiBundle\Entity\Account;
-use GS\ApiBundle\Entity\Activity;
-use GS\ApiBundle\Entity\Category;
-use GS\ApiBundle\Entity\Certificate;
-use GS\ApiBundle\Entity\Discount;
-use GS\ApiBundle\Entity\Payment;
-use GS\ApiBundle\Entity\PaymentItem;
-use GS\ApiBundle\Entity\Registration;
+use GS\StructureBundle\Entity\Account;
+use GS\StructureBundle\Entity\Activity;
+use GS\StructureBundle\Entity\Category;
+use GS\StructureBundle\Entity\Certificate;
+use GS\StructureBundle\Entity\Discount;
+use GS\StructureBundle\Entity\Payment;
+use GS\StructureBundle\Entity\PaymentItem;
+use GS\StructureBundle\Entity\Registration;
 
 class AccountBalanceService
 {
@@ -112,7 +112,7 @@ class AccountBalanceService
         } else {
             $registrations = $this->entityManager
                 ->getRepository('GSApiBundle:Registration')
-                ->getRegistrationsForAccountAndActivity($account, $activity);
+                ->getRegistrationsPaidOrValidatedForAccountAndActivity($account, $activity);
         }
         return $registrations;
     }

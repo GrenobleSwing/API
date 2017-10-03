@@ -9,29 +9,29 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use FOS\RestBundle\View\View;
 
-use GS\ApiBundle\Entity\Account;
-use GS\ApiBundle\Entity\Activity;
-use GS\ApiBundle\Entity\Category;
-use GS\ApiBundle\Entity\Discount;
-use GS\ApiBundle\Entity\Payment;
-use GS\ApiBundle\Entity\PaymentItem;
-use GS\ApiBundle\Entity\Registration;
-use GS\ApiBundle\Entity\Topic;
-use GS\ApiBundle\Entity\User;
-use GS\ApiBundle\Entity\Venue;
-use GS\ApiBundle\Entity\Year;
-use GS\ApiBundle\Form\Type\AccountType;
-use GS\ApiBundle\Form\Type\AccountPictureType;
-use GS\ApiBundle\Form\Type\ActivityType;
-use GS\ApiBundle\Form\Type\CategoryType;
-use GS\ApiBundle\Form\Type\DeleteType;
-use GS\ApiBundle\Form\Type\DiscountType;
-use GS\ApiBundle\Form\Type\PaymentType;
-use GS\ApiBundle\Form\Type\RegistrationType;
-use GS\ApiBundle\Form\Type\TopicType;
-use GS\ApiBundle\Form\Type\UserType;
-use GS\ApiBundle\Form\Type\VenueType;
-use GS\ApiBundle\Form\Type\YearType;
+use GS\StructureBundle\Entity\Account;
+use GS\StructureBundle\Entity\Activity;
+use GS\StructureBundle\Entity\Category;
+use GS\StructureBundle\Entity\Discount;
+use GS\StructureBundle\Entity\Payment;
+use GS\StructureBundle\Entity\PaymentItem;
+use GS\StructureBundle\Entity\Registration;
+use GS\StructureBundle\Entity\Topic;
+use GS\StructureBundle\Entity\User;
+use GS\StructureBundle\Entity\Venue;
+use GS\StructureBundle\Entity\Year;
+use GS\StructureBundle\Form\Type\AccountType;
+use GS\StructureBundle\Form\Type\AccountPictureType;
+use GS\StructureBundle\Form\Type\ActivityType;
+use GS\StructureBundle\Form\Type\CategoryType;
+use GS\StructureBundle\Form\Type\DeleteType;
+use GS\StructureBundle\Form\Type\DiscountType;
+use GS\StructureBundle\Form\Type\PaymentType;
+use GS\StructureBundle\Form\Type\RegistrationType;
+use GS\StructureBundle\Form\Type\TopicType;
+use GS\StructureBundle\Form\Type\UserType;
+use GS\StructureBundle\Form\Type\VenueType;
+use GS\StructureBundle\Form\Type\YearType;
 
 class FormGeneratorService
 {

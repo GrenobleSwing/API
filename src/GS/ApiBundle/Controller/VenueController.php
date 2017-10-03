@@ -9,7 +9,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use GS\ApiBundle\Entity\Venue;
+use GS\StructureBundle\Entity\Venue;
 
 /**
  * @RouteResource("Venue", pluralize=false)
@@ -21,7 +21,7 @@ class VenueController extends FOSRestController
      * @ApiDoc(
      *   section="Venue",
      *   description="Returns a form to create a new Venue",
-     *   output="GS\ApiBundle\Form\Type\VenueType",
+     *   output="GS\StructureBundle\Form\Type\VenueType",
      *   statusCodes={
      *     200="You have permission to create a Venue, the form is returned",
      *   }
@@ -40,7 +40,7 @@ class VenueController extends FOSRestController
      * @ApiDoc(
      *   section="Venue",
      *   description="Create a new Venue",
-     *   input="GS\ApiBundle\Form\Type\VenueType",
+     *   input="GS\StructureBundle\Form\Type\VenueType",
      *   statusCodes={
      *     201="The Venue has been created",
      *   }
@@ -80,7 +80,7 @@ class VenueController extends FOSRestController
      *       "description"="Venue id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   output="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     200="You have permission to delete a Venue, the form is returned",
      *   }
@@ -106,7 +106,7 @@ class VenueController extends FOSRestController
      *       "description"="Venue id"
      *     }
      *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   input="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     204="The Venue has been deleted",
      *   }
@@ -142,7 +142,7 @@ class VenueController extends FOSRestController
      *       "description"="Venue id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Venue",
+     *   output="GS\StructureBundle\Entity\Venue",
      *   statusCodes={
      *     200="Returns the Venue",
      *   }
@@ -159,7 +159,7 @@ class VenueController extends FOSRestController
      * @ApiDoc(
      *   section="Venue",
      *   description="Returns a collection of Venues",
-     *   output="array<GS\ApiBundle\Entity\Venue>",
+     *   output="array<GS\StructureBundle\Entity\Venue>",
      *   statusCodes={
      *     200="Returns all the Venues",
      *   }
@@ -189,7 +189,7 @@ class VenueController extends FOSRestController
      *       "description"="Venue id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\VenueType",
+     *   output="GS\StructureBundle\Form\Type\VenueType",
      *   statusCodes={
      *     200="You have permission to create a Venue, the form is returned",
      *   }
@@ -207,7 +207,7 @@ class VenueController extends FOSRestController
      * @ApiDoc(
      *   section="Venue",
      *   description="Update an existing Venue",
-     *   input="GS\ApiBundle\Form\Type\VenueType",
+     *   input="GS\StructureBundle\Form\Type\VenueType",
      *   requirements={
      *     {
      *       "name"="venue",

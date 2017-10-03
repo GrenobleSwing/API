@@ -9,7 +9,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use GS\ApiBundle\Entity\Discount;
+use GS\StructureBundle\Entity\Discount;
 
 /**
  * @RouteResource("Discount", pluralize=false)
@@ -21,7 +21,7 @@ class DiscountController extends FOSRestController
      * @ApiDoc(
      *   section="Discount",
      *   description="Create a new Discount",
-     *   input="GS\ApiBundle\Form\Type\DiscountType",
+     *   input="GS\StructureBundle\Form\Type\DiscountType",
      *   statusCodes={
      *     201="The Discount has been created",
      *   }
@@ -63,7 +63,7 @@ class DiscountController extends FOSRestController
      *       "description"="Discount id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Discount",
+     *   output="GS\StructureBundle\Entity\Discount",
      *   statusCodes={
      *     200="Returns the Discount",
      *   }
@@ -80,7 +80,7 @@ class DiscountController extends FOSRestController
      * @ApiDoc(
      *   section="Discount",
      *   description="Returns a collection of Discounts",
-     *   output="array<GS\ApiBundle\Entity\Discount>",
+     *   output="array<GS\StructureBundle\Entity\Discount>",
      *   statusCodes={
      *     200="Returns all the Discounts",
      *   }
@@ -110,7 +110,7 @@ class DiscountController extends FOSRestController
      *       "description"="Discount id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DiscountType",
+     *   output="GS\StructureBundle\Form\Type\DiscountType",
      *   statusCodes={
      *     200="You have permission to create a Discount, the form is returned",
      *   }
@@ -128,7 +128,7 @@ class DiscountController extends FOSRestController
      * @ApiDoc(
      *   section="Discount",
      *   description="Update an existing Discount",
-     *   input="GS\ApiBundle\Form\Type\DiscountType",
+     *   input="GS\StructureBundle\Form\Type\DiscountType",
      *   requirements={
      *     {
      *       "name"="discount",
@@ -172,7 +172,7 @@ class DiscountController extends FOSRestController
      *       "description"="Discount id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   output="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     200="You have permission to delete a Discount, the form is returned",
      *   }
@@ -198,7 +198,7 @@ class DiscountController extends FOSRestController
      *       "description"="Discount id"
      *     }
      *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   input="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     204="The Discount has been deleted",
      *   }

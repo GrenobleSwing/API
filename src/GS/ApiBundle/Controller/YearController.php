@@ -11,8 +11,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use GS\ApiBundle\Entity\Year;
-use GS\ApiBundle\Entity\Activity;
+use GS\StructureBundle\Entity\Year;
+use GS\StructureBundle\Entity\Activity;
 
 /**
  * @RouteResource("Year", pluralize=false)
@@ -23,7 +23,7 @@ class YearController extends FOSRestController
      * @ApiDoc(
      *   section="Year",
      *   description="Returns a form to create a new Year",
-     *   output="GS\ApiBundle\Form\Type\YearType",
+     *   output="GS\StructureBundle\Form\Type\YearType",
      *   statusCodes={
      *     200="You have permission to create a Year, the form is returned",
      *   }
@@ -42,7 +42,7 @@ class YearController extends FOSRestController
      * @ApiDoc(
      *   section="Year",
      *   description="Create a new Year",
-     *   input="GS\ApiBundle\Form\Type\YearType",
+     *   input="GS\StructureBundle\Form\Type\YearType",
      *   statusCodes={
      *     201="The Year has been created",
      *   }
@@ -82,7 +82,7 @@ class YearController extends FOSRestController
      *       "description"="Year id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   output="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     200="You have permission to delete a Year, the form is returned",
      *   }
@@ -108,7 +108,7 @@ class YearController extends FOSRestController
      *       "description"="Year id"
      *     }
      *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   input="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     204="The Year has been deleted",
      *   }
@@ -136,7 +136,7 @@ class YearController extends FOSRestController
      * @ApiDoc(
      *   section="Year",
      *   description="Returns current Year based on current date",
-     *   output="GS\ApiBundle\Entity\Year",
+     *   output="GS\StructureBundle\Entity\Year",
      *   statusCodes={
      *     200="Returns current Year",
      *   }
@@ -163,7 +163,7 @@ class YearController extends FOSRestController
      * @ApiDoc(
      *   section="Year",
      *   description="Returns next Year based on current date",
-     *   output="GS\ApiBundle\Entity\Year",
+     *   output="GS\StructureBundle\Entity\Year",
      *   statusCodes={
      *     200="Returns next Year",
      *   }
@@ -190,7 +190,7 @@ class YearController extends FOSRestController
      * @ApiDoc(
      *   section="Year",
      *   description="Returns previous Year based on current date",
-     *   output="GS\ApiBundle\Entity\Year",
+     *   output="GS\StructureBundle\Entity\Year",
      *   statusCodes={
      *     200="Returns previous Year",
      *   }
@@ -225,7 +225,7 @@ class YearController extends FOSRestController
      *       "description"="Year id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Year",
+     *   output="GS\StructureBundle\Entity\Year",
      *   statusCodes={
      *     200="Returns the Year",
      *   }
@@ -242,7 +242,7 @@ class YearController extends FOSRestController
      * @ApiDoc(
      *   section="Year",
      *   description="Returns a collection of Years",
-     *   output="array<GS\ApiBundle\Entity\Year>",
+     *   output="array<GS\StructureBundle\Entity\Year>",
      *   statusCodes={
      *     200="Returns all the Years",
      *   }
@@ -272,7 +272,7 @@ class YearController extends FOSRestController
      *       "description"="Year id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\YearType",
+     *   output="GS\StructureBundle\Form\Type\YearType",
      *   statusCodes={
      *     200="You have permission to create a Year, the form is returned",
      *   }
@@ -290,7 +290,7 @@ class YearController extends FOSRestController
      * @ApiDoc(
      *   section="Year",
      *   description="Update an existing Year",
-     *   input="GS\ApiBundle\Form\Type\YearType",
+     *   input="GS\StructureBundle\Form\Type\YearType",
      *   requirements={
      *     {
      *       "name"="year",
@@ -334,7 +334,7 @@ class YearController extends FOSRestController
      *       "description"="Year id"
      *     }
      *   },
-     *   output="array<GS\ApiBundle\Entity\Account>",
+     *   output="array<GS\StructureBundle\Entity\Account>",
      *   statusCodes={
      *     200="Returns the Year",
      *   }
@@ -352,7 +352,7 @@ class YearController extends FOSRestController
      * @ApiDoc(
      *   section="Year",
      *   description="Returns a form to create a new Activity for the given Year",
-     *   input="GS\ApiBundle\Form\Type\ActivityType",
+     *   input="GS\StructureBundle\Form\Type\ActivityType",
      *   requirements={
      *     {
      *       "name"="year",

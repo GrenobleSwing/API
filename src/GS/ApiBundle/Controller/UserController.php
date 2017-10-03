@@ -8,10 +8,10 @@ use Symfony\Component\Security\Core\Role\Role;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
-use GS\ApiBundle\Entity\Account;
-use GS\ApiBundle\Entity\Address;
-use GS\ApiBundle\Entity\User;
-use GS\ApiBundle\Form\Type\UserType;
+use GS\StructureBundle\Entity\Account;
+use GS\StructureBundle\Entity\Address;
+use GS\StructureBundle\Entity\User;
+use GS\StructureBundle\Form\Type\UserType;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
@@ -24,7 +24,7 @@ class UserController extends FOSRestController
      * @ApiDoc(
      *   section="User",
      *   description="Returns the current User",
-     *   output="GS\ApiBundle\Entity\User",
+     *   output="GS\StructureBundle\Entity\User",
      *   statusCodes={
      *     200="Returns the User",
      *   }
@@ -88,7 +88,7 @@ class UserController extends FOSRestController
      *       "description"="User id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Account",
+     *   output="GS\StructureBundle\Entity\Account",
      *   statusCodes={
      *     200="Returns the Account",
      *   }
@@ -109,7 +109,7 @@ class UserController extends FOSRestController
      * @ApiDoc(
      *   section="User",
      *   description="Returns a form to create a new User",
-     *   output="GS\ApiBundle\Form\Type\UserType",
+     *   output="GS\StructureBundle\Form\Type\UserType",
      *   statusCodes={
      *     200="You have permission to create an User, the form is returned",
      *   }
@@ -127,7 +127,7 @@ class UserController extends FOSRestController
      * @ApiDoc(
      *   section="User",
      *   description="Create a new User",
-     *   input="GS\ApiBundle\Form\Type\UserType",
+     *   input="GS\StructureBundle\Form\Type\UserType",
      *   statusCodes={
      *     201="The User has been created",
      *   }

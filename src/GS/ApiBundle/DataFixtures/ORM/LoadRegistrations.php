@@ -9,10 +9,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use GS\ApiBundle\Entity\Invoice;
-use GS\ApiBundle\Entity\Payment;
-use GS\ApiBundle\Entity\PaymentItem;
-use GS\ApiBundle\Entity\Registration;
+use GS\StructureBundle\Entity\Invoice;
+use GS\StructureBundle\Entity\Payment;
+use GS\StructureBundle\Entity\PaymentItem;
+use GS\StructureBundle\Entity\Registration;
 
 class LoadRegistrations extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {

@@ -34,6 +34,8 @@ class AppKernel extends Kernel
             new Vich\UploaderBundle\VichUploaderBundle(),
             new GS\ApiBundle\GSApiBundle(),
             new GS\ETransactionBundle\GSETransactionBundle(),
+            new GS\StructureBundle\GSStructureBundle(),
+//            new GS\ToolboxBundle\GSToolboxBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

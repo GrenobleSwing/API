@@ -2,7 +2,7 @@
 
 namespace GS\ApiBundle\Services;
 
-use GS\ApiBundle\Entity\Payment;
+use GS\StructureBundle\Entity\Payment;
 use Lexik\Bundle\MailerBundle\Message\MessageFactory;
 
 class PaymentService

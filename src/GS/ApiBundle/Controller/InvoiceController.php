@@ -4,7 +4,7 @@ namespace GS\ApiBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\FOSRestController;
-use GS\ApiBundle\Entity\Invoice;
+use GS\StructureBundle\Entity\Invoice;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +27,7 @@ class InvoiceController extends FOSRestController
      *       "description"="Invoice id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Invoice",
+     *   output="GS\StructureBundle\Entity\Invoice",
      *   statusCodes={
      *     200="Returns the Invoice in PDF",
      *   }
@@ -57,7 +57,7 @@ class InvoiceController extends FOSRestController
      * @ApiDoc(
      *   section="Invoice",
      *   description="Returns a collection of Invoices",
-     *   output="array<GS\ApiBundle\Entity\Invoice>",
+     *   output="array<GS\StructureBundle\Entity\Invoice>",
      *   statusCodes={
      *     200="Returns all the Invoices",
      *   }

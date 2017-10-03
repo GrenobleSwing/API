@@ -8,7 +8,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
-use GS\ApiBundle\Entity\Account;
+use GS\StructureBundle\Entity\Account;
 use GS\ETransactionBundle\Entity\Config;
 use GS\ETransactionBundle\Entity\Environment;
 use GS\ETransactionBundle\Entity\Payment;
@@ -27,7 +27,7 @@ class AccountController extends FOSRestController
      * @ApiDoc(
      *   section="Account",
      *   description="Returns a form to create a new Account",
-     *   output="GS\ApiBundle\Form\Type\AccountType",
+     *   output="GS\StructureBundle\Form\Type\AccountType",
      *   statusCodes={
      *     200="You have permission to create a Account, the form is returned",
      *   }
@@ -45,7 +45,7 @@ class AccountController extends FOSRestController
      * @ApiDoc(
      *   section="Account",
      *   description="Create a new Account",
-     *   input="GS\ApiBundle\Form\Type\AccountType",
+     *   input="GS\StructureBundle\Form\Type\AccountType",
      *   statusCodes={
      *     201="The Account has been created",
      *   }
@@ -84,7 +84,7 @@ class AccountController extends FOSRestController
      *       "description"="Account id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   output="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     200="You have permission to delete a Account, the form is returned",
      *   }
@@ -110,7 +110,7 @@ class AccountController extends FOSRestController
      *       "description"="Account id"
      *     }
      *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   input="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     204="The Account has been deleted",
      *   }
@@ -146,7 +146,7 @@ class AccountController extends FOSRestController
      *       "description"="Account id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Account",
+     *   output="GS\StructureBundle\Entity\Account",
      *   statusCodes={
      *     200="Returns the Account",
      *   }
@@ -163,7 +163,7 @@ class AccountController extends FOSRestController
      * @ApiDoc(
      *   section="Account",
      *   description="Returns a collection of Accounts",
-     *   output="array<GS\ApiBundle\Entity\Account>",
+     *   output="array<GS\StructureBundle\Entity\Account>",
      *   statusCodes={
      *     200="Returns all the Accounts",
      *   }
@@ -193,7 +193,7 @@ class AccountController extends FOSRestController
      *       "description"="Account id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\AccountType",
+     *   output="GS\StructureBundle\Form\Type\AccountType",
      *   statusCodes={
      *     200="You have permission to create a Account, the form is returned",
      *   }
@@ -211,7 +211,7 @@ class AccountController extends FOSRestController
      * @ApiDoc(
      *   section="Account",
      *   description="Update an existing Account",
-     *   input="GS\ApiBundle\Form\Type\AccountType",
+     *   input="GS\StructureBundle\Form\Type\AccountType",
      *   requirements={
      *     {
      *       "name"="account",
@@ -247,7 +247,7 @@ class AccountController extends FOSRestController
      * @ApiDoc(
      *   section="Account",
      *   description="Update the picture of an existing Account",
-     *   input="GS\ApiBundle\Form\Type\AccountPictureType",
+     *   input="GS\StructureBundle\Form\Type\AccountPictureType",
      *   requirements={
      *     {
      *       "name"="account",
@@ -384,7 +384,7 @@ class AccountController extends FOSRestController
      *       "description"="Account id"
      *     }
      *   },
-     *   output="array<GS\ApiBundle\Entity\Registration>",
+     *   output="array<GS\StructureBundle\Entity\Registration>",
      *   statusCodes={
      *     200="Returns the Registrations of the specified Account",
      *   }

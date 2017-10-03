@@ -9,11 +9,11 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use GS\ApiBundle\Entity\Activity;
-use GS\ApiBundle\Entity\Topic;
-use GS\ApiBundle\Entity\Category;
-use GS\ApiBundle\Entity\Discount;
-use GS\ApiBundle\Entity\Schedule;
+use GS\StructureBundle\Entity\Activity;
+use GS\StructureBundle\Entity\Topic;
+use GS\StructureBundle\Entity\Category;
+use GS\StructureBundle\Entity\Discount;
+use GS\StructureBundle\Entity\Schedule;
 
 /**
  * @RouteResource("Activity", pluralize=false)
@@ -25,7 +25,7 @@ class ActivityController extends FOSRestController
      * @ApiDoc(
      *   section="Activity",
      *   description="Returns a form to create a new Activity",
-     *   output="GS\ApiBundle\Form\Type\ActivityType",
+     *   output="GS\StructureBundle\Form\Type\ActivityType",
      *   statusCodes={
      *     200="You have permission to create a Activity, the form is returned",
      *   }
@@ -44,7 +44,7 @@ class ActivityController extends FOSRestController
      * @ApiDoc(
      *   section="Activity",
      *   description="Create a new Activity",
-     *   input="GS\ApiBundle\Form\Type\ActivityType",
+     *   input="GS\StructureBundle\Form\Type\ActivityType",
      *   statusCodes={
      *     201="The Activity has been created",
      *   }
@@ -87,7 +87,7 @@ class ActivityController extends FOSRestController
      *       "description"="Activity id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   output="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     200="You have permission to delete a Activity, the form is returned",
      *   }
@@ -113,7 +113,7 @@ class ActivityController extends FOSRestController
      *       "description"="Activity id"
      *     }
      *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   input="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     204="The Activity has been deleted",
      *   }
@@ -152,7 +152,7 @@ class ActivityController extends FOSRestController
      *       "description"="Activity id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Activity",
+     *   output="GS\StructureBundle\Entity\Activity",
      *   statusCodes={
      *     200="Returns the Activity",
      *   }
@@ -169,7 +169,7 @@ class ActivityController extends FOSRestController
      * @ApiDoc(
      *   section="Activity",
      *   description="Returns a collection of Activitys",
-     *   output="array<GS\ApiBundle\Entity\Activity>",
+     *   output="array<GS\StructureBundle\Entity\Activity>",
      *   statusCodes={
      *     200="Returns all the Activitys",
      *   }
@@ -199,7 +199,7 @@ class ActivityController extends FOSRestController
      *       "description"="Activity id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\ActivityType",
+     *   output="GS\StructureBundle\Form\Type\ActivityType",
      *   statusCodes={
      *     200="You have permission to create a Activity, the form is returned",
      *   }
@@ -217,7 +217,7 @@ class ActivityController extends FOSRestController
      * @ApiDoc(
      *   section="Activity",
      *   description="Update an existing Activity",
-     *   input="GS\ApiBundle\Form\Type\ActivityType",
+     *   input="GS\StructureBundle\Form\Type\ActivityType",
      *   requirements={
      *     {
      *       "name"="activity",
@@ -253,7 +253,7 @@ class ActivityController extends FOSRestController
      * @ApiDoc(
      *   section="Activity",
      *   description="Returns a form to create a new Category for the given Activity",
-     *   output="GS\ApiBundle\Form\Type\CategoryType",
+     *   output="GS\StructureBundle\Form\Type\CategoryType",
      *   statusCodes={
      *     200="You have permission to create a Category, the form is returned",
      *   }
@@ -274,7 +274,7 @@ class ActivityController extends FOSRestController
      * @ApiDoc(
      *   section="Activity",
      *   description="Returns a form to create a new Discount for the given Activity",
-     *   output="GS\ApiBundle\Form\Type\DiscountType",
+     *   output="GS\StructureBundle\Form\Type\DiscountType",
      *   statusCodes={
      *     200="You have permission to create a Discount, the form is returned",
      *   }
@@ -295,7 +295,7 @@ class ActivityController extends FOSRestController
      * @ApiDoc(
      *   section="Activity",
      *   description="Returns a form to create a new Topic for the given Activity",
-     *   output="GS\ApiBundle\Form\Type\TopicType",
+     *   output="GS\StructureBundle\Form\Type\TopicType",
      *   statusCodes={
      *     200="You have permission to create a Topic, the form is returned",
      *   }

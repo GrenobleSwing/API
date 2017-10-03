@@ -13,7 +13,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use GS\ApiBundle\Entity\Registration;
+use GS\StructureBundle\Entity\Registration;
 
 /**
  * @RouteResource("Registration", pluralize=false)
@@ -195,7 +195,7 @@ class RegistrationController extends FOSRestController
      * @ApiDoc(
      *   section="Registration",
      *   description="Create a new Registration",
-     *   input="GS\ApiBundle\Form\Type\RegistrationType",
+     *   input="GS\StructureBundle\Form\Type\RegistrationType",
      *   statusCodes={
      *     201="The Registration has been created",
      *   }
@@ -308,7 +308,7 @@ class RegistrationController extends FOSRestController
      *       "description"="Registration id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\DeleteType",
+     *   output="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     200="You have permission to delete a Registration, the form is returned",
      *   }
@@ -334,7 +334,7 @@ class RegistrationController extends FOSRestController
      *       "description"="Registration id"
      *     }
      *   },
-     *   input="GS\ApiBundle\Form\Type\DeleteType",
+     *   input="GS\StructureBundle\Form\Type\DeleteType",
      *   statusCodes={
      *     204="The Registration has been deleted",
      *   }
@@ -372,7 +372,7 @@ class RegistrationController extends FOSRestController
      *       "description"="Registration id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Entity\Registration",
+     *   output="GS\StructureBundle\Entity\Registration",
      *   statusCodes={
      *     200="Returns the Registration",
      *   }
@@ -398,7 +398,7 @@ class RegistrationController extends FOSRestController
      * @ApiDoc(
      *   section="Registration",
      *   description="Returns a collection of Registrations",
-     *   output="array<GS\ApiBundle\Entity\Registration>",
+     *   output="array<GS\StructureBundle\Entity\Registration>",
      *   statusCodes={
      *     200="Returns all the Registrations",
      *   }
@@ -437,7 +437,7 @@ class RegistrationController extends FOSRestController
      *       "description"="Registration id"
      *     }
      *   },
-     *   output="GS\ApiBundle\Form\Type\RegistrationType",
+     *   output="GS\StructureBundle\Form\Type\RegistrationType",
      *   statusCodes={
      *     200="You have permission to create a Registration, the form is returned",
      *   }
@@ -455,7 +455,7 @@ class RegistrationController extends FOSRestController
      * @ApiDoc(
      *   section="Registration",
      *   description="Update an existing Registration",
-     *   input="GS\ApiBundle\Form\Type\RegistrationType",
+     *   input="GS\StructureBundle\Form\Type\RegistrationType",
      *   requirements={
      *     {
      *       "name"="registration",

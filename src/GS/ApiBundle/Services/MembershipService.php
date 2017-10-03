@@ -4,8 +4,8 @@ namespace GS\ApiBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 
-use GS\ApiBundle\Entity\Account;
-use GS\ApiBundle\Entity\Year;
+use GS\StructureBundle\Entity\Account;
+use GS\StructureBundle\Entity\Year;
 
 class MembershipService
 {
