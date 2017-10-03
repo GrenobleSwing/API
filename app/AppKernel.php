@@ -22,7 +22,6 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Ivory\OrderedFormBundle\IvoryOrderedFormBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
-            new KMJ\PayPalBridgeBundle\KMJPayPalBridgeBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
             new Lexik\Bundle\MailerBundle\LexikMailerBundle(),
