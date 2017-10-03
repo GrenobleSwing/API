@@ -154,17 +154,17 @@ class TopicController extends FOSRestController
     public function cgetAction()
     {
         $listTopics = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Topic')
+            ->getRepository('GSStructureBundle:Topic')
             ->getOpenTopicsNotAdhesion()
             ;
 
         $listAdhesions = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Topic')
+            ->getRepository('GSStructureBundle:Topic')
             ->findBy(array('type' => 'adhesion', 'state' => 'OPEN'))
             ;
 
         $account = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Account')
+            ->getRepository('GSStructureBundle:Account')
             ->findOneByUser($this->getUser())
             ;
 
@@ -262,7 +262,7 @@ class TopicController extends FOSRestController
     public function getRegistrationsAction(Topic $topic)
     {
         $registrations = $this->getDoctrine()->getManager()
-                ->getRepository('GSApiBundle:Registration')
+                ->getRepository('GSStructureBundle:Registration')
                 ->findBy(array('topic' => $topic))
                 ;
 

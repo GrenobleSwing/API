@@ -98,7 +98,7 @@ class UserController extends FOSRestController
     public function getAccountAction(User $user)
     {
         $account = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Account')
+            ->getRepository('GSStructureBundle:Account')
             ->findOneByUser($user)
             ;
         $view = $this->view($account, 200);

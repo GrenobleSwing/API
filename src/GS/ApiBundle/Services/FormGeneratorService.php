@@ -80,13 +80,13 @@ class FormGeneratorService
             # I think the 2 if could be grouped together keeping only getMembershipTopicsForYear
             if ($activity->getId() !== null) {
                 $options['membership_topics'] = $this->em
-                        ->getRepository('GSApiBundle:Topic')
+                        ->getRepository('GSStructureBundle:Topic')
                         ->getMembershipTopicsForActivity($activity);
             }
             elseif ($activity->getYear() !== null)
             {
                 $options['membership_topics'] = $this->em
-                        ->getRepository('GSApiBundle:Topic')
+                        ->getRepository('GSStructureBundle:Topic')
                         ->getMembershipTopicsForYear($activity->getYear());
             } else {
                 $options['membership_topics'] = array();

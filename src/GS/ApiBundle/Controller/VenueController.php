@@ -169,7 +169,7 @@ class VenueController extends FOSRestController
     public function cgetAction()
     {
         $listVenues = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Venue')
+            ->getRepository('GSStructureBundle:Venue')
             ->findAll()
             ;
 

@@ -60,11 +60,11 @@ class PaymentController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($payment);
 
-            $repoAccount = $em->getRepository('GSApiBundle:Account');
+            $repoAccount = $em->getRepository('GSStructureBundle:Account');
             $account = $repoAccount->findOneByUser($this->getUser());
             $account->addPayment($payment);
 
-            $repo = $em->getRepository('GSApiBundle:Invoice');
+            $repo = $em->getRepository('GSStructureBundle:Invoice');
             if ('PAID' == $payment->getState() &&
                     null === $repo->findOneByPayment($payment)) {
                 $prefix = $payment->getDate()->format('Y');
@@ -198,7 +198,7 @@ class PaymentController extends FOSRestController
     public function cgetAction()
     {
         $listPayments = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Payment')
+            ->getRepository('GSStructureBundle:Payment')
             ->findAll()
             ;
 
@@ -259,11 +259,11 @@ class PaymentController extends FOSRestController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            $invoice = $em->getRepository('GSApiBundle:Invoice')
+            $invoice = $em->getRepository('GSStructureBundle:Invoice')
                 ->findOneByPayment($payment);
             if ('PAID' == $payment->getState() && null === $invoice) {
                 $prefix = $payment->getDate()->format('Y');
-                $invoiceNumber = $em->getRepository('GSApiBundle:Invoice')
+                $invoiceNumber = $em->getRepository('GSStructureBundle:Invoice')
                         ->countByNumber($prefix) + 1;
                 $invoice = new Invoice($payment);
                 $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));

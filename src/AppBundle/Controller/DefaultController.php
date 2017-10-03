@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use PayPal\Api\Templates;
 
-use GS\ApiBundle\Form\Type\UserType;
-use GS\ApiBundle\Entity\User;
+use GS\StructureBundle\Form\Type\UserType;
+use GS\StructureBundle\Entity\User;
 
 class DefaultController extends Controller
 {

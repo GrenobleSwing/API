@@ -37,7 +37,7 @@ class InvoiceController extends FOSRestController
     public function getAction(Invoice $invoice)
     {
         $societies = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Society')
+            ->getRepository('GSStructureBundle:Society')
             ->findAll()
             ;
         $html = $this->renderView('GSApiBundle:Invoice:invoice.html.twig', array(
@@ -67,7 +67,7 @@ class InvoiceController extends FOSRestController
     public function cgetAction()
     {
         $listInvoices = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Invoice')
+            ->getRepository('GSStructureBundle:Invoice')
             ->findAll()
             ;
 

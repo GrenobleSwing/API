@@ -173,7 +173,7 @@ class AccountController extends FOSRestController
     public function cgetAction()
     {
         $listAccounts = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Account')
+            ->getRepository('GSStructureBundle:Account')
             ->findAll()
             ;
 
@@ -332,7 +332,7 @@ class AccountController extends FOSRestController
         $activityId = $request->query->get('activityId');
         if (null !== $activityId) {
             $em = $this->getDoctrine()->getManager();
-            $activity = $em->getRepository('GSApiBundle:Activity')->find($activityId);
+            $activity = $em->getRepository('GSStructureBundle:Activity')->find($activityId);
         } else {
             $activity = null;
         }
@@ -402,15 +402,15 @@ class AccountController extends FOSRestController
     {
         if ( $request->query->has('yearId') ) {
             $year = $this->getDoctrine()->getManager()
-                    ->getRepository('GSApiBundle:Year')
+                    ->getRepository('GSStructureBundle:Year')
                     ->find($request->query->get('yearId'));
             $registrations = $this->getDoctrine()->getManager()
-                    ->getRepository('GSApiBundle:Registration')
+                    ->getRepository('GSStructureBundle:Registration')
                     ->getRegistrationsForAccountAndYear($account, $year);
         }
         else {
             $registrations = $this->getDoctrine()->getManager()
-                    ->getRepository('GSApiBundle:Registration')
+                    ->getRepository('GSStructureBundle:Registration')
                     ->findBy(array('account' => $account));
         }
 

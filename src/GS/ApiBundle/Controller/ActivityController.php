@@ -179,7 +179,7 @@ class ActivityController extends FOSRestController
     public function cgetAction()
     {
         $listActivities = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Activity')
+            ->getRepository('GSStructureBundle:Activity')
             ->findAll()
             ;
 

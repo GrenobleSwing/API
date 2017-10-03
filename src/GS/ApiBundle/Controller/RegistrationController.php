@@ -206,7 +206,7 @@ class RegistrationController extends FOSRestController
     {
         $registration = new Registration();
         $account = $this->getDoctrine()
-                ->getRepository('GSApiBundle:Account')
+                ->getRepository('GSStructureBundle:Account')
                 ->findOneByUser($this->getUser());
         $registration->setAccount($account);
 
@@ -260,7 +260,7 @@ class RegistrationController extends FOSRestController
             $partnerRole = 'leader';
         }
         $partnerRegistrations = $this->getDoctrine()
-                ->getRepository('GSApiBundle:Registration')
+                ->getRepository('GSStructureBundle:Registration')
                 ->findBy(array(
                     'account' => $partnerAccount,
                     'topic' => $registration->getTopic(),
@@ -277,13 +277,13 @@ class RegistrationController extends FOSRestController
         $partnerAccounts = null;
         if ($registration->getPartnerEmail() !== null) {
             $partnerAccounts = $this->getDoctrine()
-                    ->getRepository('GSApiBundle:Account')
+                    ->getRepository('GSStructureBundle:Account')
                     ->findByEmail($registration->getPartnerEmail());
         }
         elseif ($registration->getPartnerFirstName() !== null &&
                 $registration->getPartnerLastName() !== null) {
             $partnerAccounts = $this->getDoctrine()
-                    ->getRepository('GSApiBundle:Account')
+                    ->getRepository('GSStructureBundle:Account')
                     ->findBy(array(
                         'firstName' => $registration->getPartnerFirstName(),
                         'lastName' => $registration->getPartnerLastName()));
@@ -408,7 +408,7 @@ class RegistrationController extends FOSRestController
     public function cgetAction()
     {
         $listRegistrations = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Registration')
+            ->getRepository('GSStructureBundle:Registration')
             ->findAll()
             ;
 

@@ -9,7 +9,7 @@ services:
             - '%kernel.root_dir%'
             - '@filesystem'
             - '@doctrine.orm.entity_manager'
-            - '@gsapi.payment.service'
+            - '@gstoolbox.payment.service'
         tags:
             - { name: kernel.event_listener, event: gse_transaction.ipn.received, method: onIpnReceived }
 
@@ -23,10 +23,6 @@ services:
     gsapi.form_generator:
         class: GS\ApiBundle\Services\FormGeneratorService
         arguments: [ '@router', '@form.factory', '@doctrine.orm.entity_manager' ]
-
-    gsapi.account_balance:
-        class: GS\ApiBundle\Services\AccountBalanceService
-        arguments: [ '@doctrine.orm.entity_manager' ]
 
     gsapi.user.repository:
             class: Doctrine\ORM\EntityRepository
@@ -51,15 +47,3 @@ services:
         arguments: ['']
         tags:
             - { name: doctrine.event_subscriber }
-
-    gsapi.user.membership:
-        class: GS\ApiBundle\Services\MembershipService
-        arguments: [ '@doctrine.orm.entity_manager' ]
-
-    gsapi.registration.service:
-        class: GS\ApiBundle\Services\RegistrationService
-        arguments: [ '@doctrine.orm.entity_manager', '@mailer', '@lexik_mailer.message_factory' ]
-
-    gsapi.payment.service:
-        class: GS\ApiBundle\Services\PaymentService
-        arguments: [ '@mailer', '@lexik_mailer.message_factory' ]

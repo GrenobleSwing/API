@@ -147,7 +147,7 @@ class YearController extends FOSRestController
     public function getCurrentAction()
     {
         $year = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Year')
+            ->getRepository('GSStructureBundle:Year')
             ->findCurrentYear()
             ;
         if ($year === null) {
@@ -174,7 +174,7 @@ class YearController extends FOSRestController
     public function getNextAction()
     {
         $year = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Year')
+            ->getRepository('GSStructureBundle:Year')
             ->findNextYear()
             ;
         if ($year === null) {
@@ -201,7 +201,7 @@ class YearController extends FOSRestController
     public function getPreviousAction()
     {
         $year = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Year')
+            ->getRepository('GSStructureBundle:Year')
             ->findPreviousYear()
             ;
         if ($year === null) {
@@ -252,7 +252,7 @@ class YearController extends FOSRestController
     public function cgetAction()
     {
         $listYears = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Year')
+            ->getRepository('GSStructureBundle:Year')
             ->findAll()
             ;
 

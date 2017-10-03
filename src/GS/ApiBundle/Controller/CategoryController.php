@@ -90,7 +90,7 @@ class CategoryController extends FOSRestController
     public function cgetAction()
     {
         $listCategories = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Category')
+            ->getRepository('GSStructureBundle:Category')
             ->findAll()
             ;
 

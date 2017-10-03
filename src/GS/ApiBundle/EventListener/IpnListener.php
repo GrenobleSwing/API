@@ -68,7 +68,7 @@ class IpnListener
         $data = $event->getData();
 
         $payment = $em
-                ->getRepository('GSApiBundle:Payment')
+                ->getRepository('GSStructureBundle:Payment')
                 ->findOneByRef($data['Ref']);
 
         if ('00000' != $data['Erreur']) {
@@ -77,7 +77,7 @@ class IpnListener
             $payment->getAccount()->addPayment($payment);
             $payment->setState('PAID');
 
-            $repo = $em->getRepository('GSApiBundle:Invoice');
+            $repo = $em->getRepository('GSStructureBundle:Invoice');
             if (null === $repo->findOneByPayment($payment)) {
                 $prefix = $payment->getDate()->format('Y');
                 $invoiceNumber = $repo->countByNumber($prefix) + 1;

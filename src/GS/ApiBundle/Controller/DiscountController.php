@@ -90,7 +90,7 @@ class DiscountController extends FOSRestController
     public function cgetAction()
     {
         $listCategories = $this->getDoctrine()->getManager()
-            ->getRepository('GSApiBundle:Discount')
+            ->getRepository('GSStructureBundle:Discount')
             ->findAll()
             ;
 
