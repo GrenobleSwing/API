@@ -170,7 +170,7 @@ class TopicController extends FOSRestController
 
         foreach ($listAdhesions as $topic) {
             $year = $topic->getActivity()->getYear();
-            if (!$this->get('gsapi.user.membership')->isTeacher($account, $year)) {
+            if (!$this->get('gstoolbox.user.membership')->isTeacher($account, $year)) {
                 $listTopics[] = $topic;
             }
         }
