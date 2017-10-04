@@ -336,7 +336,7 @@ class AccountController extends FOSRestController
         } else {
             $activity = null;
         }
-        $balance = $this->get('gsapi.account_balance')->getBalance($account, $activity);
+        $balance = $this->get('gstoolbox.account_balance')->getBalance($account, $activity);
 
         $payment = $balance['payment'];
         $buttons = "";

@@ -4,6 +4,7 @@ magephp:
         path: /path/to/composer.phar
     environments:
         production:
+            rsync: -avz --delete-after
             bin_path: '/usr/local/php5.6/bin:$PATH'
             user: myuser
             branch: master
@@ -22,6 +23,8 @@ magephp:
                 - composer/install: { flags: '--no-dev', timeout: 240 }
             on-deploy:
                 - fs/copy: { from: '/path/on/host/parameters_prod.yml', to: 'app/config/parameters.yml', flags: '' }
+                - fs/link: { from: '../../data/images', to: 'web/images', flags: '-sf' }
+                - fs/link: { from: '../../data/files', to: 'web/files', flags: '-sf' }
                 - symfony/cache-warmup
                 - symfony/assets-install
                 - symfony/assetic-dump
@@ -29,6 +32,7 @@ magephp:
             post-release:
             post-deploy:
         test:
+            rsync: -avz --delete-after
             bin_path: '/usr/local/php5.6/bin:$PATH'
             user: grenobler-dev
             branch: master
@@ -47,6 +51,8 @@ magephp:
             on-deploy:
                 - fs/copy: { from: '/path/on/host/parameters_dev.yml', to: 'app/config/parameters.yml', flags: '' }
                 - fs/move: { from: 'web/app_dev.php', to: 'web/app.php' }
+                - fs/link: { from: '../../data/images', to: 'web/images', flags: '-sf' }
+                - fs/link: { from: '../../data/files', to: 'web/files', flags: '-sf' }
                 - symfony/cache-warmup
                 - symfony/assets-install
                 - symfony/assetic-dump
