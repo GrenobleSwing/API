@@ -9,8 +9,6 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use GS\StructureBundle\Entity\Account;
-use GS\ETransactionBundle\Entity\Config;
-use GS\ETransactionBundle\Entity\Environment;
 use GS\ETransactionBundle\Entity\Payment;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

@@ -11,7 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use GS\StructureBundle\Entity\Account;
 use GS\StructureBundle\Entity\Address;
-//use GS\StructureBundle\Entity\Role;
 
 class LoadUser extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -70,6 +69,42 @@ class LoadUser extends AbstractFixture implements ContainerAwareInterface, Order
         $this->addReference('organizer_user', $organizer_user);
 
         $manager->persist($organizer_account);
+
+        $teacher1_user = $userManager->createUser();
+        $teacher1_user->setEmail('teacher1@test.com');
+        $teacher1_user->setPlainPassword('test');
+        $teacher1_user->setEnabled(true);
+        $teacher1_user->addRole('ROLE_TOPIC_MANAGER');
+
+        $teacher1_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
+        $teacher1_account = new Account();
+        $teacher1_account->setFirstName('Teacher 1');
+        $teacher1_account->setLastName('Test');
+        $teacher1_account->setAddress(new Address());
+        $teacher1_account->setBirthDate(new \DateTime('1986-04-26'));
+        $teacher1_account->setUser($teacher1_user);
+        $teacher1_account->setEmail($teacher1_user->getEmail());
+        $teacher1_account->setPhoneNumber($teacher1_phoneNumber);
+
+        $manager->persist($teacher1_account);
+
+        $teacher2_user = $userManager->createUser();
+        $teacher2_user->setEmail('teacher2@test.com');
+        $teacher2_user->setPlainPassword('test');
+        $teacher2_user->setEnabled(true);
+        $teacher2_user->addRole('ROLE_TOPIC_MANAGER');
+
+        $teacher2_phoneNumber = $this->container->get('libphonenumber.phone_number_util')->parse('0380581981', 'FR');
+        $teacher2_account = new Account();
+        $teacher2_account->setFirstName('Teacher 2');
+        $teacher2_account->setLastName('Test');
+        $teacher2_account->setAddress(new Address());
+        $teacher2_account->setBirthDate(new \DateTime('1986-04-26'));
+        $teacher2_account->setUser($teacher2_user);
+        $teacher2_account->setEmail($teacher2_user->getEmail());
+        $teacher2_account->setPhoneNumber($teacher2_phoneNumber);
+
+        $manager->persist($teacher2_account);
 
         $user1 = $userManager->createUser();
         $user1->setEmail('john.doe@test.com');
