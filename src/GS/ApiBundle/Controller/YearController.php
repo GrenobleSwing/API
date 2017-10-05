@@ -343,7 +343,7 @@ class YearController extends FOSRestController
      */
     public function getMembersAction(Year $year)
     {
-        $members = $this->get('gsapi.user.membership')->getMembers($year);
+        $members = $this->get('gstoolbox.user.membership')->getMembers($year);
         $view = $this->view($members, 200);
         return $this->handleView($view);
     }

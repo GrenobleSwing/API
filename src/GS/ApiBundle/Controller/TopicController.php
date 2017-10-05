@@ -294,7 +294,7 @@ class TopicController extends FOSRestController
         $registration = new Registration();
         $registration->setTopic($topic);
         $this->denyAccessUnlessGranted('create', $registration);
-        $registrationService = $this->get('gsapi.registration.service');
+        $registrationService = $this->get('gstoolbox.registration.service');
         $missingRequirements = $registrationService->checkRequirements($registration, $this->getUser());
         if (count($missingRequirements) > 0) {
             $view = $this->view($missingRequirements, 412);

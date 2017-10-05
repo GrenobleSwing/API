@@ -356,7 +356,7 @@ class AccountController extends FOSRestController
                 $transaction->setUrlAnnule($this->getParameter('return_url_cancelled'));
                 $transaction->setUrlEffectue($this->getParameter('return_url_success'));
                 $transaction->setUrlRefuse($this->getParameter('return_url_rejected'));
-                $transaction->setIpnUrl($this->generateUrl('gse_transaction_ipn', array(), UrlGeneratorInterface::ABSOLUTE_URL));
+                $transaction->setIpnUrl($this->generateUrl('gs_etran_ipn', array(), UrlGeneratorInterface::ABSOLUTE_URL));
 
                 $buttons = $this->get('twig')->render('GSApiBundle:Payment:button.html.twig', array(
                         'payment' => $transaction,

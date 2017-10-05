@@ -70,7 +70,7 @@ class RegistrationController extends FOSRestController
         $year = $activity->getYear();
 
         if ($activity->getMembersOnly() &&
-                !$this->get('gsapi.user.membership')->isMember($account, $year) &&
+                !$this->get('gstoolbox.user.membership')->isMember($account, $year) &&
                 null !== $activity->getMembershipTopic()) {
             $membership = new Registration();
             $membership->setAccount($account);
@@ -151,7 +151,7 @@ class RegistrationController extends FOSRestController
             $em->remove($registration);
         }
 
-        $this->get('gsapi.registration.service')->onCancel($registration);
+        $this->get('gstoolbox.registration.service')->onCancel($registration);
 
         $em->flush();
 
@@ -234,7 +234,7 @@ class RegistrationController extends FOSRestController
                 $registration->validate();
             }
 
-            $this->get('gsapi.registration.service')->onSubmitted($registration);
+            $this->get('gstoolbox.registration.service')->onSubmitted($registration);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($registration);
@@ -347,7 +347,7 @@ class RegistrationController extends FOSRestController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('gsapi.registration.service')->cleanPayments($registration);
+            $this->get('gstoolbox.registration.service')->cleanPayments($registration);
 
             $em = $this->getDoctrine()->getManager();
             $em->remove($registration);
