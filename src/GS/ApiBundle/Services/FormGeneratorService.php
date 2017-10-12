@@ -29,7 +29,7 @@ use GS\StructureBundle\Form\Type\DiscountType;
 use GS\StructureBundle\Form\Type\PaymentType;
 use GS\StructureBundle\Form\Type\RegistrationType;
 use GS\StructureBundle\Form\Type\TopicType;
-use GS\StructureBundle\Form\Type\UserType;
+use GS\StructureBundle\Form\Type\UserRegistrationType;
 use GS\StructureBundle\Form\Type\VenueType;
 use GS\StructureBundle\Form\Type\YearType;
 
@@ -291,7 +291,7 @@ class FormGeneratorService
             $options['method'] = $method;
         }
 
-        return $this->formFactory->create(UserType::class, $user, $options);
+        return $this->formFactory->create(UserRegistrationType::class, $user, $options);
     }
 
     public function getFormView($form, $statusCode = 200, $template = 'form.html.twig')

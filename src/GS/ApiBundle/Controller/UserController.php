@@ -109,7 +109,7 @@ class UserController extends FOSRestController
      * @ApiDoc(
      *   section="User",
      *   description="Returns a form to create a new User",
-     *   output="GS\StructureBundle\Form\Type\UserType",
+     *   output="GS\StructureBundle\Form\Type\UserRegistrationType",
      *   statusCodes={
      *     200="You have permission to create an User, the form is returned",
      *   }
