@@ -139,11 +139,6 @@ class RegistrationController extends FOSRestController
         }
         $registration->cancel();
 
-        if (null !== $registration->getPartnerRegistration()) {
-            $registration->getPartnerRegistration()->setPartnerRegistration(null);
-            $registration->setPartnerRegistration(null);
-        }
-
         $em = $this->getDoctrine()->getManager();
 
         // If the registration is not paid, there is no need to keep it.
