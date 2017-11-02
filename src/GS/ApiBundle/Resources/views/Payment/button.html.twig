@@ -1,23 +1,47 @@
-<h3>
-    <font color="red">
-    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-    Pour ceux ayant déjà payé leur adhésion (lors de l'AG, avec le stage BTTR...),
-    si l'adhésion apparait dans la liste des inscriptions à payer ci-dessus et
-    afin d'éviter de la payer 2 fois
-    merci d'envoyer un email à <a href="mailto:tresorier@grenobleswing.com">tresorier@grenobleswing.com</a>
-    en précisant à quel moment vous avez payé votre adhésion.
-    <br>
-    Merci d'attendre que l'adhésion soit marquée comme payée sur
-    la page "Gérer mes inscriptions" avant d'effectuer votre paiement.
-    </font>
-</h3>
-<h3>
-    <font color="red">
-    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-    Pour les  tarifs étudiant et chômeur, merci d'envoyer un justificatif par mails à
-    <a href="mailto:tresorier@grenobleswing.com">tresorier@grenobleswing.com</a>
-    </font>
-</h3>
-{{ buttonGenerator.createButton1x(payment)|raw }}
-{{ buttonGenerator.createButton2x(payment)|raw }}
-{{ buttonGenerator.createButton3x(payment)|raw }}
+<div class="col-md-12">
+    <h4>
+        <font color="red">
+        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+        Pour ceux ayant déjà payé leur adhésion (lors de l'AG, avec le stage BTTR...),
+        si l'adhésion apparait dans la liste des inscriptions à payer ci-dessus et
+        afin d'éviter de la payer 2 fois
+        merci d'envoyer un email à <a href="mailto:tresorier@grenobleswing.com">tresorier@grenobleswing.com</a>
+        en précisant à quel moment vous avez payé votre adhésion.
+        <br>
+        Merci d'attendre que l'adhésion soit marquée comme payée sur
+        la page "Gérer mes inscriptions" avant d'effectuer votre paiement.
+        </font>
+    </h4>
+
+    <h4>
+        <font color="red">
+        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+        Pour les  tarifs étudiant et chômeur, merci d'envoyer un justificatif par mails à
+        <a href="mailto:tresorier@grenobleswing.com">tresorier@grenobleswing.com</a>
+        </font>
+    </h4>
+
+    {% if mustCompleteProfile %}
+        {# https://stackoverflow.com/questions/20547819/vertical-align-with-bootstrap-3 #}
+        <div class="row">
+            <div class="col-xs-12 col-sm-2 col-md-1" style='text-align: center; display: inline-block; vertical-align: middle; float: none;'>
+                <button class="btn btn-default" type="button"disabled="disabled">Payer</button>
+            </div><!--
+            --><div class="col-xs-12 col-sm-10 col-md-11" style='display: inline-block; vertical-align: middle; float: none;'>
+                <h3>
+                    Votre profil n'est pas complet.<br>
+                    L'association est tenue d'avoir un registre de ses membres à jour.<br>
+                    Merci de compléter votre profil afin de pouvoir procéder au paiement.
+                </h3>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-12" style='text-align: center;'>
+                {{ buttonGenerator.createButton1x(payment)|raw }}
+                {{ buttonGenerator.createButton2x(payment)|raw }}
+                {{ buttonGenerator.createButton3x(payment)|raw }}
+            </div>
+        </div>
+    {% endif %}
+</div>

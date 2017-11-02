@@ -338,7 +338,15 @@ class AccountController extends FOSRestController
 
         $payment = $balance['payment'];
         $buttons = "";
+        $mustCompleteProfile = false;
         if ( null !== $payment) {
+            foreach ($payment->getItems() as $item) {
+                if ($item->getRegistration()->getTopic()->isAdhesion() &&
+                        !$account->isProfileComplete()) {
+                    $mustCompleteProfile = true;
+                    break;
+                }
+            }
             $etranEnv = $payment->getItems()[0]
                     ->getRegistration()
                     ->getTopic()
@@ -359,7 +367,8 @@ class AccountController extends FOSRestController
                 $transaction->setIpnUrl($this->generateUrl('gs_etran_ipn', array(), UrlGeneratorInterface::ABSOLUTE_URL));
 
                 $buttons = $this->get('twig')->render('GSApiBundle:Payment:button.html.twig', array(
-                        'payment' => $transaction,
+                    'payment' => $transaction,
+                    'mustCompleteProfile' => $mustCompleteProfile,
                 ));
             }
         }
