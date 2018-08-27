@@ -11,7 +11,6 @@ use FOS\RestBundle\Controller\Annotations\RouteResource;
 use GS\StructureBundle\Entity\Account;
 use GS\StructureBundle\Entity\Address;
 use GS\StructureBundle\Entity\User;
-use GS\StructureBundle\Form\Type\UserType;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
