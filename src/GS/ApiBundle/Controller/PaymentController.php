@@ -73,7 +73,7 @@ class PaymentController extends FOSRestController
                 $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));
                 $invoice->setDate($payment->getDate());
 
-                $this->get('gstoolbox.payment.service')->sendEmail($payment);
+                $this->get('gstoolbox.payment.service')->sendEmailSuccess($payment);
 
                 $em->persist($invoice);
             }
@@ -269,7 +269,7 @@ class PaymentController extends FOSRestController
                 $invoice->setNumber($prefix . sprintf('%05d', $invoiceNumber));
                 $invoice->setDate($payment->getDate());
 
-                $this->get('gstoolbox.payment.service')->sendEmail($payment);
+                $this->get('gstoolbox.payment.service')->sendEmailSuccess($payment);
 
                 $em->persist($invoice);
             }
