@@ -1991,12 +1991,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/GrenobleSwing/ToolboxBundle.git",
-                "reference": "4b19e0d55438ea7359b3ea12ffbf301fd9ad1b68"
+                "reference": "df14950b7ff15705dbeb92735ffe3ed89d177100"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GrenobleSwing/ToolboxBundle/zipball/4b19e0d55438ea7359b3ea12ffbf301fd9ad1b68",
-                "reference": "4b19e0d55438ea7359b3ea12ffbf301fd9ad1b68",
+                "url": "https://api.github.com/repos/GrenobleSwing/ToolboxBundle/zipball/df14950b7ff15705dbeb92735ffe3ed89d177100",
+                "reference": "df14950b7ff15705dbeb92735ffe3ed89d177100",
                 "shasum": ""
             },
             "require": {
@@ -2036,7 +2036,7 @@
                 "source": "https://github.com/GrenobleSwing/ToolboxBundle/tree/master",
                 "issues": "https://github.com/GrenobleSwing/ToolboxBundle/issues"
             },
-            "time": "2018-10-03T18:54:30+00:00"
+            "time": "2018-10-03T20:10:54+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
