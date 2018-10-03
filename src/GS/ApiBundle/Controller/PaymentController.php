@@ -108,7 +108,7 @@ class PaymentController extends FOSRestController
      */
     public function removeAction(Payment $payment)
     {
-        if ('PAID' == $payment->getState()) {
+        if ('PAID' == $payment->getState() || 'IN_PRO' == $payment->getState()) {
             $view = $this->view(null, 403);
             return $this->handleView($view);
         }
@@ -138,7 +138,7 @@ class PaymentController extends FOSRestController
      */
     public function deleteAction(Payment $payment, Request $request)
     {
-        if ('PAID' == $payment->getState()) {
+        if ('PAID' == $payment->getState() || 'IN_PRO' == $payment->getState()) {
             $view = $this->view(null, 403);
             return $this->handleView($view);
         }
